@@ -10,7 +10,7 @@ export default class Api {
 	private authorization: string;
 
 	constructor(config: AxiosRequestConfig) {
-		this.basePath = "http://192.168.50.37:8080";
+		this.basePath = "http://192.168.56.1:8080";
 		this.authorization = "";
 	}
 

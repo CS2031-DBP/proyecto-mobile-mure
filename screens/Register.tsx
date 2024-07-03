@@ -46,7 +46,7 @@ function Register() {
 					"Registration Successful",
 					"You have successfully registered."
 				);
-				navigation.navigate("Home");
+				navigation.navigate("Main");
 			} else {
 				setErrors("One or more fields are invalid");
 			}

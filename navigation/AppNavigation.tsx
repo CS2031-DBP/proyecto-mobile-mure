@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Register from "@/screens/Register";
 import Login from "@/screens/Login";
 import Home from "@/screens/Home";
+import BottomTabsNavigator from "./BottomTabsNavigator";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,8 +34,8 @@ export default function AppNavigation() {
 					options={{ headerShown: false }}
 				/>
 				<Stack.Screen
-					name="Home"
-					component={Home}
+					name="Main"
+					component={BottomTabsNavigator}
 					options={{ headerShown: false }}
 				/>
 			</Stack.Navigator>

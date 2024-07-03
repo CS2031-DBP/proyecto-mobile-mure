@@ -34,7 +34,7 @@ export default function Login() {
 					"Login Successful",
 					"You have successfully logged in."
 				);
-				navigation.navigate("Home");
+				navigation.navigate("Main");
 			} else {
 				setErrors("Email or password is incorrect");
 			}
