@@ -5,7 +5,6 @@ interface CustomJwtPayload {
 	role: string;
 }
 
-// Type guard to check if the object is a CustomJwtPayload
 function isCustomJwtPayload(object: any): object is CustomJwtPayload {
 	return "role" in object;
 }

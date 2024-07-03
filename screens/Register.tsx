@@ -42,7 +42,6 @@ function Register() {
 				birthdate,
 			});
 			if (response && response.data) {
-				console.log(response.data);
 				Alert.alert(
 					"Registration Successful",
 					"You have successfully registered."

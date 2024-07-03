@@ -1,6 +1,6 @@
 import Api from "../api";
 import * as SecureStore from "expo-secure-store";
-import { AxiosRequestConfig, AxiosResponse } from "axios";
+import { AxiosRequestConfig } from "axios";
 import { LoginDto, LoginResponse } from "interfaces/Login";
 import { SignupDto, SignupResponse } from "interfaces/Signup";
 

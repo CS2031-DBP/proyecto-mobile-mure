@@ -29,7 +29,7 @@ export default function Login() {
 		try {
 			const response = await login({ email, password });
 			if (response && response.data) {
-				console.log(response.data);
+				console.log(response.data.token);
 				Alert.alert(
 					"Login Successful",
 					"You have successfully logged in."
