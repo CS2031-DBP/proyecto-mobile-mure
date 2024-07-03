@@ -1,6 +1,6 @@
 import { PaginatedResponse } from "@/interfaces/PaginationResponse";
 import Api from "../api";
-import { Song } from "@/interfaces/Song";
+import { SongResponse } from "@/interfaces/Song";
 
 const api = new Api({});
 
@@ -10,7 +10,9 @@ export async function getSongs(page: number, size: number) {
 	};
 
 	try {
-		const response = await api.get<null, PaginatedResponse<Song>>(options);
+		const response = await api.get<null, PaginatedResponse<SongResponse>>(
+			options
+		);
 		return response;
 	} catch (error) {
 		throw error;
