@@ -48,6 +48,7 @@ export default function UserProfile() {
             setIsFriend(true);
             Alert.alert('Friend Added', 'You have successfully added this user as a friend.');
             loadUserData();
+            navigation.navigate('Profile');
         } catch (error) {
             setErrors('Failed to add friend');
         }
@@ -60,6 +61,7 @@ export default function UserProfile() {
             setIsFriend(false);
             Alert.alert('Friend Removed', 'You have successfully removed this user from your friends.');
             loadUserData();
+            navigation.navigate('Profile');
         } catch (error) {
             setErrors('Failed to delete friend');
         }
