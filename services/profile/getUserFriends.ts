@@ -1,16 +1,18 @@
-import Api from '../api';
+import { UserForUserResponse } from "@/interfaces/User";
+import Api from "../api";
+import { AxiosRequestConfig } from "axios";
 
 const api = new Api({});
 
 export async function fetchUserFriends() {
-    let options = {
-        url: '/user/friends/me',
-    };
+	const options: AxiosRequestConfig = {
+		url: "/user/friends/me",
+	};
 
-    try {
-        const res = await api.get(options);
-        return res;
-    } catch (error) {
-        return error;
-    }
+	try {
+		const response = await api.get<null, UserForUserResponse>(options);
+		return response;
+	} catch (error) {
+		throw error;
+	}
 }

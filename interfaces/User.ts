@@ -13,3 +13,8 @@ export interface UserResponse {
 	profileImage: string;
 	role: string;
 }
+
+export interface UserForUserResponse {
+	id: number;
+	name: string;
+}

@@ -1,16 +1,18 @@
-import Api from '../api';
+import { PostResponse } from "@/interfaces/Post";
+import Api from "../api";
+import { AxiosRequestConfig } from "axios";
 
-const api = new Api({ });
+const api = new Api({});
 
-export async function fetchUserPosts() {
-    let options = {
-        url: '/post/me',
-    };
+export async function getUserPosts() {
+	const options: AxiosRequestConfig = {
+		url: "/post/me",
+	};
 
-    try {
-        const res = await api.get(options);
-        return res;
-    } catch (error) {
-        return error;
-    }
+	try {
+		const response = await api.get<null, PostResponse[]>(options);
+		return response;
+	} catch (error) {
+		throw error;
+	}
 }
