@@ -1,18 +1,13 @@
-import { UserForUserResponse } from "@/interfaces/User";
-import Api from "../api";
-import { AxiosRequestConfig } from "axios";
+import { fetchUserById } from './getUserById';
+import { UserResponse } from '@/interfaces/User';
 
-const api = new Api({});
+export async function fetchUserFriends(friendIds: number[]): Promise<UserResponse[]> {
+    const promises = friendIds.map(id => fetchUserById(id));
 
-export async function fetchUserFriends() {
-	const options: AxiosRequestConfig = {
-		url: "/user/friends/me",
-	};
-
-	try {
-		const response = await api.get<null, UserForUserResponse>(options);
-		return response;
-	} catch (error) {
-		throw error;
-	}
+    try {
+        const friendsData = await Promise.all(promises);
+        return friendsData;
+    } catch (error) {
+        throw error;
+    }
 }

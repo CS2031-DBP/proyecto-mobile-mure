@@ -1,26 +1,33 @@
-// Profile.tsx
 import React, { useEffect, useState, useCallback } from 'react';
-import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
-import { NavigationProp, ParamListBase, useFocusEffect, useNavigation } from '@react-navigation/native';
-import { Button, Text, Avatar, Divider } from 'react-native-paper';
+import { SafeAreaView, StyleSheet, View, Text, ScrollView } from 'react-native';
+import { NavigationProp, ParamListBase, useNavigation, useFocusEffect } from '@react-navigation/native';
+import { Avatar, Button } from 'react-native-paper';
 import { fetchCurrentUser } from '@/services/profile/getUserInfo';
-import { UserResponse } from '@/interfaces/User';
+import { UserResponse, UserFriends } from '@/interfaces/User';
+import { fetchUserFriends } from '@/services/profile/getUserFriends';
 
 export default function Profile() {
     const navigation = useNavigation<NavigationProp<ParamListBase>>();
     const [user, setUser] = useState<UserResponse | null>(null);
-    const [errors, setErrors] = useState("");
+    const [friends, setFriends] = useState<UserFriends[]>([]);
+    const [errors, setErrors] = useState<string | null>(null);
 
     useFocusEffect(
         useCallback(() => {
-            setErrors("");
-            fetchCurrentUser().then(response => {
-                if (response) {
-                    setUser(response.data);
-                } else {
+            const loadUserData = async () => {
+                try {
+                    const response = await fetchCurrentUser();
+                    const userData = response.data;
+                    setUser(userData);
+
+                    const friendsData = await fetchUserFriends(userData.friendsIds);
+                    setFriends(friendsData);
+                } catch (error) {
                     setErrors('Failed to load user data');
                 }
-            });
+            };
+
+            loadUserData();
         }, [])
     );
 
@@ -34,29 +41,35 @@ export default function Profile() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.profileContainer}>
-                <Avatar.Image size={100} source={{ uri: user.profileImage }} />
-                <Text style={styles.name}>{user.name}</Text>
-                <Text>{user.email}</Text>
+            <ScrollView contentContainerStyle={styles.profileContainer}>
+                <View style={styles.topContainer}>
+                    <Avatar.Image size={100} source={{ uri: user.profileImage }} style={styles.avatar} />
+                    <View style={styles.infoContainer}>
+                        <Text style={styles.name}>{user.name}</Text>
+                        <Text style={styles.birthDate}>{user.birthDate}</Text>
+                    </View>
+                    <View style={styles.friendsContainer}>
+                        <Text style={styles.friendsCount}>{friends.length} Friends</Text>
+                        <Button
+                            mode="outlined"
+                            onPress={() => navigation.navigate('FriendList', { friendIds: user.friendsIds })}
+                            style={styles.viewFriendsButton}
+                        >
+                            View Friends
+                        </Button>
+                    </View>
+                </View>
                 {errors ? <Text style={styles.errorText}>{errors}</Text> : null}
-                <Divider style={styles.divider} />
                 <View style={styles.buttonsContainer}>
                     <Button
                         mode="contained"
-                        onPress={() => Alert.alert('Edit Profile')}
-                        style={styles.button}
+                        onPress={() => navigation.navigate('EditProfile')}
+                        style={styles.editProfileButton}
                     >
-                        Edit profile
-                    </Button>
-                    <Button
-                        mode="outlined"
-                        onPress={() => Alert.alert('Share Profile')}
-                        style={styles.button}
-                    >
-                        Share profile
+                        Edit Profile
                     </Button>
                 </View>
-            </View>
+            </ScrollView>
         </SafeAreaView>
     );
 }
@@ -65,30 +78,51 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
+        paddingTop: 20,
+		marginTop: 20,
     },
     profileContainer: {
         alignItems: 'center',
         paddingHorizontal: 20,
     },
-    name: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginVertical: 10,
+    topContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20,
     },
-    divider: {
-        marginVertical: 10,
-        width: '80%',
+    avatar: {
+        marginRight: 20,
+    },
+    infoContainer: {
+        flex: 1,
+    },
+    name: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'left',
+        marginBottom: 5,
+    },
+    birthDate: {
+        fontSize: 18,
+        color: 'gray',
+        textAlign: 'left',
+    },
+    friendsContainer: {
+        alignItems: 'center',
+    },
+    friendsCount: {
+        fontSize: 18,
+    },
+    viewFriendsButton: {
+        marginTop: 10,
     },
     buttonsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
         width: '100%',
         marginTop: 20,
+        alignItems: 'center',
     },
-    button: {
-        width: '45%',
-        padding: 8,
+    editProfileButton: {
+        width: '60%',
     },
     errorText: {
         color: 'red',

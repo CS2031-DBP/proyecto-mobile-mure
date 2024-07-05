@@ -12,9 +12,16 @@ export interface UserResponse {
 	email: string;
 	profileImage: string;
 	role: string;
+	friendsIds: number[];
 }
 
-export interface UserForUserResponse {
-	id: number;
-	name: string;
+export interface UserFriends {
+    id: number;
+    name: string;
+    friendsNames: string[];
+    friendsIds: number[];
+}
+
+export interface IsFriendResponse {
+    isFriend: boolean;
 }

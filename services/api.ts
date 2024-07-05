@@ -35,7 +35,7 @@ export default class Api {
 		);
 
 		if (requiresAuth) {
-			const token = SecureStore.getItemAsync("token");
+			const token = await SecureStore.getItemAsync("token");
 			
 			if (token) {
 				headers.Authorization = `Bearer ${token}`;
