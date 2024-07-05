@@ -4,7 +4,7 @@ import { UserResponse } from "@/interfaces/User";
 
 const api = new Api({});
 
-export async function getCurrentUser() {
+export async function fetchCurrentUser() {
 	const options: AxiosRequestConfig = {
 		url: "/user/me",
 	};
