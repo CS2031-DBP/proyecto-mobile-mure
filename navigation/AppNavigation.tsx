@@ -5,6 +5,7 @@ import Login from "@/screens/Login";
 import BottomTabsNavigator from "./BottomTabsNavigator";
 import AddPost from "@/screens/AddPost";
 import AddStory from "@/screens/AddStory";
+import { PaperProvider } from "react-native-paper";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,29 +28,31 @@ function AuthStack() {
 
 export default function AppNavigation() {
 	return (
-		<NavigationContainer theme={DarkTheme}>
-			<Stack.Navigator initialRouteName="AuthStack">
-				<Stack.Screen
-					name="AuthStack"
-					component={AuthStack}
-					options={{ headerShown: false }}
-				/>
-				<Stack.Screen
-					name="Main"
-					component={BottomTabsNavigator}
-					options={{ headerShown: false }}
-				/>
-				<Stack.Screen
-					name="AddPost"
-					component={AddPost}
-					options={{ headerShown: false }}
-				/>
-				<Stack.Screen
-					name="AddStory"
-					component={AddStory}
-					options={{ headerShown: false }}
-				/>
-			</Stack.Navigator>
-		</NavigationContainer>
+		<PaperProvider>
+			<NavigationContainer>
+				<Stack.Navigator initialRouteName="AuthStack">
+					<Stack.Screen
+						name="AuthStack"
+						component={AuthStack}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="Main"
+						component={BottomTabsNavigator}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="AddPost"
+						component={AddPost}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="AddStory"
+						component={AddStory}
+						options={{ headerShown: false }}
+					/>
+				</Stack.Navigator>
+			</NavigationContainer>
+		</PaperProvider>
 	);
 }

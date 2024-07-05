@@ -57,7 +57,6 @@ const styles = StyleSheet.create({
 		fontSize: 35,
 		fontWeight: "bold",
 		fontFamily: "Roboto",
-		color: "#ffffff",
 	},
 	areaContainer: {
 		flex: 1,
