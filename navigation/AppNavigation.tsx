@@ -1,9 +1,8 @@
-import { NavigationContainer } from "@react-navigation/native";
+import { DarkTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Register from "@/screens/Register";
 import Login from "@/screens/Login";
 import BottomTabsNavigator from "./BottomTabsNavigator";
-import DarkTheme from "./Theme";
 import AddPost from "@/screens/AddPost";
 import AddStory from "@/screens/AddStory";
 
@@ -43,7 +42,7 @@ export default function AppNavigation() {
 				<Stack.Screen
 					name="AddPost"
 					component={AddPost}
-					options={{ headerShown: true, title: "Add a post" }}
+					options={{ headerShown: false }}
 				/>
 				<Stack.Screen
 					name="AddStory"
