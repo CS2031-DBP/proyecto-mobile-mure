@@ -10,7 +10,7 @@ export default class Api {
 	private authorization: string;
 
 	constructor(config: AxiosRequestConfig) {
-		this.basePath = "http://192.168.18.138:8080";
+		this.basePath = `$http://${process.env.BASE_PATH}:8080`;
 		this.authorization = "";
 	}
 
@@ -35,8 +35,8 @@ export default class Api {
 		);
 
 		if (requiresAuth) {
-			const token = SecureStore.getItemAsync("token");
-			
+			const token = await SecureStore.getItemAsync("token");
+
 			if (token) {
 				headers.Authorization = `Bearer ${token}`;
 			}
@@ -46,6 +46,8 @@ export default class Api {
 			...configOptions,
 			headers: headers,
 		};
+
+		console.log(config);
 
 		return axios<RequestType, AxiosResponse<ResponseType>>(path, config);
 	}
