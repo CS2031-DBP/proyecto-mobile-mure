@@ -41,7 +41,7 @@ function Register() {
 				password,
 				birthdate,
 			});
-			if (response && response.data) {
+			if (response && response.token) {
 				Alert.alert(
 					"Registration Successful",
 					"You have successfully registered."

@@ -10,7 +10,7 @@ export default class Api {
 	private authorization: string;
 
 	constructor(config: AxiosRequestConfig) {
-		this.basePath = `$http://${process.env.BASE_PATH}:8080`;
+		this.basePath = `http://${process.env.EXPO_PUBLIC_BASE_PATH}:8080`;
 		this.authorization = "";
 	}
 
@@ -46,8 +46,6 @@ export default class Api {
 			...configOptions,
 			headers: headers,
 		};
-
-		console.log(config);
 
 		return axios<RequestType, AxiosResponse<ResponseType>>(path, config);
 	}

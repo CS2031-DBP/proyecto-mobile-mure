@@ -1,40 +1,45 @@
 import Api from "../api";
 import * as SecureStore from "expo-secure-store";
 import { AxiosRequestConfig } from "axios";
-import { LoginDto, LoginResponse } from "interfaces/Login";
-import { SignupDto, SignupResponse } from "interfaces/Signup";
+import {
+	LoginRequest,
+	LoginResponse,
+	SignupRequest,
+	SignupResponse,
+} from "interfaces/Auth";
 
 const api = new Api({});
 
-export async function login(loginDto: LoginDto) {
+export async function login(loginRequestDto: LoginRequest) {
 	const options: AxiosRequestConfig = {
 		url: "/auth/login",
 	};
 
 	try {
-		const response = await api.post<LoginDto, LoginResponse>(
-			loginDto,
+		const response = await api.post<LoginRequest, LoginResponse>(
+			loginRequestDto,
 			options
 		);
 		await SecureStore.setItemAsync("token", response.data.token);
-		return response;
+		return response.data;
 	} catch (error) {
 		throw error;
 	}
 }
 
-export async function register(signupDto: SignupDto) {
+export async function register(signupDto: SignupRequest) {
 	const options: AxiosRequestConfig = {
 		url: "/auth/signin",
 	};
 
 	try {
-		const response = await api.post<SignupDto, SignupResponse>(
+		const response = await api.post<SignupRequest, SignupResponse>(
 			signupDto,
 			options
 		);
+		console.log(response.data.token);
 		await SecureStore.setItemAsync("token", response.data.token);
-		return response;
+		return response.data;
 	} catch (error) {
 		throw error;
 	}

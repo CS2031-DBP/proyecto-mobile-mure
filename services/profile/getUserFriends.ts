@@ -1,13 +1,12 @@
-import { fetchUserById } from './getUserById';
-import { UserResponse } from '@/interfaces/User';
+import { getUserById } from "./getUserById";
 
-export async function fetchUserFriends(friendIds: number[]): Promise<UserResponse[]> {
-    const promises = friendIds.map(id => fetchUserById(id));
+export async function getUserFriends(friendIds: number[]) {
+	const promises = friendIds.map((id) => getUserById(id));
 
-    try {
-        const friendsData = await Promise.all(promises);
-        return friendsData;
-    } catch (error) {
-        throw error;
-    }
+	try {
+		const response = await Promise.all(promises);
+		return response.map((res) => res);
+	} catch (error) {
+		throw error;
+	}
 }

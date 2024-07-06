@@ -11,7 +11,7 @@ export async function editProfile(data: UserUpdate) {
 
 	try {
 		const response = await api.patch<UserUpdate, null>(data, options);
-		return response;
+		return response.data;
 	} catch (error) {
 		throw error;
 	}

@@ -26,10 +26,11 @@ export default function Login() {
 			setErrors("Email and password are required");
 			return;
 		}
+
 		try {
 			const response = await login({ email, password });
-			if (response && response.data) {
-				console.log(response.data.token);
+
+			if (response) {
 				Alert.alert(
 					"Login Successful",
 					"You have successfully logged in."

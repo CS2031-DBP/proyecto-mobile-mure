@@ -11,7 +11,7 @@ export async function getUserPosts() {
 
 	try {
 		const response = await api.get<null, PostResponse[]>(options);
-		return response;
+		return response.data;
 	} catch (error) {
 		throw error;
 	}

@@ -4,14 +4,14 @@ import { UserResponse } from "@/interfaces/User";
 
 const api = new Api({});
 
-export async function fetchCurrentUser() {
+export async function getCurrentUserInfo() {
 	const options: AxiosRequestConfig = {
 		url: "/user/me",
 	};
 
 	try {
 		const response = await api.get<null, UserResponse>(options);
-		return response;
+		return response.data;
 	} catch (error) {
 		throw error;
 	}

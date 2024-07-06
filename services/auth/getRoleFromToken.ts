@@ -11,11 +11,12 @@ function isCustomJwtPayload(object: any): object is CustomJwtPayload {
 
 export async function getRoleFromToken() {
 	const token = await SecureStore.getItemAsync("token");
-	if (!token) {
-		throw new Error("No token found");
-	}
+
+	if (!token) throw new Error("No token found");
+
 	try {
 		const decodedToken = jwtDecode(token);
+
 		if (isCustomJwtPayload(decodedToken)) {
 			return decodedToken.role;
 		} else {

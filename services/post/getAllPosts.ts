@@ -9,7 +9,7 @@ export async function getPosts(page: number, size: number) {
 		const response = await api.get<null, PaginatedResponse<PostResponse>>({
 			url: `/post/all?page=${page}&size=${size}`,
 		});
-		return response;
+		return response.data;
 	} catch (error) {
 		throw error;
 	}
