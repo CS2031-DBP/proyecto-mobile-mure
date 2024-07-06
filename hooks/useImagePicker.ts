@@ -2,7 +2,7 @@ import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 
 export default function useImagePicker() {
-	const [image, setImage] = useState<string | null>(null);
+	const [imageUri, setImageUri] = useState<string | null>(null);
 
 	async function pickImage() {
 		const result = await ImagePicker.launchImageLibraryAsync({
@@ -13,9 +13,9 @@ export default function useImagePicker() {
 		});
 
 		if (!result.canceled) {
-			setImage(result.assets[0].uri);
+			setImageUri(result.assets[0].uri);
 		}
 	}
 
-	return { image, pickImage };
+	return { image: imageUri, pickImage, setImageUri };
 }

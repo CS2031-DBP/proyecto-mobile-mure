@@ -15,6 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import useImagePicker from "@/hooks/useImagePicker";
 import { Audio } from "expo-av";
+import { Image } from "react-native";
 
 export default function AddPost() {
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
@@ -119,22 +120,44 @@ export default function AddPost() {
 					size={40}
 					style={{ marginTop: 10 }}
 				/>
-				<TextInput
-					contentStyle={{ fontSize: 17 }}
-					placeholder="What's happennig?"
-					style={{
-						flex: 1,
-						backgroundColor: "transparent",
-						borderWidth: 0,
-						borderBlockColor: "transparent",
-					}}
-					onChangeText={setPostText}
-					value={postText}
-					outlineColor="transparent"
-					activeOutlineColor="transparent"
-					activeUnderlineColor="transparent"
-					cursorColor="purple"
-				/>
+				<View style={{ flex: 1 }}>
+					<TextInput
+						contentStyle={{ fontSize: 17 }}
+						placeholder="What's happennig?"
+						style={{
+							flex: 1,
+							backgroundColor: "transparent",
+							borderWidth: 0,
+							borderBlockColor: "transparent",
+							borderBlockEndColor: "transparent",
+						}}
+						onChangeText={setPostText}
+						value={postText}
+						outlineColor="transparent"
+						activeOutlineColor="transparent"
+						activeUnderlineColor="transparent"
+						selectionColor="transparent"
+						cursorColor="purple"
+					/>
+					<View style={{ flex: 0.5 }}>
+						{imagePickerHook.image ? (
+							<>
+								<IconButton
+									icon="close"
+									size={30}
+									style={{ position: "absolute", zIndex: 2 }}
+									onPress={() =>
+										imagePickerHook.setImageUri(null)
+									}
+								/>
+								<Image
+									src={imagePickerHook.image ?? ""}
+									style={{ flex: 1 }}
+								/>
+							</>
+						) : null}
+					</View>
+				</View>
 			</View>
 			<Divider />
 			<View
