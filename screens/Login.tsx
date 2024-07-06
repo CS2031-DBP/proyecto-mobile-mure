@@ -8,6 +8,7 @@ import {
 	useNavigation,
 } from "@react-navigation/native";
 import { Button, Text, TextInput } from "react-native-paper";
+import * as SecureStore from "expo-secure-store";
 
 export default function Login() {
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
@@ -22,19 +23,20 @@ export default function Login() {
 	);
 
 	async function handleLogin() {
-		if (!email || !password) {
-			setErrors("Email and password are required");
-			return;
-		}
+		// if (!email || !password) {
+		// 	setErrors("Email and password are required");
+		// 	return;
+		// }
 
 		try {
-			const response = await login({ email, password });
+			// const response = await login({ email, password });
+			await SecureStore.setItemAsync(
+				"token",
+				process.env.EXPO_PUBLIC_TOKEN ?? " "
+			);
+			console.log(process.env.EXPO_PUBLIC_TOKEN);
 
-			if (response) {
-				Alert.alert(
-					"Login Successful",
-					"You have successfully logged in."
-				);
+			if (process.env.EXPO_PUBLIC_TOKEN) {
 				navigation.navigate("Main");
 			} else {
 				setErrors("Email or password is incorrect");

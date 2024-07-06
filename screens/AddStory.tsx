@@ -1,10 +1,20 @@
+import useImagePicker from "@/hooks/useImagePicker";
+import {
+	NavigationProp,
+	ParamListBase,
+	useNavigation,
+} from "@react-navigation/native";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import { useState } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Icon, IconButton } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AddStory() {
 	const [facing, setFacing] = useState<CameraType>("back");
 	const [permission, requestPermission] = useCameraPermissions();
+	const navigation = useNavigation<NavigationProp<ParamListBase>>();
+	const imagePickerHook = useImagePicker();
 
 	if (!permission) {
 		// Camera permissions are still loading.
@@ -30,14 +40,38 @@ export default function AddStory() {
 	return (
 		<View style={styles.container}>
 			<CameraView style={styles.camera} facing={facing}>
-				<View style={styles.buttonContainer}>
-					<TouchableOpacity
-						style={styles.button}
-						onPress={toggleCameraFacing}
+				<SafeAreaView
+					style={{
+						flex: 1,
+						flexDirection: "column",
+						justifyContent: "space-between",
+					}}
+				>
+					<IconButton
+						icon="close"
+						size={50}
+						onPress={() => navigation.goBack()}
+					/>
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "space-between",
+							alignItems: "center",
+						}}
 					>
-						<Text style={styles.text}>Flip Camera</Text>
-					</TouchableOpacity>
-				</View>
+						<IconButton
+							icon="image"
+							size={40}
+							onPress={() => imagePickerHook.pickImage()}
+						/>
+						<IconButton icon="camera-iris" size={60} />
+						<IconButton
+							icon="camera-switch"
+							size={40}
+							onPress={toggleCameraFacing}
+						/>
+					</View>
+				</SafeAreaView>
 			</CameraView>
 		</View>
 	);

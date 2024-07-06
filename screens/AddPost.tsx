@@ -13,10 +13,12 @@ import {
 	useNavigation,
 } from "@react-navigation/native";
 import { useState } from "react";
+import useImagePicker from "@/hooks/useImagePicker";
 
 export default function AddPost() {
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
 	const [postText, setPostText] = useState("");
+	const imagePickerHook = useImagePicker();
 
 	return (
 		<SafeAreaView
@@ -52,7 +54,10 @@ export default function AddPost() {
 			</View>
 			<Divider />
 			<View style={{ flexDirection: "row" }}>
-				<IconButton icon="image" />
+				<IconButton
+					icon="image"
+					onPress={() => imagePickerHook.pickImage()}
+				/>
 				<IconButton icon="microphone-outline" />
 				<IconButton icon="music" />
 			</View>
