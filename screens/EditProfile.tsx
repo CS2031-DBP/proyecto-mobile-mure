@@ -27,9 +27,9 @@ export default function EditProfile() {
 	const [showNewPassword, setShowNewPassword] = useState(false);
 	const [errors, setErrors] = useState<string | null>(null);
 
-	const handleInputChange = (field: keyof UserUpdate, value: string) => {
+	function handleInputChange(field: keyof UserUpdate, value: string) {
 		setUser((prevUser) => ({ ...prevUser, [field]: value }));
-	};
+	}
 
 	async function handleSave() {
 		if (!userContext.user) {

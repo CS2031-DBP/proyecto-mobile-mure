@@ -97,6 +97,7 @@ export default function AddPost() {
 				style={{
 					flexDirection: "row",
 					justifyContent: "space-between",
+					alignItems: "center",
 				}}
 			>
 				<IconButton
@@ -113,14 +114,26 @@ export default function AddPost() {
 					gap: 10,
 				}}
 			>
-				<Avatar.Icon icon="account" size={40} />
+				<Avatar.Icon
+					icon="account"
+					size={40}
+					style={{ marginTop: 10 }}
+				/>
 				<TextInput
 					contentStyle={{ fontSize: 17 }}
-					mode="outlined"
 					placeholder="What's happennig?"
-					style={{ flex: 1 }}
+					style={{
+						flex: 1,
+						backgroundColor: "transparent",
+						borderWidth: 0,
+						borderBlockColor: "transparent",
+					}}
 					onChangeText={setPostText}
 					value={postText}
+					outlineColor="transparent"
+					activeOutlineColor="transparent"
+					activeUnderlineColor="transparent"
+					cursorColor="purple"
 				/>
 			</View>
 			<Divider />
@@ -145,11 +158,24 @@ export default function AddPost() {
 					/>
 					<IconButton icon="music" size={bottomIconsSize} />
 				</View>
-				<IconButton
-					icon="play"
-					size={bottomIconsSize}
-					onPress={() => playSound()}
-				/>
+				{recordingUri ? (
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "center",
+						}}
+					>
+						<IconButton
+							icon="play"
+							size={bottomIconsSize}
+							onPress={() => playSound()}
+						/>
+						<IconButton
+							icon="delete"
+							onPress={() => setRecordingUri(null)}
+						/>
+					</View>
+				) : null}
 			</View>
 		</SafeAreaView>
 	);
