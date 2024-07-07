@@ -50,17 +50,17 @@ export default class Api {
 		return axios<RequestType, AxiosResponse<ResponseType>>(path, config);
 	}
 
-	public get<RequestType, ResponseType>(options: AxiosRequestConfig) {
+	public get<RequestBodyType, ResponseBodyType>(options: AxiosRequestConfig) {
 		const configOptions: AxiosRequestConfig = {
 			...options,
 			method: "get",
 		};
 
-		return this.request<RequestType, ResponseType>(configOptions);
+		return this.request<RequestBodyType, ResponseBodyType>(configOptions);
 	}
 
-	public post<RequestType, ResponseType>(
-		data: RequestType,
+	public post<RequestBodyType, ResponseBodyType>(
+		data: RequestBodyType,
 		options: AxiosRequestConfig
 	) {
 		const configOptions: AxiosRequestConfig = {
@@ -69,11 +69,11 @@ export default class Api {
 			data: JSON.stringify(data),
 		};
 
-		return this.request<RequestType, ResponseType>(configOptions);
+		return this.request<RequestBodyType, ResponseBodyType>(configOptions);
 	}
 
-	public patch<RequestType, ResponseType>(
-		data: RequestType,
+	public patch<RequestBodyType, ResponseBodyType>(
+		data: RequestBodyType,
 		options: AxiosRequestConfig
 	) {
 		const configOptions: AxiosRequestConfig = {
@@ -82,7 +82,7 @@ export default class Api {
 			data: JSON.stringify(data),
 		};
 
-		return this.request<RequestType, ResponseType>(configOptions);
+		return this.request<RequestBodyType, ResponseBodyType>(configOptions);
 	}
 
 	public put(data: any, options: AxiosRequestConfig) {

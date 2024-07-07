@@ -20,7 +20,7 @@ interface SocialMediaEntityProps {
 	mode: "interactive" | "static";
 	navigation: NavigationProp<ParamListBase>;
 	style?: StyleProp<SafeAreaView>;
-	onMediaEntityPres?: () => void;
+	onMediaEntityPres?: (mediaId: number) => void;
 }
 
 export default function SearchMediaEntity(props: SocialMediaEntityProps) {

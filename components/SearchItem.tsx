@@ -7,7 +7,7 @@ export interface SearchItemProps {
 	imageUrl: string;
 	type: "song" | "album" | "artist";
 	artistName: string;
-	onPress: () => void;
+	onPress: (() => void) | ((id: number) => void);
 }
 
 export default function SearchItem(props: SearchItemProps) {

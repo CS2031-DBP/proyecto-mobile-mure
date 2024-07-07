@@ -21,6 +21,7 @@ import { Audio } from "expo-av";
 import { Image } from "react-native";
 import SearchMediaEntity from "@/components/SearchMediaEntity";
 import Search from "./Search";
+import MediaCard from "@/components/MediaCard";
 
 export default function AddPost() {
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
@@ -35,6 +36,7 @@ export default function AddPost() {
 		null
 	);
 	const [isModalVisible, setIsModalVisible] = useState(false);
+	const [mediaId, setMediaId] = useState<number | null>(null);
 
 	async function startRecording() {
 		try {
@@ -163,6 +165,11 @@ export default function AddPost() {
 							</>
 						) : null}
 					</View>
+					<View style={{ flex: 0.2 }}>
+						{mediaId ? (
+							<MediaCard mediaId={mediaId} type="song" />
+						) : null}
+					</View>
 				</View>
 			</View>
 			<Divider />
@@ -228,6 +235,7 @@ export default function AddPost() {
 						<SearchMediaEntity
 							mode="static"
 							navigation={navigation}
+							onMediaEntityPres={setMediaId}
 						/>
 					</View>
 				</Modal>

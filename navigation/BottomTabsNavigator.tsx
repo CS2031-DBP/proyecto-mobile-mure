@@ -10,7 +10,13 @@ function BottomTabsNavigator() {
 	const iconSize = 30;
 
 	return (
-		<Tab.Navigator initialRouteName="Home">
+		<Tab.Navigator
+			initialRouteName="Home"
+			screenOptions={{
+				tabBarShowLabel: false,
+				tabBarStyle: { height: 60 },
+			}}
+		>
 			<Tab.Screen
 				name="Home"
 				options={{
