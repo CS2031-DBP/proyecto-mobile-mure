@@ -3,6 +3,7 @@ export interface SignupRequest {
 	password: string;
 	name: string;
 	birthdate: string;
+	nickname: string;
 }
 
 export interface SignupResponse {

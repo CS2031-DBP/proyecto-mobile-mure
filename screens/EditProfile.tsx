@@ -12,30 +12,32 @@ import { UserUpdate } from "@/interfaces/User";
 import { useUserContext } from "@/contexts/UserContext";
 
 export default function EditProfile() {
-	const navigation = useNavigation<NavigationProp<ParamListBase>>();
-	const { user, refreshUser } = useUserContext();
-	const [userUpdate, setUserUpdate] = useState<UserUpdate>({
-		name: user?.name || "",
-		email: user?.email || "",
-		password: "",
-		profileImage: user?.profileImageUrl || "",
-	});
-	const [oldPassword, setOldPassword] = useState("");
-	const [newPassword, setNewPassword] = useState("");
-	const [showOldPassword, setShowOldPassword] = useState(false);
-	const [showNewPassword, setShowNewPassword] = useState(false);
-	const [errors, setErrors] = useState<string | null>(null);
+    const navigation = useNavigation<NavigationProp<ParamListBase>>();
+    const { user, refreshUser } = useUserContext();
+    const [userUpdate, setUserUpdate] = useState<UserUpdate>({
+        name: user?.name || "",
+        email: user?.email || "",
+        password: "",
+        profileImage: user?.profileImageUrl || "",
+        nickname: user?.nickname || ""
+    });
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [showOldPassword, setShowOldPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [errors, setErrors] = useState<string | null>(null);
 
-	useEffect(() => {
-		if (user) {
-			setUserUpdate({
-				name: user.name,
-				email: user.email,
-				password: "",
-				profileImage: user.profileImageUrl,
-			});
-		}
-	}, [user]);
+    useEffect(() => {
+        if (user) {
+            setUserUpdate({
+                name: user.name,
+                email: user.email,
+                password: "",
+                profileImage: user.profileImageUrl,
+                nickname: user.nickname
+            });
+        }
+    }, [user]);
 
 	const handleInputChange = (field: keyof UserUpdate, value: string) => {
 		setUserUpdate((prevUser) => ({ ...prevUser, [field]: value }));
