@@ -1,9 +1,12 @@
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import {
 	Avatar,
 	Button,
 	Divider,
 	IconButton,
+	Modal,
+	Portal,
+	Searchbar,
 	TextInput,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,6 +19,7 @@ import { useEffect, useState } from "react";
 import useImagePicker from "@/hooks/useImagePicker";
 import { Audio } from "expo-av";
 import { Image } from "react-native";
+import Search from "@/components/SearchMediaEntity";
 
 export default function AddPost() {
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
@@ -29,6 +33,7 @@ export default function AddPost() {
 	const [recordingUri, setRecordingUri] = useState<string | null | undefined>(
 		null
 	);
+	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	async function startRecording() {
 		try {
@@ -179,7 +184,11 @@ export default function AddPost() {
 							isRecording ? stopRecording() : startRecording();
 						}}
 					/>
-					<IconButton icon="music" size={bottomIconsSize} />
+					<IconButton
+						icon="music"
+						size={bottomIconsSize}
+						onPress={() => setIsModalVisible(true)}
+					/>
 				</View>
 				{recordingUri ? (
 					<View
@@ -200,6 +209,25 @@ export default function AddPost() {
 					</View>
 				) : null}
 			</View>
+			<Portal>
+				<Modal
+					visible={isModalVisible}
+					onDismiss={() => setIsModalVisible(false)}
+				>
+					<View
+						style={{
+							margin: 30,
+							padding: 20,
+							backgroundColor: "white",
+							borderCurve: "continuous",
+							borderRadius: 40,
+							height: "80%",
+						}}
+					>
+						<Search />
+					</View>
+				</Modal>
+			</Portal>
 		</SafeAreaView>
 	);
 }
