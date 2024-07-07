@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 import useImagePicker from "@/hooks/useImagePicker";
 import { Audio } from "expo-av";
 import { Image } from "react-native";
-import Search from "@/components/Search";
+import Search from "@/components/SearchMediaEntity";
 
 export default function AddPost() {
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
