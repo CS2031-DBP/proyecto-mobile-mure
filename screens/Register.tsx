@@ -15,6 +15,7 @@ function Register() {
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
+	const [nickname, setNickname] = useState("");
 	const [password, setPassword] = useState("");
 	const [birthdate, setBirthdate] = useState("");
 	const [errors, setErrors] = useState("");
@@ -40,6 +41,7 @@ function Register() {
 				email,
 				password,
 				birthdate,
+				nickname,
 			});
 			if (response && response.token) {
 				Alert.alert(
@@ -77,6 +79,14 @@ function Register() {
 					autoCapitalize="none"
 					style={styles.input}
 					keyboardType="email-address"
+				/>
+				<TextInput 
+					label="Nickname"
+					mode="outlined"
+					value={nickname}
+					onChangeText={setNickname}
+					accessibilityLabel="nickname"
+					style={styles.input}
 				/>
 				<TextInput
 					label="Password"

@@ -3,6 +3,7 @@ export interface UserUpdate {
 	name: string;
 	password: string;
 	email: string;
+	nickname: string,
 }
 
 export interface UserResponse {
@@ -13,6 +14,7 @@ export interface UserResponse {
 	profileImageUrl: string;
 	role: string;
 	friendsIds: number[];
+	nickname: string;
 }
 
 export interface UserFriends {
