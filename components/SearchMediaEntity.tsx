@@ -6,12 +6,7 @@ import { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleProp } from "react-native";
 import { Searchbar } from "react-native-paper";
 import SearchItem, { SearchItemProps } from "@/components/SearchItem";
-import {
-	NavigationContext,
-	NavigationProp,
-	ParamListBase,
-	useNavigation,
-} from "@react-navigation/native";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { getArtistsByName } from "@/services/artist/getArtistsByName";
 import { getAlbumsBytitle as getAlbumsByTitle } from "@/services/album/getAlbumsByTitle";
 import { PaginatedResponse } from "@/interfaces/PaginationResponse";
@@ -95,10 +90,12 @@ export default function SearchMediaEntity(props: SocialMediaEntityProps) {
 						artistName: "",
 						mode: props.mode,
 						onPress: () => {},
+						mediaId: 0,
 					};
 
 					if (isArtistResponse(result)) {
 						searchItemProps.title = result.name;
+						searchItemProps.mediaId = result.id;
 						searchItemProps.imageUrl = result.imageUrl;
 						searchItemProps.artistName = result.name;
 						searchItemProps.type = "artist";
@@ -109,6 +106,7 @@ export default function SearchMediaEntity(props: SocialMediaEntityProps) {
 					} else if (isSongResponse(result)) {
 						searchItemProps.title = result.title;
 						searchItemProps.imageUrl = result.coverImage;
+						searchItemProps.mediaId = result.id;
 						searchItemProps.artistName =
 							result.artistsNames.join(", ");
 						searchItemProps.type = "song";
@@ -118,6 +116,7 @@ export default function SearchMediaEntity(props: SocialMediaEntityProps) {
 							});
 					} else if (isAlbumResponse(result)) {
 						searchItemProps.title = result.title;
+						searchItemProps.mediaId = result.id;
 						searchItemProps.imageUrl = result.coverImage;
 						searchItemProps.artistName = result.artistName;
 						searchItemProps.type = "album";
@@ -130,6 +129,7 @@ export default function SearchMediaEntity(props: SocialMediaEntityProps) {
 					return (
 						<SearchItem
 							key={key}
+							mediaId={searchItemProps.mediaId}
 							title={searchItemProps.title}
 							imageUrl={searchItemProps.imageUrl}
 							type={searchItemProps.type}

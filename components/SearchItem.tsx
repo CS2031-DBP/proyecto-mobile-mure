@@ -2,12 +2,13 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import { IconButton } from "react-native-paper";
 
 export interface SearchItemProps {
+	mediaId: number;
 	title: string;
 	mode: "static" | "interactive";
 	imageUrl: string;
 	type: "song" | "album" | "artist";
 	artistName: string;
-	onPress: (() => void) | ((id: number) => void);
+	onPress: (id: number) => void;
 }
 
 export default function SearchItem(props: SearchItemProps) {
@@ -19,7 +20,9 @@ export default function SearchItem(props: SearchItemProps) {
 				alignItems: "center",
 				marginVertical: 5,
 			}}
-			onPress={() => (props.type == "song" ? null : props.onPress)}
+			onPress={() =>
+				props.mode == "static" ? props.onPress(props.mediaId) : null
+			}
 		>
 			<Image src={props.imageUrl} />
 			<View style={{ flex: 1 }}>
@@ -35,10 +38,7 @@ export default function SearchItem(props: SearchItemProps) {
 				)}
 			</View>
 			{props.mode == "interactive" && props.type == "song" ? (
-				<IconButton
-					icon="plus-circle-outline"
-					onPress={props.onPress}
-				/>
+				<IconButton icon="plus-circle-outline" />
 			) : null}
 		</TouchableOpacity>
 	);
