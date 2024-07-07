@@ -10,11 +10,16 @@ export default function Profile() {
     const { user, refreshUser } = useUserContext();
     const [friends, setFriends] = useState<UserResponse[]>([]);
     const [isFriend, setIsFriend] = useState<boolean>(false);
+    const [friendsCount, setFriendsCount] = useState<number>(0);
 
     const refreshFriends = async () => {
         if (user && user.friendsIds.length > 0) {
             const friendsData = await getUserFriends(user.friendsIds);
             setFriends(friendsData);
+            setFriendsCount(friendsData.length);
+        } else {
+            setFriends([]);
+            setFriendsCount(0);
         }
     };
 
@@ -43,6 +48,9 @@ export default function Profile() {
             setIsFriend={() => {}}
             friends={friends}
             setFriends={setFriends}
+            friendsCount={friendsCount}
+            setFriendsCount={setFriendsCount}
         />
     );
 }
+    

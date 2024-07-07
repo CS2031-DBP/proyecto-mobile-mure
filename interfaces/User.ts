@@ -10,7 +10,7 @@ export interface UserResponse {
 	name: string;
 	birthDate: string;
 	email: string;
-	profileImage: string;
+	profileImageUrl: string;
 	role: string;
 	friendsIds: number[];
 }

@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     View,
     Text,
+    Alert,
 } from "react-native";
 import {
     NavigationProp,
@@ -13,9 +14,11 @@ import {
     useRoute,
     useFocusEffect,
 } from "@react-navigation/native";
-import { Avatar, Button } from "react-native-paper";
+import { Avatar, Button, IconButton } from "react-native-paper";
 import { UserResponse } from "@/interfaces/User";
 import { getUserFriends } from "@/services/profile/getUserFriends";
+import { deleteFriend } from "@/services/friend/deleteFriend";
+import { addFriend } from "@/services/friend/addFriend";
 import { useUserContext } from "@/contexts/UserContext";
 
 export default function FriendList() {
@@ -56,6 +59,45 @@ export default function FriendList() {
         }
     };
 
+    const handleDeleteFriend = async (friendId: number) => {
+        Alert.alert(
+            "Remove Friend",
+            "Are you sure you want to remove this friend?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+                {
+                    text: "Remove",
+                    onPress: async () => {
+                        try {
+                            await deleteFriend(friendId);
+                            const updatedFriends = friends.filter(friend => friend.id !== friendId);
+                            setFriends(updatedFriends);
+                            await refreshUser();
+                            navigation.navigate("Profile");
+                            Alert.alert("Friend Removed", "You have successfully removed this friend.");
+                        } catch (error) {
+                            setErrors("Failed to remove friend");
+                        }
+                    },
+                },
+            ]
+        );
+    };
+
+    const handleAddFriend = async (friendId: number) => {
+        try {
+            await addFriend(friendId);
+            await refreshUser();
+            loadFriends();
+            Alert.alert("Friend Added", "You have successfully added this user as a friend.");
+        } catch (error) {
+            setErrors("Failed to add friend");
+        }
+    };
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView contentContainerStyle={{ padding: 16, marginTop: 16 }}>
@@ -66,8 +108,24 @@ export default function FriendList() {
                             key={friend.id}
                             style={{ flexDirection: "row", alignItems: "center", marginBottom: 16, padding: 16, backgroundColor: "#f9f9f9", borderRadius: 8 }}
                             onPress={() => handleFriendPress(friend.id)}
-                        >
-                            <Avatar.Image size={50} source={{ uri: friend.profileImage }} />
+                        >   
+                            <View>
+                                <Avatar.Image size={60} source={{ uri: friend.profileImageUrl }} />
+                                {currentUser.id !== friend.id && (
+                                    <IconButton
+                                        icon={currentUser.friendsIds.includes(friend.id) ? "trash-can" : "plus"}
+                                        size={15}
+                                        onPress={() => {
+                                            if (currentUser.friendsIds.includes(friend.id)) {
+                                                handleDeleteFriend(friend.id);
+                                            } else {
+                                                handleAddFriend(friend.id);
+                                            }
+                                        }}
+                                        style={{ position: 'absolute', top: -15, right: -15, backgroundColor: '#B0ACAC' }}
+                                    />
+                                )}
+                            </View>
                             <View style={{ flex: 1, marginLeft: 16 }}>
                                 <Text style={{ fontSize: 18, fontWeight: "bold" }}>{friend.name}</Text>
                                 <Text style={{ color: "gray" }}>{friend.birthDate}</Text>
