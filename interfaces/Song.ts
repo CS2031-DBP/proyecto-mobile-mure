@@ -10,4 +10,6 @@ export interface SongResponse {
 	albumTitle: string;
 	artistsNames: string[];
 	link: string;
+	artistsIds: number[];
+	albumId: number;
 }
