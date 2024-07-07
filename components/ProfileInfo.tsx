@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, View, Text, Alert } from 'react-native';
+import { SafeAreaView, ScrollView, View, Text, Alert, ActivityIndicator } from 'react-native';
 import { Avatar, Button, IconButton } from 'react-native-paper';
 import { UserResponse } from '@/interfaces/User';
 import { addFriend } from '@/services/friend/addFriend';
@@ -8,6 +8,10 @@ import { getUserFriends } from '@/services/profile/getUserFriends';
 import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
 import { getRoleFromToken } from '@/services/auth/getRoleFromToken';
 import { deleteUserById } from '@/services/profile/deleteUserById';
+import { getPostsByUserId } from '@/services/post/getPostsByUserId';
+import { PostResponse } from '@/interfaces/Post';
+import Post from '@/components/Post';
+import { useUserContext } from '@/contexts/UserContext';
 
 interface ProfileInfoProps {
     user: UserResponse;
@@ -16,12 +20,30 @@ interface ProfileInfoProps {
     setIsFriend: React.Dispatch<React.SetStateAction<boolean>>;
     friends: UserResponse[];
     setFriends: React.Dispatch<React.SetStateAction<UserResponse[]>>;
+    friendsCount: number;
+    setFriendsCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export default function ProfileInfo({ user, isCurrentUser, isFriend, setIsFriend, friends, setFriends }: ProfileInfoProps) {
+export default function ProfileInfo({
+    user,
+    isCurrentUser,
+    isFriend,
+    setIsFriend,
+    friends,
+    setFriends,
+    friendsCount,
+    setFriendsCount,
+}: ProfileInfoProps) {
     const navigation = useNavigation<NavigationProp<ParamListBase>>();
     const [errors, setErrors] = useState<string | null>(null);
     const [role, setRole] = useState<string | null>(null);
+    const [posts, setPosts] = useState<PostResponse[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [page, setPage] = useState<number>(0);
+    const [hasMore, setHasMore] = useState<boolean>(true);
+    const { refreshUser } = useUserContext();
+
+    const pageSize = 6;
 
     useEffect(() => {
         const fetchRole = async () => {
@@ -44,12 +66,34 @@ export default function ProfileInfo({ user, isCurrentUser, isFriend, setIsFriend
         }
     }, [isFriend, isCurrentUser, role, user.friendsIds, setFriends]);
 
+    const fetchPosts = async () => {
+        if (loading || !hasMore) return;
+
+        setLoading(true);
+        try {
+            const response = await getPostsByUserId(user.id, page, pageSize);
+            setPosts((prevPosts) => [...prevPosts, ...response.content]);
+            setHasMore(response.totalPages > page + 1);
+            setPage(page + 1);
+        } catch (error) {
+            console.error('Failed to load posts:', error);
+            setErrors('Failed to load posts');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchPosts();
+    }, [user.id]);
+
     const handleAddFriend = async () => {
         try {
             await addFriend(user.id);
             setIsFriend(true);
+            setFriendsCount(friendsCount + 1);
+            await refreshUser();
             Alert.alert('Friend Added', 'You have successfully added this user as a friend.');
-            navigation.navigate('Profile');
         } catch (error) {
             setErrors('Failed to add friend');
         }
@@ -59,8 +103,9 @@ export default function ProfileInfo({ user, isCurrentUser, isFriend, setIsFriend
         try {
             await deleteFriend(user.id);
             setIsFriend(false);
+            setFriendsCount(friendsCount - 1);
+            await refreshUser();
             Alert.alert('Friend Removed', 'You have successfully removed this user from your friends.');
-            navigation.navigate('Profile');
         } catch (error) {
             setErrors('Failed to delete friend');
         }
@@ -99,21 +144,55 @@ export default function ProfileInfo({ user, isCurrentUser, isFriend, setIsFriend
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', paddingTop: 24 }}>
             <View>
                 {!isCurrentUser && (
-                    <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%'}}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
                         <IconButton icon="arrow-left" size={24} onPress={() => navigation.navigate('Profile')} />
-                        <Text style={{ fontSize: 20, fontWeight: 'bold'}}>User Profile</Text>
+                        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>User Profile</Text>
                     </View>
                 )}
             </View>
-            <ScrollView contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 20, paddingTop: 8}}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
-                    <Avatar.Image size={100} source={{ uri: user.profileImage }} style={{ marginRight: 20 }} />
-                    <View style={{ flex: 1 }}>
+            <ScrollView
+                contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 20, paddingTop: 8 }}
+                onScroll={({ nativeEvent }) => {
+                    const isCloseToBottom = nativeEvent.layoutMeasurement.height + nativeEvent.contentOffset.y >= nativeEvent.contentSize.height - 20;
+                    if (isCloseToBottom && !loading && hasMore) {
+                        fetchPosts();
+                    }
+                }}
+                scrollEventThrottle={400}
+            >
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                    <View style={{
+                        position: 'relative',
+                        width: 100,
+                        height: 100,
+                        overflow: 'hidden',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}>
+                        <Avatar.Image size={80} source={{ uri: user.profileImageUrl }} />
+                        {!isFriend && !isCurrentUser ? (
+                            <IconButton 
+                                icon="plus" 
+                                size={15} 
+                                style={{ position: 'absolute', top: -5, right: -5, backgroundColor: '#B0ACAC' }} 
+                                onPress={handleAddFriend}
+                            />
+                        ) : null}
+                        {isFriend && !isCurrentUser ? (
+                            <IconButton 
+                                icon="trash-can" 
+                                size={15} 
+                                style={{ position: 'absolute', top: -5, right: -5, backgroundColor: '#B0ACAC' }} 
+                                onPress={handleDeleteFriend}
+                            />
+                        ) : null}
+                    </View>
+                    <View style={{ flex: 1, marginLeft: 10 }}>
                         <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'left', marginBottom: 5 }}>{user.name}</Text>
                         <Text style={{ fontSize: 18, color: 'gray', textAlign: 'left' }}>{user.birthDate}</Text>
                     </View>
                     <View style={{ alignItems: 'center' }}>
-                        <Text style={{ fontSize: 18 }}>{user.friendsIds.length} Friends</Text>
+                        <Text style={{ fontSize: 18 }}>{friendsCount} Friends</Text>
                         {(isFriend || isCurrentUser || role === 'ROLE_ADMIN') && (
                             <Button mode="outlined" onPress={() => navigation.navigate('FriendList', { friendIds: user.friendsIds })} style={{ marginTop: 4 }}>
                                 View Friends
@@ -137,23 +216,26 @@ export default function ProfileInfo({ user, isCurrentUser, isFriend, setIsFriend
                                 Delete Profile
                             </Button>
                         </View>
-                    ) : isFriend ? (
-                        <>
-                            <Button mode="contained" onPress={handleDeleteFriend} style={{ width: '60%' }}>
-                                Delete Friend
-                            </Button>
-                        </>
-                    ) : (
-                        <Button mode="contained" onPress={handleAddFriend} style={{ width: '60%' }}>
-                            Add Friend
-                        </Button>
-                    )}
+                    ) : null}
                     {role === 'ROLE_ADMIN' && !isCurrentUser && (
                         <Button mode="contained" onPress={handleDeleteProfile} style={{ width: '60%', marginTop: 10 }}>
                             Delete Profile
                         </Button>
                     )}
                 </View>
+                <View style={{ width: '100%', marginTop: 20 }}>
+                    {posts.length > 0 ? (
+                        posts.map((post) => <Post key={post.id} post={post} />)
+                    ) : (
+                        <Text style={{ color: 'gray', textAlign: 'center' }}>No posts available</Text>
+                    )}
+                    {loading && (
+                        <View style={{ padding: 16 }}>
+                            <ActivityIndicator size="large" color="#0000ff" />
+                        </View>
+                    )}
+                </View>
+
             </ScrollView>
         </SafeAreaView>
     );

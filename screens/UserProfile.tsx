@@ -5,6 +5,7 @@ import { getUserById } from '@/services/profile/getUserById';
 import { UserResponse } from '@/interfaces/User';
 import ProfileInfo from '@/components/ProfileInfo';
 import { useUserContext } from '@/contexts/UserContext';
+import { getUserFriends } from '@/services/profile/getUserFriends';
 
 export default function UserProfile() {
     const route = useRoute();
@@ -15,6 +16,7 @@ export default function UserProfile() {
     const [friends, setFriends] = useState<UserResponse[]>([]);
     const [isFriend, setIsFriend] = useState<boolean>(false);
     const [errors, setErrors] = useState<string | null>(null);
+    const [friendsCount, setFriendsCount] = useState<number>(0);
 
     const loadUserData = async () => {
         try {
@@ -32,6 +34,9 @@ export default function UserProfile() {
             if (friendStatus) {
                 const friendsData = await getUserFriends(userData.friendsIds);
                 setFriends(friendsData);
+                setFriendsCount(friendsData.length);
+            } else {
+                setFriendsCount(userData.friendsIds.length);
             }
         } catch (error) {
             setErrors("Failed to load user data");
@@ -41,7 +46,7 @@ export default function UserProfile() {
     useFocusEffect(
         useCallback(() => {
             loadUserData();
-        }, [userId])
+        }, [userId, currentUser])
     );
 
     return (
@@ -54,6 +59,8 @@ export default function UserProfile() {
                     setIsFriend={setIsFriend}
                     friends={friends}
                     setFriends={setFriends}
+                    friendsCount={friendsCount}
+                    setFriendsCount={setFriendsCount}
                 />
             ) : (
                 <Text>Loading...</Text>

@@ -14,7 +14,7 @@ export default function EditProfile() {
         name: user?.name || "",
         email: user?.email || "",
         password: "",
-        profileImage: user?.profileImage || "",
+        profileImage: user?.profileImageUrl || "",
     });
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -28,7 +28,7 @@ export default function EditProfile() {
                 name: user.name,
                 email: user.email,
                 password: "",
-                profileImage: user.profileImage,
+                profileImage: user.profileImageUrl,
             });
         }
     }, [user]);
