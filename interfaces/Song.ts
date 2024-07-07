@@ -9,4 +9,5 @@ export interface SongResponse {
 	coverImage: string;
 	albumTitle: string;
 	artistsNames: string[];
+	link: string;
 }

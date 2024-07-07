@@ -5,11 +5,12 @@ import Login from "@/screens/Login";
 import BottomTabsNavigator from "./BottomTabsNavigator";
 import AddPost from "@/screens/AddPost";
 import AddStory from "@/screens/AddStory";
+import AddPlaylist from "@/screens/AddPlaylist";
+import EditPlaylist from "@/screens/EditPlaylist";
 import EditProfile from "@/screens/EditProfile";
 import UserProfile from "@/screens/UserProfile";
 import FriendList from "@/screens/FriendList";
 import { PaperProvider } from "react-native-paper";
-import Profile from "@/screens/Profile";
 
 const Stack = createNativeStackNavigator();
 
@@ -56,13 +57,23 @@ export default function AppNavigation() {
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
+						name="AddPlaylist"
+						component={AddPlaylist}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="EditPlaylist"
+						component={EditPlaylist}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
 						name="EditProfile"
 						component={EditProfile}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
 						name="UserProfile"
-						component={Profile}
+						component={UserProfile}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen

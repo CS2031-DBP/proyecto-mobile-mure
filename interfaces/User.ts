@@ -25,3 +25,12 @@ export interface UserFriends {
 export interface IsFriendResponse {
 	isFriend: boolean;
 }
+
+export interface ProfileInfoProps {
+    user: UserResponse;
+    isCurrentUser: boolean;
+    isFriend: boolean;
+    setIsFriend: React.Dispatch<React.SetStateAction<boolean>>;
+    friends: UserResponse[];
+    setFriends: React.Dispatch<React.SetStateAction<UserResponse[]>>;
+}

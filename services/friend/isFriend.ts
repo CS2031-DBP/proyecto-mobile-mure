@@ -4,7 +4,7 @@ import { IsFriendResponse } from "@/interfaces/User";
 
 const api = new Api({});
 
-export async function isFriend(userId: number) {
+export async function checkFriendStatus(userId: number) {
 	const options: AxiosRequestConfig = {
 		url: `/user/me/friends/${userId}`,
 	};
