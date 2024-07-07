@@ -18,7 +18,7 @@ export default function Search() {
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
 	return (
-		<SafeAreaView style={{flex: 1, padding: 5}}>
+		<SafeAreaView style={{ flex: 1, padding: 5 }}>
 			<SearchMediaEntity mode={"interactive"} navigation={navigation} />
 		</SafeAreaView>
 	);
