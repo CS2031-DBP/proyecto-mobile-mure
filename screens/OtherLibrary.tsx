@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { SafeAreaView, ScrollView, Text } from 'react-native';
 import { PlaylistResponse } from '@/interfaces/Playlist';
 import { getPlaylistsByUserId } from '@/services/playlist/getPlaylistByUserId';
 import Playlist from '@/components/Playlist';
@@ -15,18 +15,22 @@ export default function OtherLibrary() {
     const [playlists, setPlaylists] = useState<PlaylistResponse[]>([]);
     const [errors, setErrors] = useState<string | null>(null);
 
-    useEffect(() => {
-        const loadPlaylists = async () => {
-            try {
-                const playlistsData = await getPlaylistsByUserId(userId);
-                setPlaylists(playlistsData);
-            } catch (error) {
-                setErrors('Failed to load playlists');
-            }
-        };
+    const loadPlaylists = async () => {
+        try {
+            const playlistsData = await getPlaylistsByUserId(userId);
+            setPlaylists(playlistsData);
+        } catch (error) {
+            setErrors('Failed to load playlists');
+        }
+    };
 
+    useEffect(() => {
         loadPlaylists();
     }, [userId]);
+
+    const handleDelete = () => {
+        loadPlaylists();
+    };
 
     return (
         <SafeAreaView style={{ flex: 1, marginTop: 16 }}>
@@ -35,7 +39,7 @@ export default function OtherLibrary() {
                     <Text style={{ color: 'red' }}>{errors}</Text>
                 ) : (
                     playlists.map((playlist) => (
-                        <Playlist key={playlist.id} playlist={playlist} onDelete={() => {}}/>
+                        <Playlist key={playlist.id} playlist={playlist} onDelete={handleDelete}/>
                     ))
                 )}
             </ScrollView>
