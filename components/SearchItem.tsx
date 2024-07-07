@@ -13,11 +13,11 @@ export interface SearchItemProps {
 export default function SearchItem(props: SearchItemProps) {
 	return (
 		<TouchableOpacity
-			style={{ flex: 1, flexDirection: "row" }}
+			style={{ flex: 1, flexDirection: "row", alignItems: "center" }}
 			onPress={() => (props.type == "song" ? null : props.onPress)}
 		>
 			<Image src={props.imageUrl} />
-			<View>
+			<View style={{ flex: 1 }}>
 				<Text>{props.title}</Text>
 				{props.type == "album" ? (
 					<Text>Album • {props.artistName}</Text>

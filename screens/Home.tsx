@@ -5,7 +5,7 @@ import {
 } from "@react-navigation/native";
 import { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { FAB, Portal, Provider, Text } from "react-native-paper";
+import { FAB, IconButton, Portal, Provider, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 function Home() {
@@ -15,16 +15,19 @@ function Home() {
 	return (
 		<Provider>
 			<SafeAreaView style={styles.areaContainer}>
-				<View>
+				<View
+					style={{
+						flex: 1,
+						flexDirection: "row",
+						justifyContent: "space-between",
+					}}
+				>
 					<Text style={styles.title}>Mure</Text>
-				</View>
-				<View>
-					{/* <Stories
-					stories={}
-					defaultInterval={1500}
-					width={432}
-					height={768}
-					/> */}
+					<IconButton
+						icon="magnify"
+						size={30}
+						onPress={() => navigation.navigate("Search")}
+					/>
 				</View>
 				<ScrollView></ScrollView>
 				<Portal>
@@ -60,7 +63,7 @@ const styles = StyleSheet.create({
 	},
 	areaContainer: {
 		flex: 1,
-		padding: 5,
+		padding: 10,
 	},
 });
 

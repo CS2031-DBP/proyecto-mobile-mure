@@ -17,6 +17,7 @@ import { Album, AlbumProps } from "@/screens/Album";
 import AddSongToPlaylist, {
 	AddSongToPlaylistProps,
 } from "@/screens/AddSongToPlaylist";
+import Search from "@/screens/Search";
 
 type RootStackParamList = {
 	Home: undefined;
@@ -35,6 +36,7 @@ type RootStackParamList = {
 	Artist: ArtistProps;
 	Album: AlbumProps;
 	AddSongToPlaylist: AddSongToPlaylistProps;
+	Search: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -130,6 +132,11 @@ export default function AppNavigation() {
 						component={AddSongToPlaylist}
 						options={{ headerShown: false }}
 						initialParams={{ songId: -1 }}
+					/>
+					<Stack.Screen
+						name="Search"
+						component={Search}
+						options={{ headerShown: false }}
 					/>
 				</Stack.Navigator>
 			</NavigationContainer>
