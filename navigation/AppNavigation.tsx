@@ -14,7 +14,9 @@ import OtherLibrary from "@/screens/OtherLibrary";
 import { PaperProvider } from "react-native-paper";
 import Artist, { ArtistProps } from "@/screens/Artist";
 import { Album, AlbumProps } from "@/screens/Album";
-import { AddSongToPlaylistProps } from "@/screens/AddSongToPlaylist";
+import AddSongToPlaylist, {
+	AddSongToPlaylistProps,
+} from "@/screens/AddSongToPlaylist";
 
 type RootStackParamList = {
 	Home: undefined;
@@ -125,8 +127,7 @@ export default function AppNavigation() {
 					/>
 					<Stack.Screen
 						name="AddSongToPlaylist"
-						// @ts-expect-error
-						component={addSongToPlaylist}
+						component={AddSongToPlaylist}
 						options={{ headerShown: false }}
 						initialParams={{ songId: -1 }}
 					/>
