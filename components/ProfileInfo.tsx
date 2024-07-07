@@ -72,6 +72,12 @@ export default function ProfileInfo({ user, isCurrentUser, isFriend, setIsFriend
                                 View Friends
                             </Button>
                         )}
+                        {(isFriend) && (
+                           <Button mode="contained" onPress={() => navigation.navigate('OtherLibrary', { userId: user.id })} style={{ width: '100%' }}>
+                           View Playlists
+                            </Button>
+                        )}
+                        
                     </View>
                 </View>
                 {errors ? <Text style={{ color: 'red', textAlign: 'center', marginVertical: 16 }}>{errors}</Text> : null}
@@ -81,9 +87,11 @@ export default function ProfileInfo({ user, isCurrentUser, isFriend, setIsFriend
                             Edit Profile
                         </Button>
                     ) : isFriend ? (
-                        <Button mode="contained" onPress={handleDeleteFriend} style={{ width: '60%' }}>
-                            Delete Friend
-                        </Button>
+                        <>
+                            <Button mode="contained" onPress={handleDeleteFriend} style={{ width: '60%', marginBottom: 10 }}>
+                                Delete Friend
+                            </Button>
+                        </>
                     ) : (
                         <Button mode="contained" onPress={handleAddFriend} style={{ width: '60%' }}>
                             Add Friend

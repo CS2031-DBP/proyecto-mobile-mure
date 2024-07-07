@@ -10,6 +10,7 @@ import EditPlaylist from "@/screens/EditPlaylist";
 import EditProfile from "@/screens/EditProfile";
 import UserProfile from "@/screens/UserProfile";
 import FriendList from "@/screens/FriendList";
+import OtherLibrary from "@/screens/OtherLibrary";
 import { PaperProvider } from "react-native-paper";
 
 const Stack = createNativeStackNavigator();
@@ -79,6 +80,11 @@ export default function AppNavigation() {
 					<Stack.Screen
 						name="FriendList"
 						component={FriendList}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="OtherLibrary"
+						component={OtherLibrary}
 						options={{ headerShown: false }}
 					/>
 				</Stack.Navigator>
