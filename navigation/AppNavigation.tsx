@@ -14,7 +14,6 @@ import OtherLibrary from "@/screens/OtherLibrary";
 import { PaperProvider } from "react-native-paper";
 import Artist, { ArtistProps } from "@/screens/Artist";
 import { Album, AlbumProps } from "@/screens/Album";
-import { addSongToPlaylist } from "@/services/playlist/addSongToPlaylist";
 import { AddSongToPlaylistProps } from "@/screens/AddSongToPlaylist";
 
 type RootStackParamList = {
