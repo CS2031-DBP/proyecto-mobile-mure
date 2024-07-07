@@ -19,7 +19,8 @@ import { useEffect, useState } from "react";
 import useImagePicker from "@/hooks/useImagePicker";
 import { Audio } from "expo-av";
 import { Image } from "react-native";
-import Search from "@/components/SearchMediaEntity";
+import SearchMediaEntity from "@/components/SearchMediaEntity";
+import Search from "./Search";
 
 export default function AddPost() {
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
@@ -216,15 +217,18 @@ export default function AddPost() {
 				>
 					<View
 						style={{
-							margin: 30,
-							padding: 20,
+							margin: 40,
+							padding: 5,
 							backgroundColor: "white",
 							borderCurve: "continuous",
 							borderRadius: 40,
 							height: "80%",
 						}}
 					>
-						<Search />
+						<SearchMediaEntity
+							mode="static"
+							navigation={navigation}
+						/>
 					</View>
 				</Modal>
 			</Portal>

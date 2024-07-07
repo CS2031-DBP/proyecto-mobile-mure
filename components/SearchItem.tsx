@@ -3,7 +3,7 @@ import { IconButton } from "react-native-paper";
 
 export interface SearchItemProps {
 	title: string;
-	mode: "picker" | "interactive";
+	mode: "static" | "interactive";
 	imageUrl: string;
 	type: "song" | "album" | "artist";
 	artistName: string;
@@ -13,12 +13,19 @@ export interface SearchItemProps {
 export default function SearchItem(props: SearchItemProps) {
 	return (
 		<TouchableOpacity
-			style={{ flex: 1, flexDirection: "row", alignItems: "center" }}
+			style={{
+				flex: 1,
+				flexDirection: "row",
+				alignItems: "center",
+				marginVertical: 5,
+			}}
 			onPress={() => (props.type == "song" ? null : props.onPress)}
 		>
 			<Image src={props.imageUrl} />
 			<View style={{ flex: 1 }}>
-				<Text>{props.title}</Text>
+				<Text style={{ fontSize: 16, fontWeight: 500 }}>
+					{props.title}
+				</Text>
 				{props.type == "album" ? (
 					<Text>Album • {props.artistName}</Text>
 				) : props.type == "artist" ? (
