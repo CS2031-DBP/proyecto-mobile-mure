@@ -2,9 +2,10 @@ export interface SongInfoForPostDto {
     title: string;
     url: string;
     coverUrl: string;
-    artist: string;
+    artistsNames: string[];
     duration: string;
     genre: string;
+    link: string;
 }
 
 export interface AlbumInfoForPostDto {
@@ -14,6 +15,7 @@ export interface AlbumInfoForPostDto {
     artist: string;
     duration: string;
     songs: string[];
+    link: string;
 }
 
 export interface PostResponse {
@@ -21,7 +23,7 @@ export interface PostResponse {
     owner: string;
     ownerId: number;
     profileImage: string;
-    createdAt: string; // Assuming it's a string, convert to Date if necessary
+    createdAt: string;
     song: SongInfoForPostDto;
     album: AlbumInfoForPostDto;
     likes: number;

@@ -12,7 +12,7 @@ import {
 	useNavigation,
 } from "@react-navigation/native";
 import { getRoleFromToken } from "@/services/auth/getRoleFromToken";
-import { Button } from "react-native-paper";
+import { IconButton, Button } from "react-native-paper";
 
 interface PlaylistProps {
 	playlist: PlaylistResponse;
@@ -130,22 +130,14 @@ export default function Playlist({ playlist, onDelete }: PlaylistProps) {
 								marginBottom: 16,
 							}}
 						>
-							by {user?.name}
+							by {user?.nickname}
 						</Text>
 					)}
 				</View>
 				{(user?.id === playlist.userId || role === "ROLE_ADMIN") && (
 					<View style={{ flexDirection: "row" }}>
-						<Button
-							mode="contained"
-							onPress={handleEdit}
-							style={{ marginRight: 8 }}
-						>
-							Edit
-						</Button>
-						<Button mode="contained" onPress={handleDelete}>
-							Delete
-						</Button>
+						<IconButton icon="pencil" size={20} onPress={handleEdit} iconColor="#750B97" />
+						<IconButton icon="delete" size={20} onPress={handleDelete} iconColor="#750B97" />
 					</View>
 				)}
 			</View>

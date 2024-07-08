@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, TextInput, Button, FlatList, Text, View, Alert } from 'react-native';
+import { SafeAreaView, ScrollView, TextInput, Text, View, Alert } from 'react-native';
+import { Button, IconButton } from 'react-native-paper';
 import { getSongsByTitle } from '@/services/song/getSongsByTitle';
 import { addSongToPlaylist } from '@/services/playlist/addSongToPlaylist';
 import { removeSongFromPlaylist } from '@/services/playlist/removeSongFromPlaylist';
@@ -85,47 +86,70 @@ export default function EditPlaylist() {
 
     return (
         <SafeAreaView style={{ flex: 1, padding: 16, marginTop: 32 }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 16 }}>Edit Playlist: {playlist.name}</Text>
-            <TextInput
-                placeholder="Enter song title"
-                value={title}
-                onChangeText={setTitle}
-                style={{ marginBottom: 16, padding: 8, borderColor: 'gray', borderWidth: 1, borderRadius: 4 }}
-            />
-            <Button title="Search" onPress={handleSearch} />
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                <IconButton
+                    icon="arrow-left"
+                    size={24}
+                    onPress={() => navigation.goBack()}
+                />
+                <Text style={{ fontSize: 24, fontWeight: 'bold', flex: 1, textAlign: 'center', marginRight: 32 }}>{playlist.name}</Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                <TextInput
+                    placeholder="Enter song title"
+                    value={title}
+                    onChangeText={setTitle}
+                    style={{ flex: 1, padding: 8, borderColor: 'gray', borderWidth: 1, borderRadius: 4 }}
+                />
+                <Button mode="contained" onPress={handleSearch} style={{ marginLeft: 8 }}>
+                    Search
+                </Button>
+            </View>
             {error && <Text style={{ color: 'red' }}>{error}</Text>}
 
-            <FlatList
-                data={songs}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 16, borderBottomColor: 'gray', borderBottomWidth: 1 }}>
-                        <View>
-                            <Text style={{ fontSize: 16 }}>{item.title}</Text>
-                            <Text style={{ fontSize: 14, color: 'gray' }}>{item.artistsNames.join(', ')}</Text>
-                        </View>
-                        <Button title="Add" onPress={() => handleAddSong(item)} />
+            <ScrollView>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <View style={{ flex: 1, marginRight: 8 }}>
+                        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>Search Results</Text>
+                        <ScrollView>
+                            {songs.map((item) => (
+                                <View key={item.id} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 8, borderBottomColor: 'gray', borderBottomWidth: 1 }}>
+                                    <View>
+                                        <Text style={{ fontSize: 16 }}>{item.title}</Text>
+                                        <Text style={{ fontSize: 14, color: 'gray' }}>{item.artistsNames.join(', ')}</Text>
+                                    </View>
+                                    <IconButton
+                                        icon="plus"
+                                        size={24}
+                                        onPress={() => handleAddSong(item)}
+                                    />
+                                </View>
+                            ))}
+                        </ScrollView>
                     </View>
-                )}
-                ListHeaderComponent={<Text style={{ fontSize: 20, fontWeight: 'bold' }}>Search Results</Text>}
-            />
-
-            <FlatList
-                data={selectedSongs}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 16, borderBottomColor: 'gray', borderBottomWidth: 1 }}>
-                        <View>
-                            <Text style={{ fontSize: 16 }}>{item.title}</Text>
-                            <Text style={{ fontSize: 14, color: 'gray' }}>{item.artistsNames.join(', ')}</Text>
-                        </View>
-                        <Button title="Remove" onPress={() => handleRemoveSong(item.id)} />
+                    <View style={{ flex: 1, marginLeft: 8 }}>
+                        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>Selected Songs</Text>
+                        <ScrollView>
+                            {selectedSongs.map((item) => (
+                                <View key={item.id} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 8, borderBottomColor: 'gray', borderBottomWidth: 1 }}>
+                                    <View>
+                                        <Text style={{ fontSize: 16 }}>{item.title}</Text>
+                                        <Text style={{ fontSize: 14, color: 'gray' }}>{item.artistsNames.join(', ')}</Text>
+                                    </View>
+                                    <IconButton
+                                        icon="minus"
+                                        size={24}
+                                        onPress={() => handleRemoveSong(item.id)}
+                                    />
+                                </View>
+                            ))}
+                        </ScrollView>
                     </View>
-                )}
-                ListHeaderComponent={<Text style={{ fontSize: 20, fontWeight: 'bold' }}>Selected Songs</Text>}
-            />
-
-            <Button title="Save Changes" onPress={handleSave} />
+                </View>
+            </ScrollView>
+            <Button mode="contained" onPress={handleSave} style={{ marginTop: 16 }}>
+                Save Changes
+            </Button>
         </SafeAreaView>
     );
 }

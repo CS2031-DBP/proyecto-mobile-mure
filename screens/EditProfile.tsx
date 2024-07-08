@@ -92,10 +92,18 @@ export default function EditProfile() {
                     Edit picture or avatar
                 </Button>
                 <TextInput
-                    label="Name"
+                    label="Full Name"
                     mode="outlined"
                     value={userUpdate.name}
                     onChangeText={(text) => handleInputChange("name", text)}
+                    style={{ width: "100%", marginBottom: 16 }}
+                    autoCapitalize="none"
+                />
+                <TextInput
+                    label="Nickname"
+                    mode="outlined"
+                    value={userUpdate.nickname}
+                    onChangeText={(text) => handleInputChange("nickname", text)}
                     style={{ width: "100%", marginBottom: 16 }}
                     autoCapitalize="none"
                 />
