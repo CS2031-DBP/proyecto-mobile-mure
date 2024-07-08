@@ -97,7 +97,7 @@ export default function MediaCard(props: MediaCard) {
 					style={{ position: "absolute", right: 0, bottom: 0 }}
 				>
 					<IconButton
-						icon="headphones"
+						icon="album"
 						size={24}
 						onPress={openLink}
 					/>

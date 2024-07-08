@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Alert, View } from "react-native";
 import {
 	Avatar,
 	Button,
@@ -6,7 +6,6 @@ import {
 	IconButton,
 	Modal,
 	Portal,
-	Searchbar,
 	TextInput,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -20,12 +19,14 @@ import useImagePicker from "@/hooks/useImagePicker";
 import { Audio } from "expo-av";
 import { Image } from "react-native";
 import SearchMediaEntity from "@/components/SearchMediaEntity";
-import Search from "./Search";
 import MediaCard from "@/components/MediaCard";
+import createPost from "@/services/post/createPost";
+import { useUserContext } from "@/contexts/UserContext";
+import { PostRequest } from "@/interfaces/Post";
 
 export default function AddPost() {
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
-	const [postText, setPostText] = useState("");
+	const [description, setDescription] = useState("");
 	const imagePickerHook = useImagePicker();
 	const bottomIconsSize = 27;
 	const [recording, setRecording] = useState<Audio.Recording>();
@@ -37,6 +38,7 @@ export default function AddPost() {
 	);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [mediaId, setMediaId] = useState<number | null>(null);
+	const userContext = useUserContext();
 
 	async function startRecording() {
 		try {
@@ -89,6 +91,22 @@ export default function AddPost() {
 		await sound.playAsync();
 	}
 
+	async function handlePost() {
+		try {
+			if (!userContext.user) throw new Error("User not found");
+
+			const postRequest: PostRequest = {
+				userId: userContext.user.id,
+				description,
+			};
+			await createPost(postRequest);
+			Alert.alert("Post created successfully");
+			navigation.goBack();
+		} catch (error) {
+			console.error("Failed to create post", error);
+		}
+	}
+
 	useEffect(() => {
 		return sound
 			? () => {
@@ -114,7 +132,9 @@ export default function AddPost() {
 					size={30}
 					onPress={() => navigation.goBack()}
 				/>
-				<Button mode="contained">Post</Button>
+				<Button mode="contained" onPress={handlePost}>
+					Post
+				</Button>
 			</View>
 			<View
 				style={{
@@ -139,8 +159,8 @@ export default function AddPost() {
 							borderBlockColor: "transparent",
 							borderBlockEndColor: "transparent",
 						}}
-						onChangeText={setPostText}
-						value={postText}
+						onChangeText={setDescription}
+						value={description}
 						outlineColor="transparent"
 						activeOutlineColor="transparent"
 						activeUnderlineColor="transparent"
@@ -151,9 +171,15 @@ export default function AddPost() {
 						{imagePickerHook.image ? (
 							<>
 								<IconButton
-									icon="close"
+									icon="delete"
+									iconColor="red"
 									size={30}
-									style={{ position: "absolute", zIndex: 2 }}
+									style={{
+										position: "absolute",
+										zIndex: 2,
+										top: 80,
+										left: -60,
+									}}
 									onPress={() =>
 										imagePickerHook.setImageUri(null)
 									}
@@ -165,9 +191,23 @@ export default function AddPost() {
 							</>
 						) : null}
 					</View>
-					<View style={{ flex: 0.2 }}>
+					<View>
 						{mediaId ? (
-							<MediaCard mediaId={mediaId} type="song" />
+							<>
+								<IconButton
+									icon="delete"
+									iconColor="red"
+									size={30}
+									style={{
+										position: "absolute",
+										zIndex: 2,
+										top: 40,
+										left: -60,
+									}}
+									onPress={() => setMediaId(null)}
+								/>
+								<MediaCard mediaId={mediaId} type="song" />
+							</>
 						) : null}
 					</View>
 				</View>
@@ -234,8 +274,10 @@ export default function AddPost() {
 					>
 						<SearchMediaEntity
 							mode="static"
-							navigation={navigation}
-							onMediaEntityPres={setMediaId}
+							onMediaEntityPres={(mediaId) => {
+								setMediaId(mediaId);
+								setIsModalVisible(false);
+							}}
 						/>
 					</View>
 				</Modal>

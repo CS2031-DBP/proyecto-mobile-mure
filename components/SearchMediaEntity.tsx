@@ -13,7 +13,7 @@ import { PaginatedResponse } from "@/interfaces/PaginationResponse";
 
 interface SocialMediaEntityProps {
 	mode: "interactive" | "static";
-	navigation: NavigationProp<ParamListBase>;
+	navigation?: NavigationProp<ParamListBase>;
 	style?: StyleProp<SafeAreaView>;
 	onMediaEntityPres?: (mediaId: number) => void;
 }
@@ -78,7 +78,7 @@ export default function SearchMediaEntity(props: SocialMediaEntityProps) {
 				onChangeText={setSearchText}
 				icon={props.mode === "interactive" ? "arrow-left" : "magnify"}
 				onIconPress={() =>
-					props.mode === "interactive" && props.navigation.goBack()
+					props.mode === "interactive" && props.navigation?.goBack()
 				}
 			/>
 			<ScrollView style={{ flex: 1, flexDirection: "column" }}>
@@ -100,7 +100,7 @@ export default function SearchMediaEntity(props: SocialMediaEntityProps) {
 						searchItemProps.artistName = result.name;
 						searchItemProps.type = "artist";
 						searchItemProps.onPress = () =>
-							props.navigation.navigate("Artist", {
+							props.navigation?.navigate("Artist", {
 								artistId: result.id,
 							});
 					} else if (isSongResponse(result)) {
@@ -111,7 +111,7 @@ export default function SearchMediaEntity(props: SocialMediaEntityProps) {
 							result.artistsNames.join(", ");
 						searchItemProps.type = "song";
 						searchItemProps.onPress = () =>
-							props.navigation.navigate("AddSongToPlaylist", {
+							props.navigation?.navigate("AddSongToPlaylist", {
 								songId: result.id,
 							});
 					} else if (isAlbumResponse(result)) {
@@ -121,7 +121,7 @@ export default function SearchMediaEntity(props: SocialMediaEntityProps) {
 						searchItemProps.artistName = result.artistName;
 						searchItemProps.type = "album";
 						searchItemProps.onPress = () =>
-							props.navigation.navigate("Album", {
+							props.navigation?.navigate("Album", {
 								albumId: result.id,
 							});
 					}
@@ -136,7 +136,7 @@ export default function SearchMediaEntity(props: SocialMediaEntityProps) {
 							artistName={searchItemProps.artistName}
 							onPress={
 								props.navigation == undefined
-									? searchItemProps.onPress
+									? () => props.onMediaEntityPres?.(result.id)
 									: () => props.navigation
 							}
 							mode={searchItemProps.mode}

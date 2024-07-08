@@ -25,7 +25,9 @@ export default class Api {
 		const path = this.basePath + options.url;
 
 		const headers: RawAxiosRequestHeaders = {
-			"Content-type": "application/json",
+			// "Content-type": "application/json",
+			"Content-Type":
+				configOptions.headers?.["Content-Type"] || "application/json",
 		};
 
 		const noAuthRequired = ["/login", "/signin"];
@@ -66,10 +68,27 @@ export default class Api {
 		const configOptions: AxiosRequestConfig = {
 			...options,
 			method: "post",
-			data: JSON.stringify(data),
+			data: data,
 		};
 
 		return this.request<RequestBodyType, ResponseBodyType>(configOptions);
+	}
+
+	public postForm<RequestBodyType, ResponseBodyType>(
+		data: RequestBodyType,
+		options: AxiosRequestConfig
+	) {
+		const configOptions: AxiosRequestConfig = {
+			...options,
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		};
+
+		return this.post<RequestBodyType, ResponseBodyType>(
+			data,
+			configOptions
+		);
 	}
 
 	public patch<RequestBodyType, ResponseBodyType>(
