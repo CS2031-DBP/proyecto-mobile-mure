@@ -80,7 +80,7 @@ function Register() {
 					style={styles.input}
 					keyboardType="email-address"
 				/>
-				<TextInput 
+				<TextInput
 					label="Nickname"
 					mode="outlined"
 					value={nickname}
