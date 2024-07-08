@@ -6,8 +6,8 @@ import {
 } from "@react-navigation/native";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import { useState } from "react";
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Icon, IconButton } from "react-native-paper";
+import { Button, StyleSheet, Text, View } from "react-native";
+import { IconButton } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AddStory() {

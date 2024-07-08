@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Alert, SafeAreaView, ScrollView, View } from "react-native";
-import { NavigationProp, ParamListBase, useNavigation } from "@react-navigation/native";
+import {
+	NavigationProp,
+	ParamListBase,
+	useNavigation,
+} from "@react-navigation/native";
 import { Button, Text, TextInput, Avatar } from "react-native-paper";
 import { editProfile } from "@/services/profile/editProfile";
 import { verifyPassword } from "@/services/profile/verifyPassword";
@@ -35,44 +39,47 @@ export default function EditProfile() {
         }
     }, [user]);
 
-    const handleInputChange = (field: keyof UserUpdate, value: string) => {
-        setUserUpdate((prevUser) => ({ ...prevUser, [field]: value }));
-    };
+	const handleInputChange = (field: keyof UserUpdate, value: string) => {
+		setUserUpdate((prevUser) => ({ ...prevUser, [field]: value }));
+	};
 
-    const handleSave = async () => {
-        if (!user) {
-            setErrors("User data not loaded");
-            return;
-        }
+	const handleSave = async () => {
+		if (!user) {
+			setErrors("User data not loaded");
+			return;
+		}
 
-        if (oldPassword && newPassword) {
-            try {
-                const isValid = await verifyPassword(user.id, oldPassword);
+		if (oldPassword && newPassword) {
+			try {
+				const isValid = await verifyPassword(user.id, oldPassword);
 
-                if (!isValid) {
-                    setErrors("The current password is incorrect");
-                    return;
-                }
+				if (!isValid) {
+					setErrors("The current password is incorrect");
+					return;
+				}
 
-                userUpdate.password = newPassword;
-            } catch (error) {
-                setErrors("Failed to verify the current password");
-                return;
-            }
-        }
+				userUpdate.password = newPassword;
+			} catch (error) {
+				setErrors("Failed to verify the current password");
+				return;
+			}
+		}
 
-        try {
-            const response = await editProfile(userUpdate);
+		try {
+			const response = await editProfile(userUpdate);
 
-            if (response) {
-                await refreshUser();
-                Alert.alert("Profile Updated", "Your profile has been updated successfully.");
-                navigation.navigate("Main", { screen: "Profile" });
-            }
-        } catch (error) {
-            setErrors("Failed to update profile");
-        }
-    };
+			if (response) {
+				await refreshUser();
+				Alert.alert(
+					"Profile Updated",
+					"Your profile has been updated successfully."
+				);
+				navigation.navigate("MainTabs", { screen: "Profile" });
+			}
+		} catch (error) {
+			setErrors("Failed to update profile");
+		}
+	};
 
     return (
         <SafeAreaView style={{ flex: 1, padding: 20 }}>

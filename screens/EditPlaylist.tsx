@@ -10,79 +10,92 @@ import { useUserContext } from '@/contexts/UserContext';
 import { RouteProp, useRoute, NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 
 interface EditPlaylistRouteParams {
-    playlist: {
-        id: number;
-        name: string;
-        userId: number;
-        songsIds: number[];
-    };
+	playlist: {
+		id: number;
+		name: string;
+		userId: number;
+		songsIds: number[];
+	};
 }
 
 export default function EditPlaylist() {
-    const [title, setTitle] = useState('');
-    const [songs, setSongs] = useState<SongResponse[]>([]);
-    const [selectedSongs, setSelectedSongs] = useState<SongResponse[]>([]);
-    const [error, setError] = useState<string | null>(null);
-    const userContext = useUserContext();
-    const route = useRoute<RouteProp<{ params: EditPlaylistRouteParams }, 'params'>>();
-    const { playlist } = route.params;
-    const navigation = useNavigation<NavigationProp<ParamListBase>>();
+	const [title, setTitle] = useState("");
+	const [songs, setSongs] = useState<SongResponse[]>([]);
+	const [selectedSongs, setSelectedSongs] = useState<SongResponse[]>([]);
+	const [error, setError] = useState<string | null>(null);
+	const userContext = useUserContext();
+	const route =
+		useRoute<RouteProp<{ params: EditPlaylistRouteParams }, "params">>();
+	const { playlist } = route.params;
+	const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
-    useEffect(() => {
-        const loadInitialSongs = async () => {
-            try {
-                const initialSongs = await Promise.all(
-                    playlist.songsIds.map(async (id) => {
-                        try {
-                            const song = await getSongById(id);
-                            return song;
-                        } catch (error) {
-                            console.error(`Failed to load song with id ${id}`, error);
-                            return null;
-                        }
-                    })
-                );
-                setSelectedSongs(initialSongs.filter(song => song !== null) as SongResponse[]);
-            } catch (error) {
-                setError('Failed to load initial songs');
-            }
-        };
+	useEffect(() => {
+		const loadInitialSongs = async () => {
+			try {
+				const initialSongs = await Promise.all(
+					playlist.songsIds.map(async (id) => {
+						try {
+							const song = await getSongById(id);
+							return song;
+						} catch (error) {
+							console.error(
+								`Failed to load song with id ${id}`,
+								error
+							);
+							return null;
+						}
+					})
+				);
+				setSelectedSongs(
+					initialSongs.filter(
+						(song) => song !== null
+					) as SongResponse[]
+				);
+			} catch (error) {
+				setError("Failed to load initial songs");
+			}
+		};
 
-        loadInitialSongs();
-    }, [playlist.songsIds]);
+		loadInitialSongs();
+	}, [playlist.songsIds]);
 
-    const handleSearch = async () => {
-        try {
-            const songsData = await getSongsByTitle(title, 0, 10);
-            setSongs(songsData);
-            setError(null);
-        } catch (error) {
-            setError('Failed to load songs');
-        }
-    };
+	const handleSearch = async () => {
+		try {
+			const songsData = await getSongsByTitle(title, 0, 10);
+			setSongs(songsData);
+			setError(null);
+		} catch (error) {
+			setError("Failed to load songs");
+		}
+	};
 
-    const handleAddSong = async (song: SongResponse) => {
-        try {
-            await addSongToPlaylist(playlist.id, Number(song.id));
-            setSelectedSongs([...selectedSongs, song]);
-        } catch (error) {
-            setError('Failed to add song to playlist');
-        }
-    };
+	const handleAddSong = async (song: SongResponse) => {
+		try {
+			await addSongToPlaylist(playlist.id, Number(song.id));
+			setSelectedSongs([...selectedSongs, song]);
+		} catch (error) {
+			setError("Failed to add song to playlist");
+		}
+	};
 
-    const handleRemoveSong = async (songId: string) => {
-        try {
-            await removeSongFromPlaylist(playlist.id, Number(songId));
-            setSelectedSongs(selectedSongs.filter(song => song.id !== songId));
-        } catch (error) {
-            setError('Failed to remove song from playlist');
-        }
-    };
+	const handleRemoveSong = async (songId: string) => {
+		try {
+			await removeSongFromPlaylist(playlist.id, Number(songId));
+			setSelectedSongs(
+				selectedSongs.filter((song) => song.id !== songId)
+			);
+		} catch (error) {
+			setError("Failed to remove song from playlist");
+		}
+	};
 
-    const handleSave = () => {
-        Alert.alert('Playlist Updated', 'Your playlist has been updated successfully.');
-        navigation.navigate('Library');
-    };
+	const handleSave = () => {
+		Alert.alert(
+			"Playlist Updated",
+			"Your playlist has been updated successfully."
+		);
+		navigation.navigate("Library");
+	};
 
     return (
         <SafeAreaView style={{ flex: 1, padding: 16, marginTop: 32 }}>

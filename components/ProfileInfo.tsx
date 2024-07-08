@@ -1,144 +1,166 @@
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, View, Text, Alert, ActivityIndicator } from 'react-native';
-import { Avatar, Button, IconButton } from 'react-native-paper';
-import { UserResponse } from '@/interfaces/User';
-import { addFriend } from '@/services/friend/addFriend';
-import { deleteFriend } from '@/services/friend/deleteFriend';
-import { getUserFriends } from '@/services/profile/getUserFriends';
-import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
-import { getRoleFromToken } from '@/services/auth/getRoleFromToken';
-import { deleteUserById } from '@/services/profile/deleteUserById';
-import { getPostsByUserId } from '@/services/post/getPostsByUserId';
-import { PostResponse } from '@/interfaces/Post';
-import Post from '@/components/Post';
-import { useUserContext } from '@/contexts/UserContext';
+import React, { useEffect, useState } from "react";
+import {
+	SafeAreaView,
+	ScrollView,
+	View,
+	Text,
+	Alert,
+	ActivityIndicator,
+} from "react-native";
+import { Avatar, Button, IconButton } from "react-native-paper";
+import { UserResponse } from "@/interfaces/User";
+import { addFriend } from "@/services/friend/addFriend";
+import { deleteFriend } from "@/services/friend/deleteFriend";
+import { getUserFriends } from "@/services/profile/getUserFriends";
+import {
+	useNavigation,
+	NavigationProp,
+	ParamListBase,
+} from "@react-navigation/native";
+import { getRoleFromToken } from "@/services/auth/getRoleFromToken";
+import { deleteUserById } from "@/services/profile/deleteUserById";
+import { getPostsByUserId } from "@/services/post/getPostsByUserId";
+import { PostResponse } from "@/interfaces/Post";
+import Post from "@/components/Post";
+import { useUserContext } from "@/contexts/UserContext";
 
 interface ProfileInfoProps {
-    user: UserResponse;
-    isCurrentUser: boolean;
-    isFriend: boolean;
-    setIsFriend: React.Dispatch<React.SetStateAction<boolean>>;
-    friends: UserResponse[];
-    setFriends: React.Dispatch<React.SetStateAction<UserResponse[]>>;
-    friendsCount: number;
-    setFriendsCount: React.Dispatch<React.SetStateAction<number>>;
+	user: UserResponse;
+	isCurrentUser: boolean;
+	isFriend: boolean;
+	setIsFriend: React.Dispatch<React.SetStateAction<boolean>>;
+	friends: UserResponse[];
+	setFriends: React.Dispatch<React.SetStateAction<UserResponse[]>>;
+	friendsCount: number;
+	setFriendsCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function ProfileInfo({
-    user,
-    isCurrentUser,
-    isFriend,
-    setIsFriend,
-    friends,
-    setFriends,
-    friendsCount,
-    setFriendsCount,
+	user,
+	isCurrentUser,
+	isFriend,
+	setIsFriend,
+	friends,
+	setFriends,
+	friendsCount,
+	setFriendsCount,
 }: ProfileInfoProps) {
-    const navigation = useNavigation<NavigationProp<ParamListBase>>();
-    const [errors, setErrors] = useState<string | null>(null);
-    const [role, setRole] = useState<string | null>(null);
-    const [posts, setPosts] = useState<PostResponse[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [page, setPage] = useState<number>(0);
-    const [hasMore, setHasMore] = useState<boolean>(true);
-    const { refreshUser } = useUserContext();
+	const navigation = useNavigation<NavigationProp<ParamListBase>>();
+	const [errors, setErrors] = useState<string | null>(null);
+	const [role, setRole] = useState<string | null>(null);
+	const [posts, setPosts] = useState<PostResponse[]>([]);
+	const [loading, setLoading] = useState<boolean>(false);
+	const [page, setPage] = useState<number>(0);
+	const [hasMore, setHasMore] = useState<boolean>(true);
+	const { refreshUser } = useUserContext();
 
-    const pageSize = 6;
+	const pageSize = 6;
 
-    useEffect(() => {
-        const fetchRole = async () => {
-            try {
-                const userRole = await getRoleFromToken();
-                setRole(userRole);
-                console.log('Fetched user role:', userRole);
-            } catch (error) {
-                console.error('Failed to fetch role', error);
-            }
-        };
-        fetchRole();
-    }, []);
+	useEffect(() => {
+		const fetchRole = async () => {
+			try {
+				const userRole = await getRoleFromToken();
+				setRole(userRole);
+				console.log("Fetched user role:", userRole);
+			} catch (error) {
+				console.error("Failed to fetch role", error);
+			}
+		};
+		fetchRole();
+	}, []);
 
-    useEffect(() => {
-        if (isFriend || isCurrentUser || role === 'ROLE_ADMIN') {
-            getUserFriends(user.friendsIds).then(setFriends).catch(() => {
-                setErrors('Failed to load friends data');
-            });
-        }
-    }, [isFriend, isCurrentUser, role, user.friendsIds, setFriends]);
+	useEffect(() => {
+		if (isFriend || isCurrentUser || role === "ROLE_ADMIN") {
+			getUserFriends(user.friendsIds)
+				.then(setFriends)
+				.catch(() => {
+					setErrors("Failed to load friends data");
+				});
+		}
+	}, [isFriend, isCurrentUser, role, user.friendsIds, setFriends]);
 
-    const fetchPosts = async () => {
-        if (loading || !hasMore) return;
+	const fetchPosts = async () => {
+		if (loading || !hasMore) return;
 
-        setLoading(true);
-        try {
-            const response = await getPostsByUserId(user.id, page, pageSize);
-            setPosts((prevPosts) => [...prevPosts, ...response.content]);
-            setHasMore(response.totalPages > page + 1);
-            setPage(page + 1);
-        } catch (error) {
-            console.error('Failed to load posts:', error);
-            setErrors('Failed to load posts');
-        } finally {
-            setLoading(false);
-        }
-    };
+		setLoading(true);
+		try {
+			const response = await getPostsByUserId(user.id, page, pageSize);
+			setPosts((prevPosts) => [...prevPosts, ...response.content]);
+			setHasMore(response.totalPages > page + 1);
+			setPage(page + 1);
+		} catch (error) {
+			console.error("Failed to load posts:", error);
+			setErrors("Failed to load posts");
+		} finally {
+			setLoading(false);
+		}
+	};
 
-    useEffect(() => {
-        fetchPosts();
-    }, [user.id]);
+	useEffect(() => {
+		fetchPosts();
+	}, [user.id]);
 
-    const handleAddFriend = async () => {
-        try {
-            await addFriend(user.id);
-            setIsFriend(true);
-            setFriendsCount(friendsCount + 1);
-            await refreshUser();
-            Alert.alert('Friend Added', 'You have successfully added this user as a friend.');
-        } catch (error) {
-            setErrors('Failed to add friend');
-        }
-    };
+	const handleAddFriend = async () => {
+		try {
+			await addFriend(user.id);
+			setIsFriend(true);
+			setFriendsCount(friendsCount + 1);
+			await refreshUser();
+			Alert.alert(
+				"Friend Added",
+				"You have successfully added this user as a friend."
+			);
+		} catch (error) {
+			setErrors("Failed to add friend");
+		}
+	};
 
-    const handleDeleteFriend = async () => {
-        try {
-            await deleteFriend(user.id);
-            setIsFriend(false);
-            setFriendsCount(friendsCount - 1);
-            await refreshUser();
-            Alert.alert('Friend Removed', 'You have successfully removed this user from your friends.');
-        } catch (error) {
-            setErrors('Failed to delete friend');
-        }
-    };
+	const handleDeleteFriend = async () => {
+		try {
+			await deleteFriend(user.id);
+			setIsFriend(false);
+			setFriendsCount(friendsCount - 1);
+			await refreshUser();
+			Alert.alert(
+				"Friend Removed",
+				"You have successfully removed this user from your friends."
+			);
+		} catch (error) {
+			setErrors("Failed to delete friend");
+		}
+	};
 
-    const handleDeleteProfile = async () => {
-        Alert.alert(
-            'Delete Profile',
-            'Are you sure you want to delete this profile?',
-            [
-                {
-                    text: 'No',
-                    style: 'cancel',
-                },
-                {
-                    text: 'Yes',
-                    onPress: async () => {
-                        try {
-                            await deleteUserById(user.id);
-                            Alert.alert('Profile Deleted', 'The user profile has been deleted successfully.');
-                            if (isCurrentUser) {
-                                navigation.navigate('Register');
-                            } else {
-                                navigation.navigate('Profile');
-                            }
-                        } catch (error) {
-                            setErrors('Failed to delete profile');
-                        }
-                    },
-                },
-            ]
-        );
-    };
+	const handleDeleteProfile = async () => {
+		Alert.alert(
+			"Delete Profile",
+			"Are you sure you want to delete this profile?",
+			[
+				{
+					text: "No",
+					style: "cancel",
+				},
+				{
+					text: "Yes",
+					onPress: async () => {
+						try {
+							await deleteUserById(user.id);
+							Alert.alert(
+								"Profile Deleted",
+								"The user profile has been deleted successfully."
+							);
+							if (isCurrentUser) {
+								navigation.navigate("Register");
+							} else {
+								navigation.navigate("Profile");
+							}
+						} catch (error) {
+							setErrors("Failed to delete profile");
+						}
+					},
+				},
+			]
+		);
+	};
 
     const handlePostDeleted = (postId: number) => {
         setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
