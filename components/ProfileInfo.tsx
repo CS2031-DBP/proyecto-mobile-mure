@@ -193,7 +193,7 @@ export default function ProfileInfo({
                     </View>
                     <View style={{ flex: 1, marginLeft: 10 }}>
                         <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: 'left', marginBottom: 5 }}>@{user.nickname}</Text>
-                        <Text style={{ fontSize: 18, color: 'gray', textAlign: 'left', marginBottom: 5  }}> 
+                        <Text style={{ fontSize: 14, color: 'gray', textAlign: 'left', marginBottom: 5  }}> 
                             {user.name}
                         </Text>
                         <Text style={{ fontSize: 12, color: 'gray', textAlign: 'left' }}>{user.birthDate}</Text>

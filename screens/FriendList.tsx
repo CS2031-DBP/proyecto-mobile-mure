@@ -171,11 +171,16 @@ export default function FriendList() {
 							</View>
 							<View style={{ flex: 1, marginLeft: 16 }}>
 								<Text
-									style={{ fontSize: 18, fontWeight: "bold" }}
+									style={{ fontSize: 16, fontWeight: "bold" }}
+								>
+									@{friend.nickname}
+								</Text>
+								<Text
+									style={{ fontSize: 14, fontWeight: "bold" }}
 								>
 									{friend.name}
 								</Text>
-								<Text style={{ color: "gray" }}>
+								<Text style={{ fontSize: 12, color: "gray" }}>
 									{friend.birthDate}
 								</Text>
 							</View>

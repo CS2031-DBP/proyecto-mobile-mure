@@ -67,7 +67,7 @@ export default function EditProfile() {
             if (response) {
                 await refreshUser();
                 Alert.alert("Profile Updated", "Your profile has been updated successfully.");
-                navigation.navigate("MainTabs", { screen: "Profile" });
+                navigation.navigate("Main", { screen: "Profile" });
             }
         } catch (error) {
             setErrors("Failed to update profile");
