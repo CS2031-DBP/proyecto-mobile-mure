@@ -162,6 +162,10 @@ export default function ProfileInfo({
 		);
 	};
 
+    const handlePostDeleted = (postId: number) => {
+        setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+    };
+
     return (
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', paddingTop: 24 }}>
             <View>
@@ -250,7 +254,7 @@ export default function ProfileInfo({
                 </View>
                 <View style={{ width: '100%', marginTop: 20 }}>
                     {posts.length > 0 ? (
-                        posts.map((post) => <Post key={post.id} post={post} />)
+                        posts.map((post) => <Post key={post.id} post={post} onPostDeleted={handlePostDeleted} />)
                     ) : (
                         <Text style={{ color: 'gray', textAlign: 'center' }}>No posts available</Text>
                     )}

@@ -81,108 +81,83 @@ export default function EditProfile() {
 		}
 	};
 
-	return (
-		<SafeAreaView style={{ flex: 1, padding: 20 }}>
-			<ScrollView contentContainerStyle={{ alignItems: "center" }}>
-				<Text
-					style={{
-						fontSize: 24,
-						fontWeight: "bold",
-						marginBottom: 20,
-					}}
-				>
-					Edit Profile
-				</Text>
-				{userUpdate.profileImage ? (
-					<Avatar.Image
-						size={100}
-						source={{ uri: userUpdate.profileImage }}
-						style={{ marginBottom: 20 }}
-					/>
-				) : (
-					<Avatar.Icon
-						size={100}
-						icon="account"
-						style={{ marginBottom: 20 }}
-					/>
-				)}
-				<Button
-					mode="text"
-					onPress={() =>
-						Alert.alert(
-							"Change Picture",
-							"Change picture functionality not implemented"
-						)
-					}
-				>
-					Edit picture or avatar
-				</Button>
-				<TextInput
-					label="Name"
-					mode="outlined"
-					value={userUpdate.name}
-					onChangeText={(text) => handleInputChange("name", text)}
-					style={{ width: "100%", marginBottom: 16 }}
-					autoCapitalize="none"
-				/>
-				<TextInput
-					label="Email"
-					mode="outlined"
-					value={userUpdate.email}
-					onChangeText={(text) => handleInputChange("email", text)}
-					style={{ width: "100%", marginBottom: 16 }}
-					keyboardType="email-address"
-					autoCapitalize="none"
-				/>
-				<TextInput
-					label="Current Password"
-					mode="outlined"
-					value={oldPassword}
-					onChangeText={setOldPassword}
-					style={{ width: "100%", marginBottom: 16 }}
-					secureTextEntry={!showOldPassword}
-					right={
-						<TextInput.Icon
-							icon={showOldPassword ? "eye-off" : "eye"}
-							onPress={() => setShowOldPassword(!showOldPassword)}
-						/>
-					}
-					autoCapitalize="none"
-				/>
-				<TextInput
-					label="New Password"
-					mode="outlined"
-					value={newPassword}
-					onChangeText={setNewPassword}
-					style={{ width: "100%", marginBottom: 16 }}
-					secureTextEntry={!showNewPassword}
-					right={
-						<TextInput.Icon
-							icon={showNewPassword ? "eye-off" : "eye"}
-							onPress={() => setShowNewPassword(!showNewPassword)}
-						/>
-					}
-					autoCapitalize="none"
-				/>
-				{errors ? (
-					<Text
-						style={{
-							color: "red",
-							textAlign: "center",
-							marginBottom: 16,
-						}}
-					>
-						{errors}
-					</Text>
-				) : null}
-				<Button
-					mode="contained"
-					onPress={handleSave}
-					style={{ width: "100%", padding: 8, marginTop: 16 }}
-				>
-					Save
-				</Button>
-			</ScrollView>
-		</SafeAreaView>
-	);
+    return (
+        <SafeAreaView style={{ flex: 1, padding: 20 }}>
+            <ScrollView contentContainerStyle={{ alignItems: "center" }}>
+                <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>Edit Profile</Text>
+                {userUpdate.profileImage ? (
+                    <Avatar.Image size={100} source={{ uri: userUpdate.profileImage }} style={{ marginBottom: 20 }} />
+                ) : (
+                    <Avatar.Icon size={100} icon="account" style={{ marginBottom: 20 }} />
+                )}
+                <Button
+                    mode="text"
+                    onPress={() =>
+                        Alert.alert("Change Picture", "Change picture functionality not implemented")
+                    }
+                >
+                    Edit picture or avatar
+                </Button>
+                <TextInput
+                    label="Full Name"
+                    mode="outlined"
+                    value={userUpdate.name}
+                    onChangeText={(text) => handleInputChange("name", text)}
+                    style={{ width: "100%", marginBottom: 16 }}
+                    autoCapitalize="none"
+                />
+                <TextInput
+                    label="Nickname"
+                    mode="outlined"
+                    value={userUpdate.nickname}
+                    onChangeText={(text) => handleInputChange("nickname", text)}
+                    style={{ width: "100%", marginBottom: 16 }}
+                    autoCapitalize="none"
+                />
+                <TextInput
+                    label="Email"
+                    mode="outlined"
+                    value={userUpdate.email}
+                    onChangeText={(text) => handleInputChange("email", text)}
+                    style={{ width: "100%", marginBottom: 16 }}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                />
+                <TextInput
+                    label="Current Password"
+                    mode="outlined"
+                    value={oldPassword}
+                    onChangeText={setOldPassword}
+                    style={{ width: "100%", marginBottom: 16 }}
+                    secureTextEntry={!showOldPassword}
+                    right={
+                        <TextInput.Icon
+                            icon={showOldPassword ? "eye-off" : "eye"}
+                            onPress={() => setShowOldPassword(!showOldPassword)}
+                        />
+                    }
+                    autoCapitalize="none"
+                />
+                <TextInput
+                    label="New Password"
+                    mode="outlined"
+                    value={newPassword}
+                    onChangeText={setNewPassword}
+                    style={{ width: "100%", marginBottom: 16 }}
+                    secureTextEntry={!showNewPassword}
+                    right={
+                        <TextInput.Icon
+                            icon={showNewPassword ? "eye-off" : "eye"}
+                            onPress={() => setShowNewPassword(!showNewPassword)}
+                        />
+                    }
+                    autoCapitalize="none"
+                />
+                {errors ? <Text style={{ color: "red", textAlign: "center", marginBottom: 16 }}>{errors}</Text> : null}
+                <Button mode="contained" onPress={handleSave} style={{ width: "100%", padding: 8, marginTop: 16 }}>
+                    Save
+                </Button>
+            </ScrollView>
+        </SafeAreaView>
+    );
 }
