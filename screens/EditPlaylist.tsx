@@ -10,146 +10,143 @@ import { useUserContext } from '@/contexts/UserContext';
 import { RouteProp, useRoute, NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 
 interface EditPlaylistRouteParams {
-    playlist: {
-        id: number;
-        name: string;
-        userId: number;
-        songsIds: number[];
-    };
+  playlist: {
+    id: number;
+    name: string;
+    userId: number;
+    songsIds: number[];
+  };
 }
 
 export default function EditPlaylist() {
-    const [title, setTitle] = useState('');
-    const [songs, setSongs] = useState<SongResponse[]>([]);
-    const [selectedSongs, setSelectedSongs] = useState<SongResponse[]>([]);
-    const [error, setError] = useState<string | null>(null);
-    const userContext = useUserContext();
-    const route = useRoute<RouteProp<{ params: EditPlaylistRouteParams }, 'params'>>();
-    const { playlist } = route.params;
-    const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const [title, setTitle] = useState("");
+  const [songs, setSongs] = useState<SongResponse[]>([]);
+  const [selectedSongs, setSelectedSongs] = useState<SongResponse[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const userContext = useUserContext();
+  const route = useRoute<RouteProp<{ params: EditPlaylistRouteParams }, "params">>();
+  const { playlist } = route.params;
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
-    useEffect(() => {
-        const loadInitialSongs = async () => {
+  useEffect(() => {
+    const loadInitialSongs = async () => {
+      try {
+        const initialSongs = await Promise.all(
+          playlist.songsIds.map(async (id) => {
             try {
-                const initialSongs = await Promise.all(
-                    playlist.songsIds.map(async (id) => {
-                        try {
-                            const song = await getSongById(id);
-                            return song;
-                        } catch (error) {
-                            console.error(`Failed to load song with id ${id}`, error);
-                            return null;
-                        }
-                    })
-                );
-                setSelectedSongs(initialSongs.filter(song => song !== null) as SongResponse[]);
+              const song = await getSongById(id);
+              return song;
             } catch (error) {
-                setError('Failed to load initial songs');
+              console.error(`Failed to load song with id ${id}`, error);
+              return null;
             }
-        };
-
-        loadInitialSongs();
-    }, [playlist.songsIds]);
-
-    const handleSearch = async () => {
-        try {
-            const songsData = await getSongsByTitle(title, 0, 10);
-            setSongs(songsData);
-            setError(null);
-        } catch (error) {
-            setError('Failed to load songs');
-        }
+          })
+        );
+        setSelectedSongs(initialSongs.filter((song) => song !== null) as SongResponse[]);
+      } catch (error) {
+        setError("Failed to load initial songs");
+      }
     };
 
-    const handleAddSong = async (song: SongResponse) => {
-        try {
-            await addSongToPlaylist(playlist.id, Number(song.id));
-            setSelectedSongs([...selectedSongs, song]);
-        } catch (error) {
-            setError('Failed to add song to playlist');
-        }
-    };
+    loadInitialSongs();
+  }, [playlist.songsIds]);
 
-    const handleRemoveSong = async (songId: string) => {
-        try {
-            await removeSongFromPlaylist(playlist.id, Number(songId));
-            setSelectedSongs(selectedSongs.filter(song => song.id !== songId));
-        } catch (error) {
-            setError('Failed to remove song from playlist');
-        }
-    };
+  const handleSearch = async () => {
+    setError(null);
+    try {
+      const songsData = await getSongsByTitle(title, 0, 10);
+      setSongs(songsData);
+    } catch (error) {
+      setError("Failed to load songs");
+    }
+  };
 
-    const handleSave = () => {
-        Alert.alert('Playlist Updated', 'Your playlist has been updated successfully.');
-        navigation.navigate('Library');
-    };
+  const handleAddSong = async (song: SongResponse) => {
+    setError(null);
+    try {
+      await addSongToPlaylist(playlist.id, Number(song.id));
+      setSelectedSongs([...selectedSongs, song]);
+    } catch (error) {
+      setError("Failed to add song to playlist");
+    }
+  };
 
-    return (
-        <SafeAreaView style={{ flex: 1, padding: 16, marginTop: 32 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-                <IconButton
-                    icon="arrow-left"
-                    size={24}
-                    onPress={() => navigation.goBack()}
-                />
-                <Text style={{ fontSize: 24, fontWeight: 'bold', flex: 1, textAlign: 'center', marginRight: 32 }}>{playlist.name}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-                <TextInput
-                    placeholder="Enter song title"
-                    value={title}
-                    onChangeText={setTitle}
-                    style={{ flex: 1, padding: 8, borderColor: 'gray', borderWidth: 1, borderRadius: 4 }}
-                />
-                <Button mode="contained" onPress={handleSearch} style={{ marginLeft: 8 }}>
-                    Search
-                </Button>
-            </View>
-            {error && <Text style={{ color: 'red' }}>{error}</Text>}
+  const handleRemoveSong = async (songId: string) => {
+    setError(null);
+    try {
+      await removeSongFromPlaylist(playlist.id, Number(songId));
+      setSelectedSongs(selectedSongs.filter((song) => song.id !== songId));
+    } catch (error) {
+      setError("Failed to remove song from playlist");
+    }
+  };
 
+  const handleSave = () => {
+    Alert.alert("Playlist Updated", "Your playlist has been updated successfully.");
+    navigation.navigate("Library");
+  };
+
+  return (
+    <SafeAreaView style={{ flex: 1, padding: 16, marginTop: 32 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+        <IconButton icon="arrow-left" size={24} onPress={() => navigation.goBack()} />
+        <Text style={{ fontSize: 24, fontWeight: 'bold', flex: 1, textAlign: 'center', marginRight: 32 }}>{playlist.name}</Text>
+      </View>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+        <TextInput
+          placeholder="Enter song title"
+          value={title}
+          onChangeText={setTitle}
+          style={{ flex: 1, padding: 8, borderColor: 'gray', borderWidth: 1, borderRadius: 4 }}
+        />
+        <Button mode="contained" onPress={handleSearch} style={{ marginLeft: 8 }}>
+          Search
+        </Button>
+      </View>
+      {error && <Text style={{ color: 'red' }}>{error}</Text>}
+      <ScrollView>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{ flex: 1, marginRight: 8 }}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>Search Results</Text>
             <ScrollView>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <View style={{ flex: 1, marginRight: 8 }}>
-                        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>Search Results</Text>
-                        <ScrollView>
-                            {songs.map((item) => (
-                                <View key={item.id} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 8, borderBottomColor: 'gray', borderBottomWidth: 1 }}>
-                                    <View>
-                                        <Text style={{ fontSize: 16 }}>{item.title}</Text>
-                                        <Text style={{ fontSize: 14, color: 'gray' }}>{item.artistsNames.join(', ')}</Text>
-                                    </View>
-                                    <IconButton
-                                        icon="plus"
-                                        size={24}
-                                        onPress={() => handleAddSong(item)}
-                                    />
-                                </View>
-                            ))}
-                        </ScrollView>
-                    </View>
-                    <View style={{ flex: 1, marginLeft: 8 }}>
-                        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>Selected Songs</Text>
-                        <ScrollView>
-                            {selectedSongs.map((item) => (
-                                <View key={item.id} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 8, borderBottomColor: 'gray', borderBottomWidth: 1 }}>
-                                    <View>
-                                        <Text style={{ fontSize: 16 }}>{item.title}</Text>
-                                        <Text style={{ fontSize: 14, color: 'gray' }}>{item.artistsNames.join(', ')}</Text>
-                                    </View>
-                                    <IconButton
-                                        icon="minus"
-                                        size={24}
-                                        onPress={() => handleRemoveSong(item.id)}
-                                    />
-                                </View>
-                            ))}
-                        </ScrollView>
-                    </View>
+              {songs.map((item) => (
+                <View key={item.id} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 8, borderBottomColor: 'gray', borderBottomWidth: 1 }}>
+                  <View>
+                    <Text style={{ fontSize: 16 }}>{item.title}</Text>
+                    <Text style={{ fontSize: 14, color: 'gray' }}>{item.artistsNames.join(', ')}</Text>
+                  </View>
+                  <IconButton
+                    icon="plus"
+                    size={24}
+                    onPress={() => handleAddSong(item)}
+                  />
                 </View>
+              ))}
             </ScrollView>
-            <Button mode="contained" onPress={handleSave} style={{ marginTop: 16 }}>
-                Save Changes
-            </Button>
-        </SafeAreaView>
-    );
+          </View>
+          <View style={{ flex: 1, marginLeft: 8 }}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>Selected Songs</Text>
+            <ScrollView>
+              {selectedSongs.map((item) => (
+                <View key={item.id} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 8, borderBottomColor: 'gray', borderBottomWidth: 1 }}>
+                  <View>
+                    <Text style={{ fontSize: 16 }}>{item.title}</Text>
+                    <Text style={{ fontSize: 14, color: 'gray' }}>{item.artistsNames.join(', ')}</Text>
+                  </View>
+                  <IconButton
+                    icon="minus"
+                    size={24}
+                    onPress={() => handleRemoveSong(item.id)}
+                  />
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      </ScrollView>
+      <Button mode="contained" onPress={handleSave} style={{ marginTop: 16 }}>
+        Save Changes
+      </Button>
+    </SafeAreaView>
+  );
 }

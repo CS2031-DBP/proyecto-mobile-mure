@@ -25,7 +25,9 @@ export default class Api {
 		const path = this.basePath + options.url;
 
 		const headers: RawAxiosRequestHeaders = {
-			"Content-type": "application/json",
+			// "Content-type": "application/json",
+			"Content-Type":
+				configOptions.headers?.["Content-Type"] || "application/json",
 		};
 
 		const noAuthRequired = ["/login", "/signin"];
@@ -50,30 +52,47 @@ export default class Api {
 		return axios<RequestType, AxiosResponse<ResponseType>>(path, config);
 	}
 
-	public get<RequestType, ResponseType>(options: AxiosRequestConfig) {
+	public get<RequestBodyType, ResponseBodyType>(options: AxiosRequestConfig) {
 		const configOptions: AxiosRequestConfig = {
 			...options,
 			method: "get",
 		};
 
-		return this.request<RequestType, ResponseType>(configOptions);
+		return this.request<RequestBodyType, ResponseBodyType>(configOptions);
 	}
 
-	public post<RequestType, ResponseType>(
-		data: RequestType,
+	public post<RequestBodyType, ResponseBodyType>(
+		data: RequestBodyType,
 		options: AxiosRequestConfig
 	) {
 		const configOptions: AxiosRequestConfig = {
 			...options,
 			method: "post",
-			data: JSON.stringify(data),
+			data: data,
 		};
 
-		return this.request<RequestType, ResponseType>(configOptions);
+		return this.request<RequestBodyType, ResponseBodyType>(configOptions);
 	}
 
-	public patch<RequestType, ResponseType>(
-		data: RequestType,
+	public postForm<RequestBodyType, ResponseBodyType>(
+		data: RequestBodyType,
+		options: AxiosRequestConfig
+	) {
+		const configOptions: AxiosRequestConfig = {
+			...options,
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		};
+
+		return this.post<RequestBodyType, ResponseBodyType>(
+			data,
+			configOptions
+		);
+	}
+
+	public patch<RequestBodyType, ResponseBodyType>(
+		data: RequestBodyType,
 		options: AxiosRequestConfig
 	) {
 		const configOptions: AxiosRequestConfig = {
@@ -82,7 +101,7 @@ export default class Api {
 			data: JSON.stringify(data),
 		};
 
-		return this.request<RequestType, ResponseType>(configOptions);
+		return this.request<RequestBodyType, ResponseBodyType>(configOptions);
 	}
 
 	public put(data: any, options: AxiosRequestConfig) {

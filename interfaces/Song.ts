@@ -1,5 +1,5 @@
 export interface SongResponse {
-	id: string;
+	id: number;
 	title: string;
 	genre: string;
 	likes: number;

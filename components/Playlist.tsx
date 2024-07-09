@@ -4,7 +4,7 @@ import { PlaylistResponse } from "@/interfaces/Playlist";
 import { getSongById } from "@/services/song/getSongById";
 import { deletePlaylist } from "@/services/playlist/deletePlaylist";
 import { SongResponse } from "@/interfaces/Song";
-import Song from "@/components/Song";
+import MediaCard from "@/components/MediaCard";
 import { useUserContext } from "@/contexts/UserContext";
 import {
 	NavigationProp,
@@ -103,6 +103,7 @@ export default function Playlist({ playlist, onDelete }: PlaylistProps) {
 				marginBottom: 16,
 				backgroundColor: "#fff",
 				borderRadius: 8,
+				gap: 20,
 			}}
 		>
 			<View
@@ -153,7 +154,11 @@ export default function Playlist({ playlist, onDelete }: PlaylistProps) {
 				</Text>
 			) : (
 				songs.map((song) => (
-					<Song key={song.id} songId={Number(song.id)} />
+					<MediaCard
+						key={song.id}
+						mediaId={Number(song.id)}
+						type="song"
+					/>
 				))
 			)}
 		</View>

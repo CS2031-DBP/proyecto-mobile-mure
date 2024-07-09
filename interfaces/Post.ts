@@ -33,12 +33,11 @@ export interface PostResponse {
     likedByUserIds: number[];
 }
 
-
 export interface PostRequest {
 	userId: number;
-	songId: number;
-	albumId: number;
+	songId?: number;
+	albumId?: number;
 	description: string;
-	imageUrl: string;
-	audioUrl: string;
+	image?: File;
+	audio?: File;
 }
