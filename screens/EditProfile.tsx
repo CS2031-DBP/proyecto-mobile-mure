@@ -67,19 +67,16 @@ export default function EditProfile() {
 
 		try {
 			const response = await editProfile(userUpdate);
+            if (response) {
+                await refreshUser();
+                Alert.alert("Profile Updated", "Your profile has been updated successfully.");
+                navigation.navigate("Main", { screen: "Profile" });
+            }
+        } catch (error) {
+            setErrors("Failed to update profile");
+        }
+    };
 
-			if (response) {
-				await refreshUser();
-				Alert.alert(
-					"Profile Updated",
-					"Your profile has been updated successfully."
-				);
-				navigation.navigate("MainTabs", { screen: "Profile" });
-			}
-		} catch (error) {
-			setErrors("Failed to update profile");
-		}
-	};
 
 	return (
 		<SafeAreaView style={{ flex: 1, padding: 20 }}>
