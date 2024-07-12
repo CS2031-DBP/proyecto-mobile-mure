@@ -1,59 +1,65 @@
 import React, { useState, useCallback } from "react";
 import { SafeAreaView, Text } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
-import { UserResponse } from "@/interfaces/User";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 import ProfileInfo from "@/components/ProfileInfo";
-import { useUserContext } from "@/contexts/UserContext";
+import { UserResponse } from "@/interfaces/User";
+import { getUserById } from "@/services/profile/getUserById";
 import { getUserFriends } from "@/services/profile/getUserFriends";
+import { useUserContext } from "@/contexts/UserContext";
 
 export default function Profile() {
-	const { user, refreshUser } = useUserContext();
+	const route = useRoute();
+	const { userId } = route.params || {}; 
+	const { user: currentUser, refreshUser } = useUserContext();
+	const [user, setUser] = useState<UserResponse | null>(null);
 	const [friends, setFriends] = useState<UserResponse[]>([]);
 	const [isFriend, setIsFriend] = useState<boolean>(false);
 	const [friendsCount, setFriendsCount] = useState<number>(0);
+	const [errors, setErrors] = useState<string | null>(null);
 
-	const refreshFriends = async () => {
-		if (user && user.friendsIds.length > 0) {
-			const friendsData = await getUserFriends(user.friendsIds);
+	const loadUserData = async () => {
+		try {
+		const id = userId ?? currentUser?.id;
+		const userData = await getUserById(id);
+		setUser(userData);
+
+		const friendStatus = currentUser?.friendsIds.includes(id) ?? false;
+		setIsFriend(friendStatus);
+
+		if (friendStatus || id === currentUser?.id) {
+			const friendsData = await getUserFriends(userData.friendsIds);
 			setFriends(friendsData);
 			setFriendsCount(friendsData.length);
 		} else {
-			setFriends([]);
-			setFriendsCount(0);
+			setFriendsCount(userData.friendsIds.length);
+		}
+		} catch (error) {
+		setErrors("Failed to load user data");
 		}
 	};
 
 	useFocusEffect(
 		useCallback(() => {
-			(async () => {
-				await refreshUser();
-				await refreshFriends();
-			})();
-		}, [refreshUser])
+		loadUserData();
+		}, [userId, currentUser])
 	);
-
-	if (!user) {
-		return (
-			<SafeAreaView
-				style={{ flex: 1, justifyContent: "center", paddingTop: 20 }}
-			>
-				<Text>Loading...</Text>
-			</SafeAreaView>
-		);
-	}
 
 	return (
 		<SafeAreaView style={{ flex: 1, justifyContent: "center", paddingTop: 32 }}>
+		{user ? (
 			<ProfileInfo
 				user={user}
-				isCurrentUser={true}
-				isFriend={false}
-				setIsFriend={() => {}}
+				isCurrentUser={userId === undefined || userId === currentUser?.id}
+				isFriend={isFriend}
+				setIsFriend={setIsFriend}
 				friends={friends}
 				setFriends={setFriends}
 				friendsCount={friendsCount}
 				setFriendsCount={setFriendsCount}
 			/>
+		) : (
+			<Text>Loading...</Text>
+		)}
 		</SafeAreaView>
 	);
 }
