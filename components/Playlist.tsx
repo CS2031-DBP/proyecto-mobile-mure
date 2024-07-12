@@ -137,8 +137,18 @@ export default function Playlist({ playlist, onDelete }: PlaylistProps) {
 				</View>
 				{(user?.id === playlist.userId || role === "ROLE_ADMIN") && (
 					<View style={{ flexDirection: "row" }}>
-						<IconButton icon="pencil" size={20} onPress={handleEdit} iconColor="#750B97" />
-						<IconButton icon="delete" size={20} onPress={handleDelete} iconColor="#750B97" />
+						<IconButton
+							icon="pencil"
+							size={20}
+							onPress={handleEdit}
+							iconColor="#750B97"
+						/>
+						<IconButton
+							icon="delete"
+							size={20}
+							onPress={handleDelete}
+							iconColor="#750B97"
+						/>
 					</View>
 				)}
 			</View>

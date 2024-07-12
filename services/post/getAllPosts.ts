@@ -2,7 +2,7 @@ import Api from "../api";
 import { PaginatedResponse } from "@/interfaces/PaginationResponse";
 import { PostResponse } from "@/interfaces/Post";
 
-export async function getPosts(page: number, size: number) {
+export async function getAllPosts(page: number, size: number) {
 	const api = await Api.getInstance();
 
 	try {

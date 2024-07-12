@@ -95,10 +95,27 @@ export default class Api {
 		const configOptions: AxiosRequestConfig = {
 			...options,
 			method: "patch",
-			data: JSON.stringify(data),
+			data: data,
 		};
 
 		return this.request<RequestBodyType, ResponseBodyType>(configOptions);
+	}
+
+	public patchForm<RequestBodyType, ResponseBodyType>(
+		data: RequestBodyType,
+		options: AxiosRequestConfig
+	) {
+		const configOptions: AxiosRequestConfig = {
+			...options,
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		};
+
+		return this.patch<RequestBodyType, ResponseBodyType>(
+			data,
+			configOptions
+		);
 	}
 
 	public put(data: any, options: AxiosRequestConfig) {

@@ -1,9 +1,9 @@
 export interface UserUpdate {
-	profileImage: string;
-	name: string;
-	password: string;
-	email: string;
-	nickname: string,
+	profileImage?: File;
+	name?: string;
+	password?: string;
+	email?: string;
+	nickname?: string;
 }
 
 export interface UserResponse {
@@ -29,10 +29,10 @@ export interface IsFriendResponse {
 }
 
 export interface ProfileInfoProps {
-    user: UserResponse;
-    isCurrentUser: boolean;
-    isFriend: boolean;
-    setIsFriend: React.Dispatch<React.SetStateAction<boolean>>;
-    friends: UserResponse[];
-    setFriends: React.Dispatch<React.SetStateAction<UserResponse[]>>;
+	user: UserResponse;
+	isCurrentUser: boolean;
+	isFriend: boolean;
+	setIsFriend: React.Dispatch<React.SetStateAction<boolean>>;
+	friends: UserResponse[];
+	setFriends: React.Dispatch<React.SetStateAction<UserResponse[]>>;
 }
