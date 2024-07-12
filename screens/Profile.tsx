@@ -1,14 +1,18 @@
 import React, { useState, useCallback } from "react";
 import { SafeAreaView, Text } from "react-native";
-import { useFocusEffect, useRoute } from "@react-navigation/native";
+import { useFocusEffect, useRoute, RouteProp } from "@react-navigation/native";
 import ProfileInfo from "@/components/ProfileInfo";
 import { UserResponse } from "@/interfaces/User";
 import { getUserById } from "@/services/profile/getUserById";
 import { getUserFriends } from "@/services/profile/getUserFriends";
 import { useUserContext } from "@/contexts/UserContext";
 
+interface ProfileRouteProps {
+	userId: number;
+}
+
 export default function Profile() {
-	const route = useRoute();
+	const route = useRoute<RouteProp<{ params: ProfileRouteProps }, "params">>();
 	const { userId } = route.params || {};
 	const { user: currentUser, refreshUser } = useUserContext();
 	const [user, setUser] = useState<UserResponse | null>(null);

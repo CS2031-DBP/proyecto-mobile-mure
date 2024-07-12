@@ -134,7 +134,7 @@ export default function EditPlaylist() {
 			"Playlist Updated",
 			"Your playlist has been updated successfully."
 		);
-		navigation.navigate("Library");
+		navigation.navigate("Main", { screen: "Library" });
 	};
 
 	return (

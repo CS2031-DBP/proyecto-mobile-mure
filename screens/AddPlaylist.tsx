@@ -91,7 +91,7 @@ export default function AddPlaylist() {
 				"Playlist Created",
 				"Your playlist has been created successfully."
 			);
-			navigation.navigate("Library");
+			navigation.navigate("Main", { screen: "Library" });
 		} catch (error) {
 			setError("Failed to create playlist");
 		}
