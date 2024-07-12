@@ -24,6 +24,7 @@ import createPost from "@/services/post/createPost";
 import { useUserContext } from "@/contexts/UserContext";
 import { PostRequest } from "@/interfaces/Post";
 import * as FileSystem from "expo-file-system";
+import createFormData from "@/utils/createFormData";
 
 export default function AddPost() {
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
@@ -97,20 +98,15 @@ export default function AddPost() {
 			if (!userContext.user) throw new Error("User not found");
 			const localUri = imagePickerHook.image;
 			if (!localUri) throw new Error("Image not selected");
-
-			const response = await fetch(localUri);
-			const blob = await response.blob();
-			console.log(blob);
-			const formData = new FormData();
-			formData.append("userId", userContext.user.id.toString());
-			formData.append("image", {
-				uri: localUri,
-				name: "image.jpg",
-				type: "image/jpeg",
-			} as any);
-			formData.append("description", description);
-			console.log("Creating post with FormData");
-			await createPost(formData); // Adjusted to send formData
+			const postRequest: PostRequest = {
+				userId: userContext.user.id,
+				description: description,
+				image: {
+					uri: localUri,
+					name: "image.jpg",
+					type: "image/jpeg",
+				},
+			};
 			Alert.alert("Post created successfully");
 			navigation.goBack();
 		} catch (error) {

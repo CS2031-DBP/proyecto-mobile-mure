@@ -2,9 +2,8 @@ import { AxiosRequestConfig } from "axios";
 import Api from "../api";
 import { UserResponse } from "@/interfaces/User";
 
-const api = new Api({});
-
 export async function getCurrentUserInfo() {
+	const api = await Api.getInstance();
 	const options: AxiosRequestConfig = {
 		url: "/user/me",
 	};

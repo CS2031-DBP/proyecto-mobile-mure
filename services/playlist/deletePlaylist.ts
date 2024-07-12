@@ -1,14 +1,14 @@
-import Api from '../api';
-
-const api = new Api({});
+import Api from "../api";
 
 export async function deletePlaylist(playlistId: number) {
-    try {
-        const response = await api.delete({
-            url: `/playlist/${playlistId}`,
-        });
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
+	const api = await Api.getInstance();
+
+	try {
+		const response = await api.delete({
+			url: `/playlist/${playlistId}`,
+		});
+		return response.data;
+	} catch (error) {
+		throw error;
+	}
 }

@@ -1,9 +1,8 @@
 import { UserPasswordVerificationRequest } from "@/interfaces/Auth";
 import Api from "../api";
 
-const api = new Api({});
-
 export async function verifyPassword(userId: number, password: string) {
+	const api = await Api.getInstance();
 	const options = {
 		url: "/auth/verify-password",
 	};

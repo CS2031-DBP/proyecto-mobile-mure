@@ -1,8 +1,8 @@
 import { AxiosRequestConfig } from "axios";
 import Api from "../api";
-const api = new Api({});
 
 export async function addFriend(userId: number) {
+	const api = await Api.getInstance();
 	const options: AxiosRequestConfig = {
 		url: `/user/friends/add/${userId}`,
 	};

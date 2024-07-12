@@ -2,16 +2,16 @@ import Api from "../api";
 import { PlaylistResponse } from "@/interfaces/Playlist";
 import { PaginatedResponse } from "@/interfaces/PaginationResponse";
 
-const api = new Api({});
-
 export async function getPlaylistsByUserId(
 	userId: number,
 	page: number,
 	size: number
 ) {
+	const api = await Api.getInstance();
 	const options = {
 		url: `/playlist/user/${userId}?page=${page}&size=${size}`,
 	};
+
 	try {
 		const response = await api.get<
 			null,

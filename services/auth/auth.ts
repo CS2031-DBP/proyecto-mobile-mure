@@ -8,9 +8,8 @@ import {
 	SignupResponse,
 } from "interfaces/Auth";
 
-const api = new Api({});
-
 export async function login(loginRequestDto: LoginRequest) {
+	const api = await Api.getInstance();
 	const options: AxiosRequestConfig = {
 		url: "/auth/login",
 	};
@@ -21,6 +20,7 @@ export async function login(loginRequestDto: LoginRequest) {
 			options
 		);
 		await SecureStore.setItemAsync("token", response.data.token);
+		api.setAuthorization(response.data.token);
 		return response.data;
 	} catch (error) {
 		throw error;
@@ -28,6 +28,7 @@ export async function login(loginRequestDto: LoginRequest) {
 }
 
 export async function register(signupDto: SignupRequest) {
+	const api = await Api.getInstance();
 	const options: AxiosRequestConfig = {
 		url: "/auth/signin",
 	};
@@ -37,8 +38,8 @@ export async function register(signupDto: SignupRequest) {
 			signupDto,
 			options
 		);
-		console.log(response.data.token);
 		await SecureStore.setItemAsync("token", response.data.token);
+		api.setAuthorization(response.data.token);
 		return response.data;
 	} catch (error) {
 		throw error;

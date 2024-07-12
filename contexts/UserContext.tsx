@@ -21,9 +21,7 @@ export function UserProvider(props: UserProviderProps) {
 		try {
 			const userData = await getCurrentUserInfo();
 			setUser(userData);
-		} catch (error) {
-			console.error("Failed to load user data", error);
-		}
+		} catch (error) {}
 	}
 
 	useEffect(() => {

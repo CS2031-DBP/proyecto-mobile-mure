@@ -18,6 +18,8 @@ import AddSongToPlaylist, {
 	AddSongToPlaylistProps,
 } from "@/screens/AddSongToPlaylist";
 import Search from "@/screens/Search";
+import { useEffect, useState } from "react";
+import * as SecureStore from "expo-secure-store";
 
 type RootStackParamList = {
 	Home: undefined;
@@ -59,10 +61,28 @@ function AuthStack() {
 }
 
 export default function AppNavigation() {
+	const [initialRoute, setInitialRoute] =
+		useState<keyof RootStackParamList>("AuthStack");
+
+	useEffect(() => {
+		const checkToken = async () => {
+			const token = await SecureStore.getItemAsync("userToken");
+			console.log(token);
+
+			if (token) {
+				setInitialRoute("Main");
+			} else {
+				setInitialRoute("AuthStack");
+			}
+		};
+
+		checkToken();
+	}, []);
+
 	return (
 		<PaperProvider>
 			<NavigationContainer>
-				<Stack.Navigator initialRouteName="AuthStack">
+				<Stack.Navigator initialRouteName={initialRoute}>
 					<Stack.Screen
 						name="AuthStack"
 						component={AuthStack}

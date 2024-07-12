@@ -2,9 +2,8 @@ import { AxiosRequestConfig } from "axios";
 import Api from "../api";
 import { UserUpdate } from "@/interfaces/User";
 
-const api = new Api({});
-
 export async function editProfile(data: UserUpdate) {
+	const api = await Api.getInstance();
 	const options: AxiosRequestConfig = {
 		url: "/user/update/me",
 	};

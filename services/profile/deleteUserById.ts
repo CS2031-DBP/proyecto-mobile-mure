@@ -1,9 +1,8 @@
 import Api from "../api";
 import { AxiosRequestConfig } from "axios";
 
-const api = new Api({});
-
 export async function deleteUserById(userId: number) {
+	const api = await Api.getInstance();
 	const options: AxiosRequestConfig = {
 		url: `/user/${userId}`,
 	};

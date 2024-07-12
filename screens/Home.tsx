@@ -1,9 +1,10 @@
+import { useUserContext } from "@/contexts/UserContext";
 import {
 	NavigationProp,
 	ParamListBase,
 	useNavigation,
 } from "@react-navigation/native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { FAB, IconButton, Portal, Provider, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,6 +12,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 function Home() {
 	const [isFabGroupOpen, setIsFabGroupOpen] = useState(false);
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
+	const userContext = useUserContext();
+
+	useEffect(() => {
+		(async () => {
+			await userContext.refreshUser();
+		})();
+	}, []);
 
 	return (
 		<Provider>

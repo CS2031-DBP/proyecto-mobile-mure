@@ -1,55 +1,54 @@
+import createFormData from "@/utils/createFormData";
 import axios, {
 	AxiosRequestConfig,
 	AxiosResponse,
 	RawAxiosRequestHeaders,
 } from "axios";
-import * as SecureStore from "expo-secure-store";
 
 export default class Api {
+	private static instance: Api | null = null;
 	private basePath: string;
-	private authorization: string;
+	private authorization: string | null;
 
-	constructor(config: AxiosRequestConfig) {
-		this.basePath = `http://${process.env.EXPO_PUBLIC_BASE_PATH}:8080`;
-		this.authorization = "";
+	private constructor(basePath: string, authorization: string | null) {
+		this.basePath = basePath;
+		this.authorization = authorization;
+	}
+
+	public setAuthorization(authorization: string) {
+		this.authorization = authorization;
+	}
+
+	public static async getInstance() {
+		if (!Api.instance) {
+			const basePath = `http://${process.env.EXPO_PUBLIC_BASE_PATH}:8080`;
+			Api.instance = new Api(basePath, "");
+		}
+
+		return Api.instance;
 	}
 
 	private async request<RequestType, ResponseType>(
 		options: AxiosRequestConfig
 	) {
+		const headers: RawAxiosRequestHeaders = {
+			"Content-Type":
+				options.headers?.["Content-Type"] || "application/json",
+			Authorization: this.authorization
+				? `Bearer ${this.authorization}`
+				: "",
+		};
 		const configOptions: AxiosRequestConfig = {
 			...options,
 			baseURL: this.basePath,
-		};
-
-		const path = this.basePath + options.url;
-
-		const headers: RawAxiosRequestHeaders = {
-			// "Content-type": "application/json",
-			"Content-Type":
-				configOptions.headers?.["Content-Type"] || "application/json",
-		};
-
-		const noAuthRequired = ["/login", "/signin"];
-
-		const requiresAuth = !noAuthRequired.some((endpoint) =>
-			path.includes(endpoint)
-		);
-
-		if (requiresAuth) {
-			const token = await SecureStore.getItemAsync("token");
-
-			if (token) {
-				headers.Authorization = `Bearer ${token}`;
-			}
-		}
-
-		const config: AxiosRequestConfig = {
-			...configOptions,
 			headers: headers,
 		};
+		const path = this.basePath + options.url;
 
-		return axios<RequestType, AxiosResponse<ResponseType>>(path, config);
+		return axios<RequestType, AxiosResponse<ResponseType>>(
+			path,
+			configOptions
+		);
 	}
 
 	public get<RequestBodyType, ResponseBodyType>(options: AxiosRequestConfig) {
@@ -74,27 +73,19 @@ export default class Api {
 		return this.request<RequestBodyType, ResponseBodyType>(configOptions);
 	}
 
-	public async postForm<RequestBodyType, ResponseBodyType>(
-		data: RequestBodyType,
-		options: AxiosRequestConfig
-	) {
-		const token = await SecureStore.getItemAsync("token");
-
+	public async postForm<
+		RequestBodyType extends Record<string, any>,
+		ResponseBodyType
+	>(data: RequestBodyType, options: AxiosRequestConfig) {
 		const configOptions: AxiosRequestConfig = {
+			...options,
 			headers: {
-				Authorization: `Bearer ${token}`,
 				"Content-Type": "multipart/form-data",
 			},
 		};
+		const formData = createFormData(data);
 
-		console.log(token);
-		console.log(`${this.basePath}/post`);
-		return axios.post(`${this.basePath}/post`, data, configOptions);
-
-		// return this.post<RequestBodyType, ResponseBodyType>(
-		// 	data,
-		// 	configOptions
-		// );
+		return this.post<object, ResponseBodyType>(formData, configOptions);
 	}
 
 	public patch<RequestBodyType, ResponseBodyType>(

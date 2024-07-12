@@ -1,3 +1,5 @@
+import { File } from "./File";
+
 export interface SongInfoForPostDto {
 	title: string;
 	url: string;
@@ -38,6 +40,6 @@ export interface PostRequest {
 	songId?: number;
 	albumId?: number;
 	description: string;
-	image?: any;
-	audio?: object;
+	image?: File;
+	audio?: File;
 }
