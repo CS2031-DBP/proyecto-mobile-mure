@@ -74,21 +74,27 @@ export default class Api {
 		return this.request<RequestBodyType, ResponseBodyType>(configOptions);
 	}
 
-	public postForm<RequestBodyType, ResponseBodyType>(
+	public async postForm<RequestBodyType, ResponseBodyType>(
 		data: RequestBodyType,
 		options: AxiosRequestConfig
 	) {
+		const token = await SecureStore.getItemAsync("token");
+
 		const configOptions: AxiosRequestConfig = {
-			...options,
 			headers: {
+				Authorization: `Bearer ${token}`,
 				"Content-Type": "multipart/form-data",
 			},
 		};
 
-		return this.post<RequestBodyType, ResponseBodyType>(
-			data,
-			configOptions
-		);
+		console.log(token);
+		console.log(`${this.basePath}/post`);
+		return axios.post(`${this.basePath}/post`, data, configOptions);
+
+		// return this.post<RequestBodyType, ResponseBodyType>(
+		// 	data,
+		// 	configOptions
+		// );
 	}
 
 	public patch<RequestBodyType, ResponseBodyType>(
