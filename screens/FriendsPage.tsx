@@ -108,10 +108,6 @@ export default function FriendsPage() {
 
 	const isCurrentUser = userId === currentUser?.id;
 
-	console.log("Is current user:", isCurrentUser);
-	console.log("User ID from route:", userId);
-	console.log("Current user ID:", currentUser?.id);
-
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			{errors ? (

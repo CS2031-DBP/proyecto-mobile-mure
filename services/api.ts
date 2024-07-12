@@ -101,21 +101,20 @@ export default class Api {
 		return this.request<RequestBodyType, ResponseBodyType>(configOptions);
 	}
 
-	public patchForm<RequestBodyType, ResponseBodyType>(
-		data: RequestBodyType,
-		options: AxiosRequestConfig
-	) {
+
+	public async patchForm<
+		RequestBodyType extends Record<string, any>,
+		ResponseBodyType
+	>(data: RequestBodyType, options: AxiosRequestConfig) {
 		const configOptions: AxiosRequestConfig = {
 			...options,
 			headers: {
 				"Content-Type": "multipart/form-data",
 			},
 		};
+		const formData = createFormData(data);
 
-		return this.patch<RequestBodyType, ResponseBodyType>(
-			data,
-			configOptions
-		);
+		return this.patch<object, ResponseBodyType>(formData, configOptions);
 	}
 
 	public put(data: any, options: AxiosRequestConfig) {

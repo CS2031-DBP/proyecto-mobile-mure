@@ -23,8 +23,6 @@ import MediaCard from "@/components/MediaCard";
 import createPost from "@/services/post/createPost";
 import { useUserContext } from "@/contexts/UserContext";
 import { PostRequest } from "@/interfaces/Post";
-import * as FileSystem from "expo-file-system";
-import createFormData from "@/utils/createFormData";
 
 export default function AddPost() {
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
@@ -107,6 +105,7 @@ export default function AddPost() {
 					type: "image/jpeg",
 				},
 			};
+			await createPost(postRequest);
 			Alert.alert("Post created successfully");
 			navigation.goBack();
 		} catch (error) {

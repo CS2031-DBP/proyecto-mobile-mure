@@ -32,7 +32,6 @@ export default function Playlist({ playlist, onDelete }: PlaylistProps) {
 			try {
 				const userRole = await getRoleFromToken();
 				setRole(userRole);
-				console.log("Fetched user role:", userRole);
 			} catch (error) {
 				console.error("Failed to fetch role", error);
 			}

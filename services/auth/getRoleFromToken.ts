@@ -18,7 +18,6 @@ export async function getRoleFromToken() {
 		const decodedToken = jwtDecode(token);
 
 		if (isCustomJwtPayload(decodedToken)) {
-			console.log("Decoded role from token:", decodedToken.role);
 			return decodedToken.role;
 		} else {
 			throw new Error("Invalid token payload");

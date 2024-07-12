@@ -1,3 +1,5 @@
+import { File } from "./File";
+
 export interface UserUpdate {
 	profileImage?: File;
 	name?: string;
