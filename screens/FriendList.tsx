@@ -186,13 +186,6 @@ export default function FriendList() {
 							</View>
 							<View style={{ alignItems: "flex-end" }}>
 								<Text>{friend.friendsIds.length} Friends</Text>
-								<Button
-									mode="outlined"
-									onPress={() => handleFriendPress(friend.id)}
-									style={{ marginTop: 8 }}
-								>
-									View Profile
-								</Button>
 							</View>
 						</TouchableOpacity>
 					))

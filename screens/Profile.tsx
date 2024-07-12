@@ -43,15 +43,17 @@ export default function Profile() {
 	}
 
 	return (
-		<ProfileInfo
-			user={user}
-			isCurrentUser={true}
-			isFriend={false}
-			setIsFriend={() => {}}
-			friends={friends}
-			setFriends={setFriends}
-			friendsCount={friendsCount}
-			setFriendsCount={setFriendsCount}
-		/>
+		<SafeAreaView style={{ flex: 1, justifyContent: "center", paddingTop: 32 }}>
+			<ProfileInfo
+				user={user}
+				isCurrentUser={true}
+				isFriend={false}
+				setIsFriend={() => {}}
+				friends={friends}
+				setFriends={setFriends}
+				friendsCount={friendsCount}
+				setFriendsCount={setFriendsCount}
+			/>
+		</SafeAreaView>
 	);
 }

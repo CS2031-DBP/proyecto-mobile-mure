@@ -1,9 +1,9 @@
 export interface UserUpdate {
-	profileImage: string;
-	name: string;
-	password: string;
-	email: string;
-	nickname: string,
+	profileImage?: File;
+	name?: string;
+	password?: string;
+	email?: string;
+	nickname?: string,
 }
 
 export interface UserResponse {

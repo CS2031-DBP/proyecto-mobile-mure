@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { SafeAreaView, Text } from "react-native";
+import { SafeAreaView, Text, View } from "react-native";
 import {
 	useFocusEffect,
 	NavigationProp,
@@ -7,6 +7,7 @@ import {
 	useRoute,
 	useNavigation,
 } from "@react-navigation/native";
+import { IconButton } from "react-native-paper";
 import { getUserById } from "@/services/profile/getUserById";
 import { UserResponse } from "@/interfaces/User";
 import ProfileInfo from "@/components/ProfileInfo";
@@ -57,8 +58,12 @@ export default function UserProfile() {
 
 	return (
 		<SafeAreaView
-			style={{ flex: 1, justifyContent: "center", paddingTop: 20 }}
+			style={{ flex: 1, justifyContent: "center"}}
 		>
+			<View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', paddingTop: 20 }}>
+                        <IconButton icon="arrow-left" size={24} onPress={() => navigation.navigate('Profile')} />
+                        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>User Profile</Text>
+            </View>
 			{user ? (
 				<ProfileInfo
 					user={user}

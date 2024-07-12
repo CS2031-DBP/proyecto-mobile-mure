@@ -167,17 +167,9 @@ export default function ProfileInfo({
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, justifyContent: 'center', paddingTop: 24 }}>
-            <View>
-                {!isCurrentUser && (
-                    <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                        <IconButton icon="arrow-left" size={24} onPress={() => navigation.navigate('Profile')} />
-                        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>User Profile</Text>
-                    </View>
-                )}
-            </View>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center'}}>
             <ScrollView
-                contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 20, paddingTop: 8 }}
+                contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 20 }}
                 onScroll={({ nativeEvent }) => {
                     const isCloseToBottom = nativeEvent.layoutMeasurement.height + nativeEvent.contentOffset.y >= nativeEvent.contentSize.height - 20;
                     if (isCloseToBottom && !loading && hasMore) {

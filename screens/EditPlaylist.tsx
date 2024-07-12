@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, TextInput, Text, View, Alert } from 'react-native';
+import { SafeAreaView, FlatList, TextInput, Text, View, Alert } from 'react-native';
 import { Button, IconButton } from 'react-native-paper';
 import { getSongsByTitle } from '@/services/song/getSongsByTitle';
 import { addSongToPlaylist } from '@/services/playlist/addSongToPlaylist';
@@ -23,6 +23,9 @@ export default function EditPlaylist() {
   const [songs, setSongs] = useState<SongResponse[]>([]);
   const [selectedSongs, setSelectedSongs] = useState<SongResponse[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const userContext = useUserContext();
   const route = useRoute<RouteProp<{ params: EditPlaylistRouteParams }, "params">>();
   const { playlist } = route.params;
@@ -53,11 +56,33 @@ export default function EditPlaylist() {
 
   const handleSearch = async () => {
     setError(null);
+    setPage(0);
+    setHasMore(true);
     try {
       const songsData = await getSongsByTitle(title, 0, 10);
-      setSongs(songsData);
+      setSongs(songsData.content);
     } catch (error) {
       setError("Failed to load songs");
+    }
+  };
+
+  const loadMoreSongs = async () => {
+    if (loading || !hasMore) return;
+
+    setLoading(true);
+    try {
+      const nextPage = page + 1;
+      const songsData = await getSongsByTitle(title, nextPage, 10);
+      if (songsData.content.length > 0) {
+        setSongs([...songs, ...songsData.content]);
+        setPage(nextPage);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      setError("Failed to load more songs");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -104,46 +129,51 @@ export default function EditPlaylist() {
         </Button>
       </View>
       {error && <Text style={{ color: 'red' }}>{error}</Text>}
-      <ScrollView>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <View style={{ flex: 1, marginRight: 8 }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>Search Results</Text>
-            <ScrollView>
-              {songs.map((item) => (
-                <View key={item.id} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 8, borderBottomColor: 'gray', borderBottomWidth: 1 }}>
-                  <View>
-                    <Text style={{ fontSize: 16 }}>{item.title}</Text>
-                    <Text style={{ fontSize: 14, color: 'gray' }}>{item.artistsNames.join(', ')}</Text>
-                  </View>
-                  <IconButton
-                    icon="plus"
-                    size={24}
-                    onPress={() => handleAddSong(item)}
-                  />
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
+        <View style={{ flex: 1, marginRight: 8 }}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>Search Results</Text>
+          <FlatList
+            data={songs}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 8, borderBottomColor: 'gray', borderBottomWidth: 1 }}>
+                <View style={{ flex: 1, marginRight: 8 }}>
+                  <Text style={{ fontSize: 14, flexShrink: 1 }} numberOfLines={1} ellipsizeMode="tail">{item.title}</Text>
+                  <Text style={{ fontSize: 12, color: 'gray', flexShrink: 1 }} numberOfLines={1} ellipsizeMode="tail">{item.artistsNames.join(', ')}</Text>
                 </View>
-              ))}
-            </ScrollView>
-          </View>
-          <View style={{ flex: 1, marginLeft: 8 }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>Selected Songs</Text>
-            <ScrollView>
-              {selectedSongs.map((item) => (
-                <View key={item.id} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 8, borderBottomColor: 'gray', borderBottomWidth: 1 }}>
-                  <View>
-                    <Text style={{ fontSize: 16 }}>{item.title}</Text>
-                    <Text style={{ fontSize: 14, color: 'gray' }}>{item.artistsNames.join(', ')}</Text>
-                  </View>
-                  <IconButton
-                    icon="minus"
-                    size={24}
-                    onPress={() => handleRemoveSong(item.id)}
-                  />
-                </View>
-              ))}
-            </ScrollView>
-          </View>
+                <IconButton
+                  icon="plus"
+                  size={24}
+                  onPress={() => handleAddSong(item)}
+                />
+              </View>
+            )}
+            onEndReached={loadMoreSongs}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={loading && <Text style={{ textAlign: 'center' }}>Loading...</Text>}
+          />
         </View>
-      </ScrollView>
+        <View style={{ flex: 1, marginLeft: 8 }}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>Selected Songs</Text>
+          <FlatList
+            data={selectedSongs}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 8, borderBottomColor: 'gray', borderBottomWidth: 1 }}>
+                <View style={{ flex: 1, marginRight: 8 }}>
+                  <Text style={{ fontSize: 14, flexShrink: 1 }} numberOfLines={1} ellipsizeMode="tail">{item.title}</Text>
+                  <Text style={{ fontSize: 12, color: 'gray', flexShrink: 1 }} numberOfLines={1} ellipsizeMode="tail">{item.artistsNames.join(', ')}</Text>
+                </View>
+                <IconButton
+                  icon="minus"
+                  size={24}
+                  onPress={() => handleRemoveSong(item.id)}
+                />
+              </View>
+            )}
+          />
+        </View>
+      </View>
       <Button mode="contained" onPress={handleSave} style={{ marginTop: 16 }}>
         Save Changes
       </Button>
