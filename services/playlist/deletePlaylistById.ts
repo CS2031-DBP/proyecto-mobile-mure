@@ -1,6 +1,6 @@
 import Api from "../api";
 
-export async function deletePlaylist(playlistId: number) {
+export async function deletePlaylistById(playlistId: number) {
 	const api = await Api.getInstance();
 
 	try {

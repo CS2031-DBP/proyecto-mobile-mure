@@ -96,7 +96,7 @@ export default function MediaCard(props: MediaCard) {
 					onPress={openLink}
 					style={{ position: "absolute", right: 0, bottom: 0 }}
 				>
-					<IconButton icon="album" size={24} onPress={openLink} />
+					<IconButton icon="headphones" size={24} onPress={openLink} />
 				</TouchableOpacity>
 			</View>
 		</Card>

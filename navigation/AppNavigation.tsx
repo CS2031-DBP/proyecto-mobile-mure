@@ -11,6 +11,7 @@ import EditProfile from "@/screens/EditProfile";
 import Profile from "@/screens/Profile";
 import FriendsPage from "@/screens/FriendsPage";
 import Library from "@/screens/Library";
+import PlaylistPage from "@/screens/PlaylistPage";
 import { PaperProvider } from "react-native-paper";
 import Artist, { ArtistProps } from "@/screens/Artist";
 import { Album, AlbumProps } from "@/screens/Album";
@@ -35,6 +36,7 @@ type RootStackParamList = {
 	Profile: { userId?: number };
 	FriendsPage: { friendIds: number[]; userId?: number };
 	Library: { userId?: number };
+	PlaylistPage: { playlistId: number };
 	Artist: ArtistProps;
 	Album: AlbumProps;
 	AddSongToPlaylist: AddSongToPlaylistProps;
@@ -133,6 +135,11 @@ export default function AppNavigation() {
                         component={Library}
                         options={{ headerShown: false }}
                     />
+					<Stack.Screen
+						name="PlaylistPage"
+						component={PlaylistPage}
+						options={{ headerShown: false }}
+					/>
 					<Stack.Screen
 						name="Artist"
 						// @ts-expect-error

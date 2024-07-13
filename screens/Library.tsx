@@ -1,23 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
-import {
-    SafeAreaView,
-    ScrollView,
-    Text,
-    ActivityIndicator,
-} from "react-native";
+import { SafeAreaView, ScrollView, Text, ActivityIndicator, TouchableOpacity, View } from "react-native";
 import { PlaylistResponse } from "@/interfaces/Playlist";
 import { getPlaylistsByUserId } from "@/services/playlist/getPlaylistsByUserId";
-import Playlist from "@/components/Playlist";
 import { useUserContext } from "@/contexts/UserContext";
 import { FAB, Portal, Provider } from "react-native-paper";
-import {
-    NavigationProp,
-    ParamListBase,
-    useNavigation,
-    useIsFocused,
-    RouteProp,
-    useRoute,
-} from "@react-navigation/native";
+import { NavigationProp, ParamListBase, useNavigation, useIsFocused, RouteProp, useRoute } from "@react-navigation/native";
 
 interface LibraryProps {
     userId?: number;
@@ -36,7 +23,7 @@ export default function Library() {
     const isFocused = useIsFocused();
     const scrollViewRef = useRef<ScrollView>(null);
 
-    const size = 6;
+    const size = 10; // Cambiar tamaño de la página a 10
 
     const userId = route.params?.userId || userContext.user?.id;
     const isCurrentUser = userId === userContext.user?.id;
@@ -55,9 +42,7 @@ export default function Library() {
                 setHasMore(false);
             }
             setPlaylists((prevPlaylists) =>
-                reset
-                    ? playlistsData
-                    : [...new Set([...prevPlaylists, ...playlistsData])]
+                reset ? playlistsData : [...prevPlaylists, ...playlistsData]
             );
         } catch (error) {
             setErrors("Failed to load playlists");
@@ -85,10 +70,7 @@ export default function Library() {
 
     const handleScroll = ({ nativeEvent }: { nativeEvent: any }) => {
         const { layoutMeasurement, contentOffset, contentSize } = nativeEvent;
-        if (
-            layoutMeasurement.height + contentOffset.y >=
-            contentSize.height - 20
-        ) {
+        if (layoutMeasurement.height + contentOffset.y >= contentSize.height - 20) {
             loadMore();
         }
     };
@@ -106,18 +88,29 @@ export default function Library() {
                         <Text style={{ color: "red" }}>{errors}</Text>
                     ) : (
                         playlists.map((playlist) => (
-                            <Playlist
+                            <TouchableOpacity
                                 key={playlist.id}
-                                playlist={playlist}
-                                onDelete={() => loadPlaylists(0, true)}
-                                isCurrentUser={isCurrentUser}
-                                isAdmin={userContext.user?.role === "ROLE_ADMIN"}
-                            />
+                                onPress={() =>
+                                    navigation.navigate("PlaylistPage", { playlistId: playlist.id })
+                                }
+                            >
+                                <View
+                                    style={{
+                                        padding: 16,
+                                        marginBottom: 16,
+                                        backgroundColor: "#fff",
+                                        borderRadius: 8,
+                                    }}
+                                >
+                                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>{playlist.name}</Text>
+                                    <Text style={{ fontSize: 16, color: "gray" }}>
+                                        {playlist.songsIds.length} songs
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
                         ))
                     )}
-                    {loading && (
-                        <ActivityIndicator size="large" color="#0000ff" />
-                    )}
+                    {loading && <ActivityIndicator size="large" color="#0000ff" />}
                 </ScrollView>
                 {isCurrentUser && (
                     <Portal>
@@ -129,13 +122,10 @@ export default function Library() {
                                 {
                                     icon: "playlist-plus",
                                     label: "Add Playlist",
-                                    onPress: () =>
-                                        navigation.navigate("AddPlaylist"),
+                                    onPress: () => navigation.navigate("AddPlaylist"),
                                 },
                             ]}
-                            onStateChange={() =>
-                                setIsFabGroupOpen(!isFabGroupOpen)
-                            }
+                            onStateChange={() => setIsFabGroupOpen(!isFabGroupOpen)}
                         />
                     </Portal>
                 )}

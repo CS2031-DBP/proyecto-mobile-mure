@@ -40,8 +40,7 @@ export default function EditPlaylist() {
 	const [loading, setLoading] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
 	const userContext = useUserContext();
-	const route =
-		useRoute<RouteProp<{ params: EditPlaylistRouteParams }, "params">>();
+	const route = useRoute<RouteProp<{ params: EditPlaylistRouteParams }, "params">>();
 	const { playlist } = route.params;
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
@@ -134,7 +133,7 @@ export default function EditPlaylist() {
 			"Playlist Updated",
 			"Your playlist has been updated successfully."
 		);
-		navigation.navigate("Main", { screen: "Library" });
+		navigation.navigate("PlaylistPage", { playlistId: playlist.id });
 	};
 
 	return (
