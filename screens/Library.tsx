@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { SafeAreaView, ScrollView, Text, ActivityIndicator, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, ScrollView, Text, ActivityIndicator, TouchableOpacity, View, Image } from "react-native";
 import { PlaylistResponse } from "@/interfaces/Playlist";
 import { getPlaylistsByUserId } from "@/services/playlist/getPlaylistsByUserId";
+import { getFavoriteAlbums } from "@/services/album/getFavoriteAlbums";
 import { useUserContext } from "@/contexts/UserContext";
 import { FAB, Portal, Provider } from "react-native-paper";
 import { NavigationProp, ParamListBase, useNavigation, useIsFocused, RouteProp, useRoute } from "@react-navigation/native";
 import { getFavoriteSongs } from "@/services/song/getFavoriteSongs";
 import { SongResponse } from "@/interfaces/Song";
+import { AlbumResponse } from "@/interfaces/Album";
 
 interface LibraryProps {
     userId?: number;
@@ -18,6 +20,7 @@ export default function Library() {
     const userContext = useUserContext();
     const [playlists, setPlaylists] = useState<PlaylistResponse[]>([]);
     const [favoriteSongs, setFavoriteSongs] = useState<SongResponse[]>([]);
+    const [favoriteAlbums, setFavoriteAlbums] = useState<AlbumResponse[]>([]);
     const [errors, setErrors] = useState<string | null>(null);
     const [page, setPage] = useState<number>(0);
     const [hasMore, setHasMore] = useState<boolean>(true);
@@ -42,6 +45,7 @@ export default function Library() {
         try {
             const playlistsData = await getPlaylistsByUserId(userId, currentPage, size);
             const favoriteSongsData = await getFavoriteSongs(userId);
+            const favoriteAlbumsData = await getFavoriteAlbums(userId);
 
             if (playlistsData.length < size) {
                 setHasMore(false);
@@ -50,8 +54,10 @@ export default function Library() {
                 reset ? playlistsData : [...prevPlaylists, ...playlistsData]
             );
             setFavoriteSongs(favoriteSongsData);
+            setFavoriteAlbums(favoriteAlbumsData);
         } catch (error) {
-            setErrors("Failed to load playlists");
+            console.error("Failed to load data:", error);
+            setErrors("Failed to load data");
         } finally {
             setLoading(false);
         }
@@ -81,6 +87,10 @@ export default function Library() {
         }
     };
 
+    const truncateText = (text: string, maxLength: number) => {
+        return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+    };
+
     return (
         <Provider>
             <SafeAreaView style={{ flex: 1, marginTop: 16 }}>
@@ -105,12 +115,43 @@ export default function Library() {
                                         borderRadius: 8,
                                     }}
                                 >
-                                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>Favorite Songs</Text>
-                                    <Text style={{ fontSize: 16, color: "gray" }}>
+                                    <Text style={{ fontSize: 16, fontWeight: "bold" }}>Favorite Songs</Text>
+                                    <Text style={{ fontSize: 14, color: "gray" }}>
                                         {favoriteSongs.length} songs
                                     </Text>
                                 </View>
                             </TouchableOpacity>
+                            {favoriteAlbums.map((album) => (
+                                <TouchableOpacity
+                                    key={album.id}
+                                    onPress={() => navigation.navigate("Album", { albumId: album.id })}
+                                >
+                                    <View
+                                        style={{
+                                            padding: 16,
+                                            marginBottom: 16,
+                                            backgroundColor: "#fff",
+                                            borderRadius: 8,
+                                            flexDirection: "row",
+                                            alignItems: "center"
+                                        }}
+                                    >
+                                        <Image
+                                            source={{ uri: album.coverImageUrl }}
+                                            style={{ width: 60, height: 60, borderRadius: 4, marginRight: 16 }}
+                                        />
+                                        <View>
+                                            <Text style={{ fontSize: 16, fontWeight: "bold" }}>{truncateText(album.title, 25)}</Text>
+                                            <Text style={{ fontSize: 14, color: "gray" }}>
+                                                {truncateText(album.artistName, 20)}
+                                            </Text>
+                                            <Text>
+                                                album
+                                            </Text>
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
+                            ))}
                             {playlists.map((playlist) => (
                                 <TouchableOpacity
                                     key={playlist.id}
@@ -126,9 +167,12 @@ export default function Library() {
                                             borderRadius: 8,
                                         }}
                                     >
-                                        <Text style={{ fontSize: 20, fontWeight: "bold" }}>{playlist.name}</Text>
-                                        <Text style={{ fontSize: 16, color: "gray" }}>
+                                        <Text style={{ fontSize: 16, fontWeight: "bold" }}>{truncateText(playlist.name, 20)}</Text>
+                                        <Text style={{ fontSize: 14, color: "gray" }}>
                                             {playlist.songsIds.length} songs
+                                        </Text>
+                                        <Text>
+                                            playlist
                                         </Text>
                                     </View>
                                 </TouchableOpacity>
