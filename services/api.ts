@@ -101,7 +101,6 @@ export default class Api {
 		return this.request<RequestBodyType, ResponseBodyType>(configOptions);
 	}
 
-
 	public async patchForm<
 		RequestBodyType extends Record<string, any>,
 		ResponseBodyType

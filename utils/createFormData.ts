@@ -14,7 +14,7 @@ export default function createFormData<T extends Record<string, any>>(
 			"type" in value
 		) {
 			formData.append(key, value as any);
-		} else {
+		} else if (value != undefined) {
 			formData.append(key, value.toString());
 		}
 	});

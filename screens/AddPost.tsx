@@ -94,16 +94,17 @@ export default function AddPost() {
 	async function handlePost() {
 		try {
 			if (!userContext.user) throw new Error("User not found");
-			const localUri = imagePickerHook.image;
-			if (!localUri) throw new Error("Image not selected");
+
 			const postRequest: PostRequest = {
 				userId: userContext.user.id,
 				description: description,
-				image: {
-					uri: localUri,
-					name: "image.jpg",
-					type: "image/jpeg",
-				},
+				image: imagePickerHook.image
+					? {
+							uri: imagePickerHook.image,
+							name: "image.jpg",
+							type: "image/jpeg",
+					  }
+					: undefined,
 			};
 			await createPost(postRequest);
 			Alert.alert("Post created successfully");
