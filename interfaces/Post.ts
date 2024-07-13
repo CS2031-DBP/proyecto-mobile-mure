@@ -1,23 +1,21 @@
 import { File } from "./File";
 
-export interface SongInfoForPostDto {
+export interface SongResponseForPostDto {
 	title: string;
-	url: string;
-	coverUrl: string;
+	coverImageUrl: string;
 	artistsNames: string[];
 	duration: string;
 	genre: string;
-	link: string;
+	spotifyUrl: string;
 }
 
 export interface AlbumInfoForPostDto {
 	title: string;
-	url: string;
-	coverUrl: string;
+	coverImageUrl: string;
 	artist: string;
 	duration: string;
 	songs: string[];
-	link: string;
+	spotifyUrl: string;
 }
 
 export interface PostResponse {
@@ -26,7 +24,7 @@ export interface PostResponse {
 	ownerId: number;
 	profileImage: string;
 	createdAt: string;
-	song: SongInfoForPostDto;
+	song: SongResponseForPostDto;
 	album: AlbumInfoForPostDto;
 	likes: number;
 	description: string;

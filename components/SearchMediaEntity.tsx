@@ -105,7 +105,7 @@ export default function SearchMediaEntity(props: SocialMediaEntityProps) {
 							});
 					} else if (isSongResponse(result)) {
 						searchItemProps.title = result.title;
-						searchItemProps.imageUrl = result.coverImage;
+						searchItemProps.imageUrl = result.coverImageUrl;
 						searchItemProps.mediaId = result.id;
 						searchItemProps.artistName =
 							result.artistsNames.join(", ");
@@ -117,7 +117,7 @@ export default function SearchMediaEntity(props: SocialMediaEntityProps) {
 					} else if (isAlbumResponse(result)) {
 						searchItemProps.title = result.title;
 						searchItemProps.mediaId = result.id;
-						searchItemProps.imageUrl = result.coverImage;
+						searchItemProps.imageUrl = result.coverImageUrl;
 						searchItemProps.artistName = result.artistName;
 						searchItemProps.type = "album";
 						searchItemProps.onPress = () =>

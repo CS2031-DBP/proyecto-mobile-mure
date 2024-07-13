@@ -5,6 +5,8 @@ import { getPlaylistsByUserId } from "@/services/playlist/getPlaylistsByUserId";
 import { useUserContext } from "@/contexts/UserContext";
 import { FAB, Portal, Provider } from "react-native-paper";
 import { NavigationProp, ParamListBase, useNavigation, useIsFocused, RouteProp, useRoute } from "@react-navigation/native";
+import { getFavoriteSongs } from "@/services/song/getFavoriteSongs";
+import { SongResponse } from "@/interfaces/Song";
 
 interface LibraryProps {
     userId?: number;
@@ -15,6 +17,7 @@ export default function Library() {
     const navigation = useNavigation<NavigationProp<ParamListBase>>();
     const userContext = useUserContext();
     const [playlists, setPlaylists] = useState<PlaylistResponse[]>([]);
+    const [favoriteSongs, setFavoriteSongs] = useState<SongResponse[]>([]);
     const [errors, setErrors] = useState<string | null>(null);
     const [page, setPage] = useState<number>(0);
     const [hasMore, setHasMore] = useState<boolean>(true);
@@ -23,7 +26,7 @@ export default function Library() {
     const isFocused = useIsFocused();
     const scrollViewRef = useRef<ScrollView>(null);
 
-    const size = 10; // Cambiar tamaño de la página a 10
+    const size = 10;
 
     const userId = route.params?.userId || userContext.user?.id;
     const isCurrentUser = userId === userContext.user?.id;
@@ -38,12 +41,16 @@ export default function Library() {
 
         try {
             const playlistsData = await getPlaylistsByUserId(userId, currentPage, size);
+
+            const favoriteSongsData = await getFavoriteSongs(userId);
+
             if (playlistsData.length < size) {
                 setHasMore(false);
             }
             setPlaylists((prevPlaylists) =>
                 reset ? playlistsData : [...prevPlaylists, ...playlistsData]
             );
+            setFavoriteSongs(favoriteSongsData);
         } catch (error) {
             setErrors("Failed to load playlists");
         } finally {
@@ -87,12 +94,9 @@ export default function Library() {
                     {errors ? (
                         <Text style={{ color: "red" }}>{errors}</Text>
                     ) : (
-                        playlists.map((playlist) => (
+                        <>
                             <TouchableOpacity
-                                key={playlist.id}
-                                onPress={() =>
-                                    navigation.navigate("PlaylistPage", { playlistId: playlist.id })
-                                }
+                                onPress={() => navigation.navigate("FavoriteSongs", { songs: favoriteSongs })}
                             >
                                 <View
                                     style={{
@@ -102,13 +106,35 @@ export default function Library() {
                                         borderRadius: 8,
                                     }}
                                 >
-                                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>{playlist.name}</Text>
+                                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>Favorite Songs</Text>
                                     <Text style={{ fontSize: 16, color: "gray" }}>
-                                        {playlist.songsIds.length} songs
+                                        {favoriteSongs.length} songs
                                     </Text>
                                 </View>
                             </TouchableOpacity>
-                        ))
+                            {playlists.map((playlist) => (
+                                <TouchableOpacity
+                                    key={playlist.id}
+                                    onPress={() =>
+                                        navigation.navigate("PlaylistPage", { playlistId: playlist.id })
+                                    }
+                                >
+                                    <View
+                                        style={{
+                                            padding: 16,
+                                            marginBottom: 16,
+                                            backgroundColor: "#fff",
+                                            borderRadius: 8,
+                                        }}
+                                    >
+                                        <Text style={{ fontSize: 20, fontWeight: "bold" }}>{playlist.name}</Text>
+                                        <Text style={{ fontSize: 16, color: "gray" }}>
+                                            {playlist.songsIds.length} songs
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            ))}
+                        </>
                     )}
                     {loading && <ActivityIndicator size="large" color="#0000ff" />}
                 </ScrollView>

@@ -6,10 +6,11 @@ export interface SongResponse {
 	timesPlayed: number;
 	releaseDate: string;
 	duration: string;
-	coverImage: string;
+	coverImageUrl: string;
 	albumTitle: string;
 	artistsNames: string[];
-	link: string;
+	spotifyUrl: string;
+	spotifyPreviewUrl: string;
 	artistsIds: number[];
 	albumId: number;
 }

@@ -46,7 +46,7 @@ export default function Home() {
             if (reset) {
                 setPosts(response.content);
             } else {
-                setPosts((prevPosts) => [...prevPosts, ...response.content]);
+                setPosts((prevPosts) => [... new Set(prevPosts), ...response.content]);
             }
             setHasMore(response.totalPages > (reset ? 1 : page + 1));
             setPage((prevPage) => (reset ? 1 : prevPage + 1));

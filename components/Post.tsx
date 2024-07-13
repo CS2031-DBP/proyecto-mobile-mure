@@ -222,7 +222,7 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 							}}
 						>
 							<Image
-								source={{ uri: post.album.coverUrl }}
+								source={{ uri: post.album.coverImageUrl }}
 								style={{
 									width: 60,
 									height: 60,
@@ -233,7 +233,7 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 								icon="album"
 								size={20}
 								onPress={() => {
-									openLink(post.album.link);
+									openLink(post.album.spotifyUrl);
 								}}
 							/>
 						</View>
@@ -246,7 +246,7 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 							}}
 						>
 							<Image
-								source={{ uri: post.song.coverUrl }}
+								source={{ uri: post.song.coverImageUrl }}
 								style={{
 									width: 60,
 									height: 60,
@@ -257,7 +257,7 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 								icon="headphones"
 								size={20}
 								onPress={() => {
-									openLink(post.song.link);
+									openLink(post.song.spotifyUrl);
 								}}
 							/>
 						</View>
