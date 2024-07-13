@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { SafeAreaView, ScrollView, View, Text, Alert, ActivityIndicator } from "react-native";
 import { Avatar, Button, IconButton } from "react-native-paper";
 import { UserResponse } from "@/interfaces/User";
@@ -11,7 +11,7 @@ import { getPostsByUserId } from "@/services/post/getPostsByUserId";
 import { PostResponse } from "@/interfaces/Post";
 import Post from "@/components/Post";
 import { useUserContext } from "@/contexts/UserContext";
-import { useNavigation, NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useNavigation, NavigationProp, ParamListBase, useFocusEffect } from "@react-navigation/native";
 
 interface ProfileProps {
     user: UserResponse;
@@ -43,7 +43,7 @@ export default function ProfileInfo({
     const [page, setPage] = useState<number>(0);
     const [hasMore, setHasMore] = useState<boolean>(true);
 
-    const pageSize = 6;
+    const pageSize = 10;
 
     useEffect(() => {
         const fetchRole = async () => {
@@ -67,15 +67,19 @@ export default function ProfileInfo({
         }
     }, [isFriend, isCurrentUser, role, user.friendsIds, setFriends]);
 
-    const fetchPosts = async () => {
+    const fetchPosts = async (reset: boolean = false) => {
         if (loading || !hasMore) return;
 
         setLoading(true);
         try {
-            const response = await getPostsByUserId(user.id, page, pageSize);
-            setPosts((prevPosts) => [...prevPosts, ...response.content]);
+            const response = await getPostsByUserId(user.id, reset ? 0 : page, pageSize);
+            if (reset) {
+                setPosts(response.content);
+            } else {
+                setPosts((prevPosts) => [...prevPosts, ...response.content]);
+            }
             setHasMore(response.totalPages > page + 1);
-            setPage(page + 1);
+            setPage((prevPage) => (reset ? 1 : prevPage + 1));
         } catch (error) {
             console.error("Failed to load posts:", error);
             setErrors("Failed to load posts");
@@ -84,9 +88,11 @@ export default function ProfileInfo({
         }
     };
 
-    useEffect(() => {
-        fetchPosts();
-    }, [user.id]);
+    useFocusEffect(
+        useCallback(() => {
+            fetchPosts(true);
+        }, [user.id])
+    );
 
     const handleAddFriend = async () => {
         try {

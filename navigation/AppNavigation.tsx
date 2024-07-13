@@ -33,9 +33,9 @@ type RootStackParamList = {
 	AddPlaylist: undefined;
 	EditPlaylist: undefined;
 	EditProfile: undefined;
-	Profile: { userId?: number };
+	Profile: { userId: number };
 	FriendsPage: { friendIds: number[]; userId?: number };
-	Library: { userId?: number };
+	Library: { userId: number };
 	PlaylistPage: { playlistId: number };
 	Artist: ArtistProps;
 	Album: AlbumProps;
