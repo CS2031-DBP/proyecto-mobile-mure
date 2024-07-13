@@ -6,7 +6,7 @@ export interface AlbumResponse {
 	songsCount: number;
 	totalDuration: string;
 	artistName: string;
-	songTitles: string[];
+	songsTitles: string[];
 	coverImageUrl: string;
 	spotifyUrl: string;
 	songsIds: number[];

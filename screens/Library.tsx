@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { SafeAreaView, ScrollView, Text, ActivityIndicator, TouchableOpacity, View } from "react-native";
 import { PlaylistResponse } from "@/interfaces/Playlist";
 import { getPlaylistsByUserId } from "@/services/playlist/getPlaylistsByUserId";
@@ -41,7 +41,6 @@ export default function Library() {
 
         try {
             const playlistsData = await getPlaylistsByUserId(userId, currentPage, size);
-
             const favoriteSongsData = await getFavoriteSongs(userId);
 
             if (playlistsData.length < size) {
@@ -96,7 +95,7 @@ export default function Library() {
                     ) : (
                         <>
                             <TouchableOpacity
-                                onPress={() => navigation.navigate("FavoriteSongs", { songs: favoriteSongs })}
+                                onPress={() => navigation.navigate("FavoriteSongs", { userId })}
                             >
                                 <View
                                     style={{

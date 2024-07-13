@@ -4,20 +4,19 @@ import { useFocusEffect, RouteProp, useRoute } from "@react-navigation/native";
 import { SongResponse } from "@/interfaces/Song";
 import { getFavoriteSongs } from "@/services/song/getFavoriteSongs";
 import MediaCard from "@/components/MediaCard";
-import { useUserContext } from "@/contexts/UserContext";
 
 interface FavoriteSongsRouteProps {
-    songs: SongResponse[];
+    userId: number;
 }
 
 export default function FavoriteSongs() {
     const route = useRoute<RouteProp<{ params: FavoriteSongsRouteProps }, "params">>();
-    const { user } = useUserContext();
+    const { userId } = route.params;
     const [favoriteSongs, setFavoriteSongs] = useState<SongResponse[]>([]);
 
     const loadFavoriteSongs = async () => {
-        if (user) {
-            const songs = await getFavoriteSongs(user.id);
+        if (userId) {
+            const songs = await getFavoriteSongs(userId);
             setFavoriteSongs(songs);
         }
     };
@@ -25,7 +24,7 @@ export default function FavoriteSongs() {
     useFocusEffect(
         useCallback(() => {
             loadFavoriteSongs();
-        }, [user])
+        }, [userId])
     );
 
     return (

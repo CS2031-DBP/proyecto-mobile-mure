@@ -1,6 +1,7 @@
 import { File } from "./File";
 
 export interface SongResponseForPostDto {
+	id: number;
 	title: string;
 	coverImageUrl: string;
 	artistsNames: string[];
@@ -11,6 +12,7 @@ export interface SongResponseForPostDto {
 }
 
 export interface AlbumInfoForPostDto {
+	id: number;
 	title: string;
 	coverImageUrl: string;
 	artist: string;

@@ -238,7 +238,7 @@ export default function ProfileInfo({
                                 }
                                 style={{ marginTop: 8, width: "100%" }}
                             >
-                                View Playlists
+                                View Library
                             </Button>
                         )}
                     </View>

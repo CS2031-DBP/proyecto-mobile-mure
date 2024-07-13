@@ -1,4 +1,3 @@
-// src/services/song/getSongById.ts
 import Api from "../api";
 import { SongResponse } from "@/interfaces/Song";
 

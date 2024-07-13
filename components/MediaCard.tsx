@@ -85,7 +85,6 @@ export default function MediaCard({ type, mediaId }: MediaCardProps) {
 
     if (!media) return <Text style={{ textAlign: "center" }}>Loading...</Text>;
 
-    console.log('Media data:', media);
 
     return (
         <Card style={{ padding: 10 }}>
@@ -133,7 +132,7 @@ export default function MediaCard({ type, mediaId }: MediaCardProps) {
                         <AudioPlayer previewUrl={(media as SongResponse).spotifyPreviewUrl} />
                     ) : (
                         <TouchableOpacity onPress={openLink}>
-                            <IconButton icon="headphones" size={24} />
+                            <IconButton icon="spotify" size={24} iconColor="green" />
                         </TouchableOpacity>
                     )}
                     <TouchableOpacity onPress={handleLike}>

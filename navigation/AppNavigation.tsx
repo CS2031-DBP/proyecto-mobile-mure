@@ -14,8 +14,8 @@ import Library from "@/screens/Library";
 import PlaylistPage from "@/screens/PlaylistPage";
 import FavoriteSongs from "@/screens/FavoriteSongs";
 import { PaperProvider } from "react-native-paper";
-import Artist, { ArtistProps } from "@/screens/Artist";
-import { Album, AlbumProps } from "@/screens/Album";
+import Artist from "@/screens/Artist";
+import Album from "@/screens/Album";
 import AddSongToPlaylist, {
 	AddSongToPlaylistProps,
 } from "@/screens/AddSongToPlaylist";
@@ -39,8 +39,8 @@ type RootStackParamList = {
 	Library: { userId: number };
 	PlaylistPage: { playlistId: number };
 	FavoriteSongs: undefined;
-	Artist: ArtistProps;
-	Album: AlbumProps;
+	Artist: undefined;
+	Album: { albumId: number };
 	AddSongToPlaylist: AddSongToPlaylistProps;
 	Search: undefined;
 };
@@ -148,18 +148,9 @@ export default function AppNavigation() {
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="Artist"
-						// @ts-expect-error
-						component={Artist}
-						options={{ headerShown: false }}
-						initialParams={{ artistId: -1 }}
-					/>
-					<Stack.Screen
 						name="Album"
-						// @ts-expect-error
 						component={Album}
 						options={{ headerShown: false }}
-						initialParams={{ albumId: -1 }}
 					/>
 					<Stack.Screen
 						name="AddSongToPlaylist"
