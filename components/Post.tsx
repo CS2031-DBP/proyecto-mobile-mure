@@ -16,6 +16,7 @@ import { likePost } from "@/services/post/likePost";
 import { dislikePost } from "@/services/post/dislikePost";
 import { deletePostById } from "@/services/post/deletePostById";
 import { getRoleFromToken } from "@/services/auth/getRoleFromToken";
+import AudioPlayer from "@/components/AudioPlayer";
 
 interface PostProps {
 	post: PostResponse;
@@ -253,13 +254,17 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 									borderRadius: 4,
 								}}
 							/>
-							<IconButton
-								icon="headphones"
-								size={20}
-								onPress={() => {
-									openLink(post.song.spotifyUrl);
-								}}
-							/>
+							{post.song.spotifyPreviewUrl ? (
+								<AudioPlayer previewUrl={post.song.spotifyPreviewUrl} />
+							) : (
+								<IconButton
+									icon="headphones"
+									size={20}
+									onPress={() => {
+										openLink(post.song.spotifyUrl);
+									}}
+								/>
+							)}
 						</View>
 					)}
 				</View>
@@ -279,7 +284,7 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 
 			{post.audioUrl ? (
 				<View style={{ marginTop: 12 }}>
-					{/* Insert audio player here */}
+					<AudioPlayer previewUrl={post.audioUrl} />
 				</View>
 			) : null}
 
@@ -310,13 +315,11 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 							onPress={() => {
 								/* Edit post */
 							}}
-							iconColor="#750B97"
 						/>
 						<IconButton
 							icon="delete"
 							size={20}
 							onPress={handleDelete}
-							iconColor="#750B97"
 						/>
 					</View>
 				)}

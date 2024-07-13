@@ -7,6 +7,7 @@ export interface SongResponseForPostDto {
 	duration: string;
 	genre: string;
 	spotifyUrl: string;
+	spotifyPreviewUrl: string;
 }
 
 export interface AlbumInfoForPostDto {

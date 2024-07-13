@@ -51,6 +51,12 @@ export default function MediaCard({ type, mediaId }: MediaCardProps) {
         fetchMedia();
     }, [mediaId]);
 
+    function openLink() {
+        if (media?.spotifyUrl) {
+            Linking.openURL(media.spotifyUrl);
+        }
+    }
+
     const handleLike = async () => {
         try {
             if (liked) {
@@ -71,14 +77,6 @@ export default function MediaCard({ type, mediaId }: MediaCardProps) {
             setError(`Failed to update like status for ID ${mediaId}`);
         }
     };
-
-	const openLink = () => {
-		if (type === "song") {
-			Linking.openURL((media as SongResponse).spotifyUrl);
-		} else if (type === "album") {
-			Linking.openURL((media as AlbumResponse).spotifyUrl);
-		}
-	}
 
     if (error)
         return (
@@ -131,21 +129,20 @@ export default function MediaCard({ type, mediaId }: MediaCardProps) {
                     ) : null}
                 </View>
                 <View style={{ justifyContent: 'space-between', alignItems: 'center', position: "absolute", right: 0, top: 0, bottom: 0 }}>
-                    {type === "song" && (media as SongResponse).spotifyPreviewUrl && (
+                    {type === "song" && (media as SongResponse).spotifyPreviewUrl ? (
                         <AudioPlayer previewUrl={(media as SongResponse).spotifyPreviewUrl} />
-                    )}
-                    <View style={{ flexDirection: "row" }}>
+                    ) : (
                         <TouchableOpacity onPress={openLink}>
                             <IconButton icon="headphones" size={24} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={handleLike}>
-                            <IconButton
-                                icon={liked ? "heart" : "heart-outline"}
-                                size={24}
-                                iconColor={liked ? "red" : "gray"}
-                            />
-                        </TouchableOpacity>
-                    </View>
+                    )}
+                    <TouchableOpacity onPress={handleLike}>
+                        <IconButton
+                            icon={liked ? "heart" : "heart-outline"}
+                            size={24}
+                            iconColor={liked ? "red" : "gray"}
+                        />
+                    </TouchableOpacity>
                 </View>
             </View>
         </Card>
