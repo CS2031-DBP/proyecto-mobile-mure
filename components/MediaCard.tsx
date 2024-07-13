@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, Linking } from "react-native";
 import { Card, IconButton } from "react-native-paper";
-import { Audio } from "expo-av";
 import { SongResponse } from "@/interfaces/Song";
 import { getSongById } from "@/services/song/getSongById";
 import { AlbumResponse } from "@/interfaces/Album";
@@ -13,6 +12,7 @@ import { dislikeAlbum } from "@/services/album/dislikeAlbum";
 import { isSongLikedByUser } from "@/services/song/isSongLikedByUser";
 import { isAlbumLikedByUser } from "@/services/album/isAlbumLikedByUser";
 import { useUserContext } from "@/contexts/UserContext";
+import AudioPlayer from "@/components/AudioPlayer";
 
 interface MediaCardProps {
     type: "song" | "album";
@@ -24,8 +24,6 @@ export default function MediaCard({ type, mediaId }: MediaCardProps) {
     const [error, setError] = useState<string | null>(null);
     const [media, setMedia] = useState<Media | null>(null);
     const [liked, setLiked] = useState<boolean>(false);
-    const [isPlaying, setIsPlaying] = useState<boolean>(false);
-    const [sound, setSound] = useState<Audio.Sound | null>(null);
     const { user } = useUserContext();
 
     useEffect(() => {
@@ -53,47 +51,6 @@ export default function MediaCard({ type, mediaId }: MediaCardProps) {
         fetchMedia();
     }, [mediaId]);
 
-    useEffect(() => {
-        return () => {
-            if (sound) {
-                sound.unloadAsync();
-            }
-        };
-    }, [sound]);
-
-    const handlePlayPause = async () => {
-        if (isPlaying) {
-            await sound?.pauseAsync();
-            setIsPlaying(false);
-        } else {
-            if (!sound) {
-                const { sound: newSound } = await Audio.Sound.createAsync(
-                    { uri: (media as SongResponse).spotifyPreviewUrl },
-                    { shouldPlay: true }
-                );
-                setSound(newSound);
-                setIsPlaying(true);
-            } else {
-                await sound.playAsync();
-                setIsPlaying(true);
-            }
-        }
-    };
-
-    const handleRestart = async () => {
-        if (sound) {
-            await sound.setPositionAsync(0);
-            await sound.playAsync();
-            setIsPlaying(true);
-        }
-    };
-
-    function openLink() {
-        if (media?.spotifyUrl) {
-            Linking.openURL(media.spotifyUrl);
-        }
-    }
-
     const handleLike = async () => {
         try {
             if (liked) {
@@ -114,6 +71,14 @@ export default function MediaCard({ type, mediaId }: MediaCardProps) {
             setError(`Failed to update like status for ID ${mediaId}`);
         }
     };
+
+	const openLink = () => {
+		if (type === "song") {
+			Linking.openURL((media as SongResponse).spotifyUrl);
+		} else if (type === "album") {
+			Linking.openURL((media as AlbumResponse).spotifyUrl);
+		}
+	}
 
     if (error)
         return (
@@ -167,14 +132,7 @@ export default function MediaCard({ type, mediaId }: MediaCardProps) {
                 </View>
                 <View style={{ justifyContent: 'space-between', alignItems: 'center', position: "absolute", right: 0, top: 0, bottom: 0 }}>
                     {type === "song" && (media as SongResponse).spotifyPreviewUrl && (
-                        <View style={{ flexDirection: "row" }}>
-                            <TouchableOpacity onPress={handlePlayPause}>
-                                <IconButton icon={isPlaying ? "pause" : "play"} size={24} />
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={handleRestart}>
-                                <IconButton icon="restart" size={24} />
-                            </TouchableOpacity>
-                        </View>
+                        <AudioPlayer previewUrl={(media as SongResponse).spotifyPreviewUrl} />
                     )}
                     <View style={{ flexDirection: "row" }}>
                         <TouchableOpacity onPress={openLink}>
