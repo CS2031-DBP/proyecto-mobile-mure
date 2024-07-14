@@ -8,5 +8,6 @@ export interface CommentResponseDto {
     id: number;
     content: string;
     userId: number;
+    nickname: string;
     postId: number;
 }

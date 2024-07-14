@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Modal, TextInput, FlatList, ActivityIndicator, Alert, Button } from "react-native";
+import { View, Text, Modal, TextInput, FlatList, ActivityIndicator, Alert, TouchableOpacity } from "react-native";
 import { IconButton } from "react-native-paper";
 import { CommentResponseDto, CommentRequestDto } from "@/interfaces/Comment";
 import { createComment } from "@/services/comment/createComment";
@@ -7,6 +7,7 @@ import { getCommentsByPostId } from "@/services/comment/getCommentsByPostId";
 import { deleteComment } from "@/services/comment/deleteComment";
 import Comment from "./Comment";
 import { useUserContext } from "@/contexts/UserContext";
+import { getRoleFromToken } from "@/services/auth/getRoleFromToken";
 
 interface CommentsModalProps {
     visible: boolean;
@@ -21,6 +22,19 @@ export default function CommentsModal({ visible, postId, onClose }: CommentsModa
     const [page, setPage] = useState<number>(0);
     const [hasMore, setHasMore] = useState<boolean>(true);
     const { user } = useUserContext();
+    const [userRole, setUserRole] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchRole = async () => {
+            try {
+                const role = await getRoleFromToken();
+                setUserRole(role);
+            } catch (error) {
+                console.error("Failed to fetch user role:", error);
+            }
+        };
+        fetchRole();
+    }, []);
 
     useEffect(() => {
         if (visible) {
@@ -76,27 +90,31 @@ export default function CommentsModal({ visible, postId, onClose }: CommentsModa
     };
 
     return (
-        <Modal
-            visible={visible}
-            onRequestClose={onClose}
-            animationType="slide"
-        >
-            <View style={{ flex: 1, padding: 16 }}>
-                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                    <Text style={{ fontSize: 24 }}>Comments</Text>
+        <Modal visible={visible} onRequestClose={onClose} animationType="slide">
+            <View style={{ flex: 1, padding: 16, backgroundColor: "#fff" }}>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: 16,
+                    }}
+                >
+                    <Text style={{ fontSize: 24, fontWeight: "bold" }}>Comments</Text>
                     <IconButton icon="close" size={24} onPress={onClose} />
                 </View>
                 <FlatList
                     data={comments}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => (
-                        <Comment comment={item} onDelete={handleDeleteComment} />
+                        <Comment comment={item} onDelete={handleDeleteComment} userRole={userRole} />
                     )}
                     onEndReached={() => fetchComments(false)}
                     onEndReachedThreshold={0.5}
                     ListFooterComponent={loading && <ActivityIndicator size="large" color="#0000ff" />}
+                    style={{ marginBottom: 16 }}
                 />
-                <View style={{ flexDirection: "row", alignItems: "center", marginTop: 16 }}>
+                <View style={{ flexDirection: "row", alignItems: "center", borderTopWidth: 1, borderColor: "gray", paddingTop: 16 }}>
                     <TextInput
                         value={newComment}
                         onChangeText={setNewComment}
@@ -107,9 +125,19 @@ export default function CommentsModal({ visible, postId, onClose }: CommentsModa
                             borderColor: "gray",
                             borderWidth: 1,
                             borderRadius: 4,
+                            marginRight: 8,
                         }}
                     />
-                    <Button title="Send" onPress={handleCreateComment} />
+                    <TouchableOpacity
+                        onPress={handleCreateComment}
+                        style={{
+                            backgroundColor: "#6200ea",
+                            padding: 10,
+                            borderRadius: 4,
+                        }}
+                    >
+                        <Text style={{ color: "#fff", fontWeight: "bold" }}>Send</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </Modal>

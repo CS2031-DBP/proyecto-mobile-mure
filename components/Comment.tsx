@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, Alert, TouchableOpacity } from "react-native";
 import { IconButton } from "react-native-paper";
 import { CommentResponseDto } from "@/interfaces/Comment";
 import { useUserContext } from "@/contexts/UserContext";
@@ -7,18 +7,31 @@ import { useUserContext } from "@/contexts/UserContext";
 interface CommentProps {
     comment: CommentResponseDto;
     onDelete: (commentId: number) => void;
+    userRole: string | null;
 }
 
-export default function Comment({ comment, onDelete }: CommentProps) {
+export default function Comment({ comment, onDelete, userRole }: CommentProps) {
     const { user } = useUserContext();
-    const isCommentOwner = user?.id === comment.userId;
+
+    const handleDelete = () => {
+        Alert.alert(
+            "Delete Comment",
+            "Are you sure you want to delete this comment?",
+            [
+                { text: "Cancel", style: "cancel" },
+                { text: "Delete", onPress: () => onDelete(comment.id), style: "destructive" },
+            ]
+        );
+    };
+
+    const isOwnerOrAdmin = user?.id === comment.userId || userRole === "ROLE_ADMIN";
 
     return (
         <View
             style={{
                 flexDirection: "row",
-                alignItems: "center",
                 justifyContent: "space-between",
+                alignItems: "center",
                 padding: 8,
                 borderBottomColor: "gray",
                 borderBottomWidth: 1,
@@ -26,14 +39,10 @@ export default function Comment({ comment, onDelete }: CommentProps) {
         >
             <View style={{ flex: 1, marginRight: 8 }}>
                 <Text style={{ fontSize: 14 }}>{comment.content}</Text>
-                <Text style={{ fontSize: 12, color: "gray" }}>User ID: {comment.userId}</Text>
+                <Text style={{ fontSize: 12, color: "gray" }}>{comment.nickname}</Text>
             </View>
-            {isCommentOwner && (
-                <IconButton
-                    icon="delete"
-                    size={20}
-                    onPress={() => onDelete(comment.id)}
-                />
+            {isOwnerOrAdmin && (
+                <IconButton icon="delete" size={20} onPress={handleDelete} />
             )}
         </View>
     );

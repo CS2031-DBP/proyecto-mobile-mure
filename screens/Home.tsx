@@ -1,24 +1,12 @@
+import React, { useEffect, useState, useCallback } from "react";
+import { View, Alert, Image, RefreshControl, FlatList } from "react-native";
+import { ActivityIndicator, FAB, IconButton, Portal, Provider, Text } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { getAllPosts } from "@/services/post/getAllPosts";
 import Post from "@/components/Post";
 import { useUserContext } from "@/contexts/UserContext";
 import { PostResponse } from "@/interfaces/Post";
-import {
-    NavigationProp,
-    ParamListBase,
-    useNavigation,
-    useFocusEffect,
-} from "@react-navigation/native";
-import { useEffect, useState, useCallback } from "react";
-import { View, Alert, Image, RefreshControl, FlatList } from "react-native";
-import {
-    ActivityIndicator,
-    FAB,
-    IconButton,
-    Portal,
-    Provider,
-    Text,
-} from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { getAllPosts } from "@/services/post/getAllPosts";
+import { NavigationProp, ParamListBase, useNavigation, useFocusEffect } from "@react-navigation/native";
 
 export default function Home() {
     const [isFabGroupOpen, setIsFabGroupOpen] = useState(false);
@@ -46,7 +34,7 @@ export default function Home() {
             if (reset) {
                 setPosts(response.content);
             } else {
-                setPosts((prevPosts) => [... new Set(prevPosts), ...response.content]);
+                setPosts((prevPosts) => [...new Set(prevPosts), ...response.content]);
             }
             setHasMore(response.totalPages > (reset ? 1 : page + 1));
             setPage((prevPage) => (reset ? 1 : prevPage + 1));
