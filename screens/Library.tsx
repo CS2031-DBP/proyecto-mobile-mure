@@ -113,12 +113,20 @@ export default function Library() {
                                         marginBottom: 16,
                                         backgroundColor: "#fff",
                                         borderRadius: 8,
+                                        flexDirection: "row",
+                                        alignItems: "center"
                                     }}
-                                >
-                                    <Text style={{ fontSize: 16, fontWeight: "bold" }}>Favorite Songs</Text>
-                                    <Text style={{ fontSize: 14, color: "gray" }}>
-                                        {favoriteSongs.length} songs
-                                    </Text>
+                                >   
+                                    <View style={{flex: 1}}>
+                                        <Text style={{ fontSize: 16, fontWeight: "bold", flex: 1 }}>Favorite Songs</Text>
+                                        <Text style={{ fontSize: 14, color: "gray", flex: 1 }}>
+                                            {favoriteSongs.length} songs
+                                        </Text>
+                                    </View>
+                                    <Image
+                                        source={require("@/assets/liked-songs.jpeg")}
+                                        style={{ width: 60, height: 60, borderRadius: 4 }}
+                                    />
                                 </View>
                             </TouchableOpacity>
                             {favoriteAlbums.map((album) => (
@@ -165,15 +173,31 @@ export default function Library() {
                                             marginBottom: 16,
                                             backgroundColor: "#fff",
                                             borderRadius: 8,
+                                            flexDirection: "row",
+                                            alignItems: "center"
                                         }}
                                     >
-                                        <Text style={{ fontSize: 16, fontWeight: "bold" }}>{truncateText(playlist.name, 20)}</Text>
-                                        <Text style={{ fontSize: 14, color: "gray" }}>
-                                            {playlist.songsIds.length} songs
-                                        </Text>
-                                        <Text>
-                                            playlist
-                                        </Text>
+                                        <View style={{ flex: 1 }}>
+                                            <Text style={{ fontSize: 16, fontWeight: "bold" }}>{truncateText(playlist.name, 20)}</Text>
+                                            <Text style={{ fontSize: 14, color: "gray" }}>
+                                                {playlist.songsIds.length} songs
+                                            </Text>
+                                            <Text>
+                                                playlist
+                                            </Text>
+                                        </View>
+                                        {playlist.coverImageUrl ? (
+                                            <Image
+                                                source={{ uri: playlist.coverImageUrl }}
+                                                style={{ width: 60, height: 60, borderRadius: 4 }}
+                                            />
+                                        ) : (
+                                            <Image
+                                                source={require("@/assets/logo-mure.jpg")}
+                                                style={{ width: 60, height: 60, borderRadius: 4 }}
+                                            />
+                                        )
+                                        }
                                     </View>
                                 </TouchableOpacity>
                             ))}
