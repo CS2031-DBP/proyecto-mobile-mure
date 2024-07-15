@@ -255,7 +255,7 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 										icon="album"
 										size={20}
 										onPress={() => {
-											navigation.navigate("Album", {
+											navigation.navigate("AlbumScreen", {
 												albumId: post.album.id,
 											});
 										}}

@@ -116,7 +116,7 @@ export default function HomeScreen() {
 					<Text
 						style={{
 							fontSize: 35,
-							fontFamily: fonts["oleo-script-bold"],
+							//fontFamily: fonts["oleo-script-bold"],
 						}}
 					>
 						Mure

@@ -4,11 +4,12 @@ import {
 	ScrollView,
 	View,
 	Text,
+	Image,
 	Alert,
 	ActivityIndicator,
 	RefreshControl,
 } from "react-native";
-import { Avatar, Button, IconButton } from "react-native-paper";
+import { Button, IconButton } from "react-native-paper";
 import {
 	useNavigation,
 	NavigationProp,
@@ -202,8 +203,8 @@ export default function ProfileInfo({
 							alignItems: "center",
 						}}
 					>
-						<Avatar.Image
-							size={80}
+						<Image
+							style={{ width: 80, height: 80, borderRadius: 50 }}
 							source={{ uri: user.profileImageUrl }}
 						/>
 						{!isFriend && !isCurrentUser ? (
@@ -274,7 +275,7 @@ export default function ProfileInfo({
 							<Button
 								mode="outlined"
 								onPress={() =>
-									navigation.navigate("FriendsPage", {
+									navigation.navigate("FriendsPageScreen", {
 										friendIds: user.friendsIds,
 										userId: user.id,
 									})
@@ -290,10 +291,10 @@ export default function ProfileInfo({
 								mode="contained"
 								onPress={() =>
 									isCurrentUser
-										? navigation.navigate("Main", {
-												screen: "Library",
+										? navigation.navigate("MainScreen", {
+												screen: "LibraryScreen",
 											})
-										: navigation.navigate("Library", {
+										: navigation.navigate("LibraryScreen", {
 												userId: user.id,
 											})
 								}
@@ -333,7 +334,7 @@ export default function ProfileInfo({
 							<Button
 								mode="contained"
 								onPress={() =>
-									navigation.navigate("EditProfile")
+									navigation.navigate("EditProfileScreen")
 								}
 								style={{ flex: 1, marginRight: 10 }}
 							>
