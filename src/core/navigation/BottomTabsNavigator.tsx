@@ -1,13 +1,13 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Home from "@features/home/Home";
-import Library from "@features/library/Library";
-import Profile from "@features/profile/Profile";
+import HomeScreen from "@features/home/HomeScreen";
+import LibraryScreen from "@features/library/LibraryScreen";
+import ProfileScreen from "@features/profile/ProfileScreen";
 import { Icon } from "react-native-paper";
 
 type BottomTabsParamList = {
-	Home: undefined;
-	Library: undefined;
-	Profile: undefined;
+	HomeScreen: undefined;
+	LibraryScreen: undefined;
+	ProfileScreen: undefined;
 };
 
 const Tab = createBottomTabNavigator<BottomTabsParamList>();
@@ -17,35 +17,35 @@ export default function BottomTabsNavigator() {
 
 	return (
 		<Tab.Navigator
-			initialRouteName="Home"
+			initialRouteName="HomeScreen"
 			screenOptions={{
 				tabBarShowLabel: false,
 				tabBarStyle: { height: 60 },
 			}}
 		>
 			<Tab.Screen
-				name="Home"
+				name="HomeScreen"
 				options={{
 					headerShown: false,
 					tabBarIcon: () => <Icon source="home" size={iconSize} />,
 				}}
-				component={Home}
+				component={HomeScreen}
 			/>
 			<Tab.Screen
-				name="Library"
+				name="LibraryScreen"
 				options={{
 					headerShown: false,
 					tabBarIcon: () => <Icon source="library" size={iconSize} />,
 				}}
-				component={Library}
+				component={LibraryScreen}
 			/>
 			<Tab.Screen
-				name="Profile"
+				name="ProfileScreen"
 				options={{
 					headerShown: false,
 					tabBarIcon: () => <Icon source="account" size={iconSize} />,
 				}}
-				component={Profile}
+				component={ProfileScreen}
 			/>
 		</Tab.Navigator>
 	);

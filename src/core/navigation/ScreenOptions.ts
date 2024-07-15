@@ -5,6 +5,8 @@ export const defaultScreenOptions: NativeStackNavigationOptions = {
 		fontFamily: "poppins-regular",
 	},
 	headerBackVisible: true,
-	headerTransparent: true,
 	headerTitleAlign: "center",
+	headerStyle: {
+		backgroundColor: "#F8E8D5",
+	},
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { ScrollView, TouchableOpacity, View, Text } from "react-native";
 import { Avatar, IconButton } from "react-native-paper";
-import { UserResponse } from "@/interfaces/User";
+import { UserResponse } from "@interfaces/UserResponse";
 
 interface FriendListProps {
 	friends: UserResponse[];

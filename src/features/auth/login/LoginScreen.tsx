@@ -6,6 +6,7 @@ import RegisterLink from "../components/RegisterLink";
 import { RootStackParamList } from "@navigation/AppNavigation";
 import { showMessage } from "react-native-flash-message";
 import { login } from "./services/login";
+import { theme } from "@navigation/Theme";
 
 export default function LoginScreen() {
 	const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -38,6 +39,7 @@ export default function LoginScreen() {
 				alignItems: "center",
 				justifyContent: "center",
 				gap: 40,
+				backgroundColor: theme.colors?.background,
 			}}
 		>
 			<Text variant="displaySmall">Login to Mure</Text>

@@ -7,13 +7,10 @@ import { useEffect } from "react";
 import NotificationDisplay from "@components/NotificationDisplay";
 import useNotifications from "@hooks/useNotifications";
 import FlashMessage from "react-native-flash-message";
+import { fonts } from "@navigation/Theme";
 
 export default function App() {
-	const [loaded, error] = useFonts({
-		"poppins-regular": require("./assets/fonts/Poppins-Regular.ttf"),
-		"oleo-script-regular": require("./assets/fonts/OleoScriptSwashCaps-Regular.ttf"),
-		"oleo-script-bold": require("./assets/fonts/OleoScriptSwashCaps-Bold.ttf"),
-	});
+	const [loaded, error] = useFonts(fonts);
 	// const { user } = useUserContext();
 	// const userId = user ? user.id : 0;
 	// const { notification } = useNotifications(userId);

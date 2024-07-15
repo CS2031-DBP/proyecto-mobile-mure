@@ -6,7 +6,7 @@ import RegisterContainer from "@features/auth/register/components/RegisterContai
 import RegisterField from "@features/auth/register/components/RegisterField";
 import { showMessage } from "react-native-flash-message";
 
-export default function RegisterBasicInfo() {
+export default function RegisterBasicInfoScreen() {
 	const [email, setEmail] = useState("");
 	const [date, setDate] = useState(new Date(Date.now()));
 	const navigation = useNavigation<NavigationProp<RegisterStackParamList>>();
@@ -33,7 +33,7 @@ export default function RegisterBasicInfo() {
 			return;
 		}
 
-		navigation.navigate("RegisterDetails", {
+		navigation.navigate("RegisterDetailsScreen", {
 			email,
 			birthdate: date,
 		});

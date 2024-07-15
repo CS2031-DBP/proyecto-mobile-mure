@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
-import { View, Alert, Image, RefreshControl, FlatList } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { FlatList, Image, RefreshControl, View } from "react-native";
 import {
 	ActivityIndicator,
 	FAB,
@@ -13,16 +13,18 @@ import { getAllPosts } from "./services/getAllPosts";
 import { useUserContext } from "@contexts/UserContext";
 import {
 	NavigationProp,
-	ParamListBase,
-	useNavigation,
 	useFocusEffect,
+	useNavigation,
 } from "@react-navigation/native";
 import Post from "@features/post/components/Post";
 import { PostResponse } from "@features/post/interfaces/PostResponse";
+import { fonts, theme } from "@navigation/Theme";
+import { showMessage } from "react-native-flash-message";
+import { RootStackParamList } from "@navigation/AppNavigation";
 
-export default function Home() {
+export default function HomeScreen() {
 	const [isFabGroupOpen, setIsFabGroupOpen] = useState(false);
-	const navigation = useNavigation<NavigationProp<ParamListBase>>();
+	const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 	const [posts, setPosts] = useState<PostResponse[]>([]);
 	const [page, setPage] = useState<number>(0);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -37,12 +39,19 @@ export default function Home() {
 		})();
 	}, []);
 
-	const fetchPosts = async (reset: boolean = false) => {
-		if (loading || (!reset && !hasMore)) return;
+	useFocusEffect(
+		useCallback(() => {
+			fetchPosts(true);
+		}, [])
+	);
 
+	async function fetchPosts(reset: boolean = false) {
+		if (loading || (!reset && !hasMore)) return;
 		setLoading(true);
+
 		try {
 			const response = await getAllPosts(reset ? 0 : page, 6);
+
 			if (reset) {
 				setPosts(response.content);
 			} else {
@@ -51,41 +60,41 @@ export default function Home() {
 					...response.content,
 				]);
 			}
+
 			setHasMore(response.totalPages > (reset ? 1 : page + 1));
 			setPage((prevPage) => (reset ? 1 : prevPage + 1));
 		} catch (error) {
-			console.error("Failed to load posts:", error);
-			Alert.alert("Error", "Failed to load posts");
+			showMessage({ message: "Failed to load posts", type: "danger" });
 		} finally {
 			setLoading(false);
 		}
-	};
+	}
 
-	useFocusEffect(
-		useCallback(() => {
-			fetchPosts(true);
-		}, [])
-	);
-
-	const handlePostDeleted = (postId: number) => {
+	function handlePostDeleted(postId: number) {
 		setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
-	};
+	}
 
-	const handleRefresh = async () => {
+	async function handleRefresh() {
 		setRefreshing(true);
 		await fetchPosts(true);
 		setRefreshing(false);
-	};
+	}
 
-	const handleLoadMore = async () => {
+	async function handleLoadMore() {
 		if (hasMore && !loading) {
 			await fetchPosts();
 		}
-	};
+	}
 
 	return (
 		<Provider>
-			<SafeAreaView style={{ flex: 1, padding: 10 }}>
+			<SafeAreaView
+				style={{
+					flex: 1,
+					padding: 10,
+					backgroundColor: theme.colors?.background,
+				}}
+			>
 				<View
 					style={{
 						flexDirection: "row",
@@ -94,10 +103,10 @@ export default function Home() {
 					}}
 				>
 					<Image
-						source={require("../../../assets/images/mure-logo-solid-background.jpg")}
+						source={require("assets/images/mure-logo-transparent-background.png")}
 						style={{
-							width: 60,
-							height: 60,
+							width: 45,
+							height: 45,
 							resizeMode: "contain",
 							borderRadius: 50,
 							marginLeft: 10,
@@ -107,8 +116,7 @@ export default function Home() {
 					<Text
 						style={{
 							fontSize: 35,
-							fontWeight: "bold",
-							fontFamily: "Roboto",
+							fontFamily: fonts["oleo-script-bold"],
 						}}
 					>
 						Mure
@@ -116,7 +124,7 @@ export default function Home() {
 					<IconButton
 						icon="magnify"
 						size={30}
-						onPress={() => navigation.navigate("Search")}
+						onPress={() => navigation.navigate("SearchScreen")}
 					/>
 				</View>
 				<FlatList
@@ -148,12 +156,14 @@ export default function Home() {
 							{
 								icon: "lead-pencil",
 								label: "Add a post",
-								onPress: () => navigation.navigate("AddPost"),
+								onPress: () =>
+									navigation.navigate("AddPostScreen"),
 							},
 							{
 								icon: "camera",
 								label: "Add a story",
-								onPress: () => navigation.navigate("AddStory"),
+								onPress: () =>
+									navigation.navigate("AddStoryScreen"),
 							},
 						]}
 						onStateChange={() => setIsFabGroupOpen(!isFabGroupOpen)}

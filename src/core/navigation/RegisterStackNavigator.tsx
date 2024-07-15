@@ -1,13 +1,13 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { defaultScreenOptions } from "./ScreenOptions";
-import RegisterDetails, {
+import RegisterDetailsScreen, {
 	RegisterDetailsProps,
-} from "@features/auth/register/RegisterDetails";
-import RegisterBasicInfo from "@features/auth/register/RegisterBasicInfo";
+} from "@features/auth/register/RegisterDetailsScreen";
+import RegisterBasicInfoScreen from "@features/auth/register/RegisterBasicInfoScreen";
 
 export type RegisterStackParamList = {
-	RegisterBasicInfo: undefined;
-	RegisterDetails: RegisterDetailsProps;
+	RegisterBasicInfoScreen: undefined;
+	RegisterDetailsScreen: RegisterDetailsProps;
 };
 
 const RegisterStack = createNativeStackNavigator<RegisterStackParamList>();
@@ -15,17 +15,17 @@ const RegisterStack = createNativeStackNavigator<RegisterStackParamList>();
 export default function RegisterStackNavigator() {
 	return (
 		<RegisterStack.Navigator
-			initialRouteName={"RegisterBasicInfo"}
+			initialRouteName={"RegisterBasicInfoScreen"}
 			screenOptions={{ ...defaultScreenOptions }}
 		>
 			<RegisterStack.Screen
-				name="RegisterBasicInfo"
-				component={RegisterBasicInfo}
+				name="RegisterBasicInfoScreen"
+				component={RegisterBasicInfoScreen}
 				options={{ headerTitle: "Create account" }}
 			/>
 			<RegisterStack.Screen
-				name="RegisterDetails"
-				component={RegisterDetails}
+				name="RegisterDetailsScreen"
+				component={RegisterDetailsScreen}
 				options={{ headerTitle: "" }}
 				initialParams={{ email: "", birthdate: new Date() }}
 			/>

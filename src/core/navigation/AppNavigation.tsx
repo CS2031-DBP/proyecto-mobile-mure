@@ -1,22 +1,22 @@
 import { NavigationContainer } from "@react-navigation/native";
 import BottomTabsNavigator from "./BottomTabsNavigator";
-import AddPost from "@features/post/AddPost";
-import AddStory from "@features/story/AddStory";
-import AddPlaylist from "@features/playlist/AddPlaylist";
-import EditPlaylist from "@features/playlist/EditPlaylist";
-import EditProfile from "@features/profile/EditProfile";
-import Profile from "@features/profile/Profile";
-import FriendsPage from "@features/profile/FriendsPage";
-import Library from "@features/library/Library";
-import FavoriteSongs from "@features/song/FavoriteSongs";
+import AddPostScreen from "@features/post/AddPostScreen";
+import AddStoryScreen from "@features/story/AddStoryScreen";
+import AddPlaylistScreen from "@features/playlist/AddPlaylistScreen";
+import EditPlaylistScreen from "@features/playlist/EditPlaylistScreen";
+import EditProfileScreen from "@features/profile/EditProfileScreen";
+import ProfileScreen from "@features/profile/ProfileScreen";
+import FriendsScreen from "@features/profile/FriendsScreen";
+import LibraryScreen from "@features/library/LibraryScreen";
+import FavoriteSongsScreen from "@features/song/FavoriteSongsScreen";
 import { PaperProvider } from "react-native-paper";
-import Album from "@features/album/Album";
-import AddSongToPlaylist, {
+import AlbumScreen from "@features/album/AlbumScreen";
+import AddSongToPlaylistScreen, {
 	AddSongToPlaylistProps,
-} from "@features/song/AddSongToPlaylist";
-import Search from "@features/search/Search";
-import Auth from "@features/auth/Auth";
-import theme from "./Theme";
+} from "@features/song/AddSongToPlaylistScreen";
+import SearchScreen from "@features/search/SearchScreen";
+import AuthScreen from "@features/auth/AuthScreen";
+import { theme } from "./Theme";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import RegisterStackNavigator from "./RegisterStackNavigator";
 import { defaultScreenOptions } from "./ScreenOptions";
@@ -78,7 +78,7 @@ export default function AppNavigation() {
 				>
 					<Stack.Screen
 						name="AuthStackScreen"
-						component={Auth}
+						component={AuthScreen}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
@@ -98,42 +98,42 @@ export default function AppNavigation() {
 					/>
 					<Stack.Screen
 						name="AddPostScreen"
-						component={AddPost}
+						component={AddPostScreen}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
 						name="AddStoryScreen"
-						component={AddStory}
+						component={AddStoryScreen}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
 						name="AddPlaylistScreen"
-						component={AddPlaylist}
+						component={AddPlaylistScreen}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
 						name="EditPlaylistScreen"
-						component={EditPlaylist}
+						component={EditPlaylistScreen}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
 						name="EditProfileScreen"
-						component={EditProfile}
+						component={EditProfileScreen}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
 						name="ProfileScreen"
-						component={Profile}
+						component={ProfileScreen}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
 						name="FriendsPageScreen"
-						component={FriendsPage}
+						component={FriendsScreen}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
 						name="LibraryScreen"
-						component={Library}
+						component={LibraryScreen}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
@@ -143,23 +143,23 @@ export default function AppNavigation() {
 					/>
 					<Stack.Screen
 						name="FavoriteSongsScreen"
-						component={FavoriteSongs}
+						component={FavoriteSongsScreen}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
 						name="AlbumScreen"
-						component={Album}
+						component={AlbumScreen}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
 						name="AddSongToPlaylistScreen"
-						component={AddSongToPlaylist}
+						component={AddSongToPlaylistScreen}
 						options={{ headerShown: false }}
 						initialParams={{ songId: -1 }}
 					/>
 					<Stack.Screen
 						name="SearchScreen"
-						component={Search}
+						component={SearchScreen}
 						options={{ headerShown: false }}
 					/>
 				</Stack.Navigator>
