@@ -1,9 +1,9 @@
-import RegisterBasicInfo from "@features/auth/register/RegisterBasicInfo";
-import RegisterDetails, {
-	RegisterDetailsProps,
-} from "@features/auth/register/RegisterDetails";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { defaultScreenOptions } from "./ScreenOptions";
+import RegisterDetails, {
+	RegisterDetailsProps,
+} from "@features/auth/register-2/RegisterDetails";
+import RegisterBasicInfo from "@features/auth/register-2/RegisterBasicInfo";
 
 export type RegisterStackParamList = {
 	RegisterBasicInfo: undefined;

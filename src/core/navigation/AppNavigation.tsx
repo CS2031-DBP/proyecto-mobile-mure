@@ -132,7 +132,7 @@ export default function AppNavigation() {
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="PlaylistPage"
+						name="Playlist"
 						component={Playlist}
 						options={{ headerShown: false }}
 					/>

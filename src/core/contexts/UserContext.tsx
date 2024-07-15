@@ -1,6 +1,6 @@
+import { UserResponse } from "@interfaces/UserResponse";
+import { getCurrentUserInfo } from "@services/getUserInfo";
 import { createContext, useState, useEffect, useContext } from "react";
-import { UserResponse } from "@/interfaces/User";
-import { getCurrentUserInfo } from "@features/profile/services/getUserInfo";
 
 interface UserProviderProps {
 	children: React.ReactNode;

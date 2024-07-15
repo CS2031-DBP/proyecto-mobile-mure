@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	View,
 	Text,
@@ -7,10 +7,10 @@ import {
 	TouchableOpacity,
 	Linking,
 } from "react-native";
-import { getAlbumById } from "@features/album/services/getAlbumById";
-import { isAlbumLikedByUser } from "@features/album/services/isAlbumLikedByUser";
-import { likeAlbum } from "@features/album/services/likeAlbum";
-import { dislikeAlbum } from "@features/album/services/dislikeAlbum";
+import { getAlbumById } from "./services/getAlbumById";
+import { isAlbumLikedByUser } from "./services/isAlbumLikedByUser";
+import { likeAlbum } from "./services/likeAlbum";
+import { dislikeAlbum } from "./services/dislikeAlbum";
 import { AlbumResponse } from "./interfaces/AlbumResponse";
 import MediaCard from "@components/MediaCard";
 import { RouteProp, useRoute, useNavigation } from "@react-navigation/native";
@@ -33,6 +33,7 @@ export default function Album() {
 	useEffect(() => {
 		async function fetchAlbum() {
 			try {
+				if (!user) throw new Error("User not found");
 				const albumData = await getAlbumById(albumId);
 				setAlbum(albumData);
 				const likedStatus = await isAlbumLikedByUser(albumId, user?.id);
