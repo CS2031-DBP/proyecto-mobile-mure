@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, View, Text, Alert, ActivityIndicator } from "react-native";
+import React, { useEffect, useState, useCallback } from "react";
+import { SafeAreaView, ScrollView, View, Text, Alert, ActivityIndicator, RefreshControl } from "react-native";
 import { Avatar, Button, IconButton } from "react-native-paper";
 import { UserResponse } from "@/interfaces/User";
 import { addFriend } from "@/services/friend/addFriend";
@@ -40,6 +40,7 @@ export default function ProfileInfo({
     const [role, setRole] = useState<string | null>(null);
     const [posts, setPosts] = useState<PostResponse[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [refreshing, setRefreshing] = useState<boolean>(false);
     const [page, setPage] = useState<number>(0);
     const [hasMore, setHasMore] = useState<boolean>(true);
 
@@ -67,21 +68,32 @@ export default function ProfileInfo({
         }
     }, [isFriend, isCurrentUser, role, user.friendsIds, setFriends]);
 
-    const fetchPosts = async () => {
-        if (loading || !hasMore) return;
+    const fetchPosts = async (reset: boolean = false) => {
+        if (loading || (!reset && !hasMore)) return;
 
         setLoading(true);
         try {
-            const response = await getPostsByUserId(user.id, page, pageSize);
-            setPosts((prevPosts) => [...prevPosts, ...response.content]);
-            setHasMore(response.totalPages > page + 1);
-            setPage(page + 1);
+            const response = await getPostsByUserId(user.id, reset ? 0 : page, pageSize);
+            if (reset) {
+                setPosts(response.content);
+                setPage(1);
+            } else {
+                setPosts((prevPosts) => [...prevPosts, ...response.content]);
+                setPage(page + 1);
+            }
+            setHasMore(response.totalPages > (reset ? 1 : page + 1));
         } catch (error) {
             console.error("Failed to load posts:", error);
             setErrors("Failed to load posts");
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleRefresh = async () => {
+        setRefreshing(true);
+        await fetchPosts(true);
+        setRefreshing(false);
     };
 
     useEffect(() => {
@@ -294,6 +306,9 @@ export default function ProfileInfo({
                         fetchPosts();
                     }
                 }}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+                }
                 scrollEventThrottle={400}
             >
                 <View style={{ width: "100%", marginTop: 20 }}>

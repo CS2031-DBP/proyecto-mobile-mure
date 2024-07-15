@@ -47,6 +47,24 @@ export type RootStackParamList = {
 export const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function AppNavigation() {
+	const [initialRoute, setInitialRoute] =
+		useState<keyof RootStackParamList>("AuthStack");
+
+	useEffect(() => {
+		const checkToken = async () => {
+			const token = await SecureStore.getItemAsync("token");
+			console.log(token);
+
+			if (token) {
+				setInitialRoute("Main");
+			} else {
+				setInitialRoute("AuthStack");
+			}
+		};
+
+		checkToken();
+	}, []);
+
 	return (
 		<PaperProvider theme={theme}>
 			<NavigationContainer>

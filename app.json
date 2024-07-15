@@ -20,10 +20,12 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
-        "android.permission.",
+        "android.permission.NOTIFICATIONS",
+        "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
-      ],
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+      ]
       "package": "com.mure.proyecto_mobile_mure"
     },
     "web": {
@@ -48,8 +50,9 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "8db35d16-807e-4637-961c-05d3de5d028e"
+        "projectId": "dc0555a1-fcea-434b-9461-bef5ff2e4a2c"
       }
-    }
+    },
+    "owner": "kartago852"
   }
 }
