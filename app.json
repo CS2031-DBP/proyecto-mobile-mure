@@ -23,9 +23,9 @@
         "android.permission.NOTIFICATIONS",
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
-        "android.permission.WRITE_EXTERNAL_STORAGE",
-      ]
+        "android.permission.RECORD_AUDIO",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ],
       "package": "com.mure.proyecto_mobile_mure"
     },
     "web": {

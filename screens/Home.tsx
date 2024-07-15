@@ -1,12 +1,24 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { View, Alert, Image, RefreshControl, FlatList } from "react-native";
-import { ActivityIndicator, FAB, IconButton, Portal, Provider, Text } from "react-native-paper";
+import {
+	ActivityIndicator,
+	FAB,
+	IconButton,
+	Portal,
+	Provider,
+	Text,
+} from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getAllPosts } from "@/services/post/getAllPosts";
 import Post from "@/components/Post";
 import { useUserContext } from "@/contexts/UserContext";
 import { PostResponse } from "@/interfaces/Post";
-import { NavigationProp, ParamListBase, useNavigation, useFocusEffect } from "@react-navigation/native";
+import {
+	NavigationProp,
+	ParamListBase,
+	useNavigation,
+	useFocusEffect,
+} from "@react-navigation/native";
 
 export default function Home() {
 	const [isFabGroupOpen, setIsFabGroupOpen] = useState(false);
@@ -28,23 +40,26 @@ export default function Home() {
 	const fetchPosts = async (reset: boolean = false) => {
 		if (loading || (!reset && !hasMore)) return;
 
-        setLoading(true);
-        try {
-            const response = await getAllPosts(reset ? 0 : page, 6);
-            if (reset) {
-                setPosts(response.content);
-            } else {
-                setPosts((prevPosts) => [...new Set(prevPosts), ...response.content]);
-            }
-            setHasMore(response.totalPages > (reset ? 1 : page + 1));
-            setPage((prevPage) => (reset ? 1 : prevPage + 1));
-        } catch (error) {
-            console.error("Failed to load posts:", error);
-            Alert.alert("Error", "Failed to load posts");
-        } finally {
-            setLoading(false);
-        }
-    };
+		setLoading(true);
+		try {
+			const response = await getAllPosts(reset ? 0 : page, 6);
+			if (reset) {
+				setPosts(response.content);
+			} else {
+				setPosts((prevPosts) => [
+					...new Set(prevPosts),
+					...response.content,
+				]);
+			}
+			setHasMore(response.totalPages > (reset ? 1 : page + 1));
+			setPage((prevPage) => (reset ? 1 : prevPage + 1));
+		} catch (error) {
+			console.error("Failed to load posts:", error);
+			Alert.alert("Error", "Failed to load posts");
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	useFocusEffect(
 		useCallback(() => {

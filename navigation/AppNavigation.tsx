@@ -21,6 +21,8 @@ import theme from "./Theme";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import RegisterStackNavigator from "./RegisterStackNavigator";
 import { defaultScreenOptions } from "./ScreenOptions";
+import { useEffect, useState } from "react";
+import * as SecureStorage from "expo-secure-store";
 
 export type RootStackParamList = {
 	Auth: undefined;
@@ -52,7 +54,7 @@ export default function AppNavigation() {
 
 	useEffect(() => {
 		const checkToken = async () => {
-			const token = await SecureStore.getItemAsync("token");
+			const token = await SecureStorage.getItemAsync("token");
 			console.log(token);
 
 			if (token) {

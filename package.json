@@ -4,9 +4,9 @@
   "main": "expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "web": "expo start --web"
+    "web": "expo start --web",
     "ios": "expo run:ios",
-    "android": "expo run:android",
+    "android": "expo run:android"
   },
   "dependencies": {
     "@react-native-google-signin/google-signin": "^12.2.1",
