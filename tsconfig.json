@@ -3,9 +3,30 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@components/*": [
+        "./src/shared/components/*"
+      ],
+      "@services/*": [
+        "./src/shared/services/*"
+      ],
+      "@features/*": [
+        "./src/features/*"
+      ],
+      "@contexts/*": [
+        "./src/core/contexts/*"
+      ],
+      "@hooks/*": [
+        "./src/shared/hooks/*"
+      ],
+      "@navigation/*": [
+        "./src/core/navigation/*"
+      ],
+      "@utils/*": [
+        "./src/shared/utils/*"
+      ],
+      "@interfaces/*": [
+        "./src/shared/interfaces/*"
+      ],
     }
   },
   "extends": "expo/tsconfig.base"
