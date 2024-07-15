@@ -1,47 +1,55 @@
 {
-    "expo": {
-        "name": "proyecto-mobile-mure",
-        "slug": "proyecto-mobile-mure",
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "icon": "./assets/icon.png",
-        "userInterfaceStyle": "light",
-        "splash": {
-            "image": "./assets/splash.png",
-            "resizeMode": "contain",
-            "backgroundColor": "#ffffff"
-        },
-        "ios": {
-            "supportsTablet": true
-        },
-        "android": {
-            "adaptiveIcon": {
-                "foregroundImage": "./assets/adaptive-icon.png",
-                "backgroundColor": "#ffffff"
-            },
-            "permissions": [
-                ""
-            ]
-        },
-        "web": {
-            "favicon": "./assets/favicon.png"
-        },
-        "plugins": [
-            "expo-secure-store",
-            [
-                "expo-camera",
-                {
-                    "cameraPermission": "Allow Mure to access your camera",
-                    "microphonePermission": "Allow Mure to access your microphone",
-                    "recordAudioAndroid": true
-                }
-            ],
-            [
-                "expo-image-picker",
-                {
-                    "photosPermission": "The app accesses your photos to let you share them with your friends."
-                }
-            ]
-        ]
+  "expo": {
+    "name": "proyecto-mobile-mure",
+    "slug": "proyecto-mobile-mure",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F8E8D5"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/favicon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.mure.proyecto_mobile_mure"
+    },
+    "web": {
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Mure to access your camera",
+          "microphonePermission": "Allow Mure to access your microphone",
+          "recordAudioAndroid": true
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "8db35d16-807e-4637-961c-05d3de5d028e"
+      }
     }
+  }
 }

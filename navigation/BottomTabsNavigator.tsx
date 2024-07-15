@@ -4,9 +4,15 @@ import Library from "@/screens/Library";
 import Profile from "@/screens/Profile";
 import { Icon } from "react-native-paper";
 
-const Tab = createBottomTabNavigator();
+type BottomTabsParamList = {
+	Home: undefined;
+	Library: undefined;
+	Profile: undefined;
+};
 
-function BottomTabsNavigator() {
+const Tab = createBottomTabNavigator<BottomTabsParamList>();
+
+export default function BottomTabsNavigator() {
 	const iconSize = 30;
 
 	return (
@@ -44,5 +50,3 @@ function BottomTabsNavigator() {
 		</Tab.Navigator>
 	);
 }
-
-export default BottomTabsNavigator;

@@ -1,19 +1,21 @@
+import { Platform } from "react-native";
 import {
-	DarkTheme as NavigationDarkTheme,
-	Theme,
-} from "@react-navigation/native";
+	configureFonts,
+	MD3LightTheme as DefaultTheme,
+} from "react-native-paper";
+import { ThemeProp } from "react-native-paper/lib/typescript/types";
 
-const DarkTheme: Theme = {
-	...NavigationDarkTheme,
-	colors: {
-		...NavigationDarkTheme.colors,
-		primary: "#1f1f1f",
-		background: "#121212",
-		card: "#1f1f1f",
-		text: "#ffffff",
-		border: "#272727",
-		notification: "#ff453a",
-	},
+const fontConfig = {
+	fontFamily: Platform.select({
+		default: "poppins-regular",
+	}),
 };
 
-export default DarkTheme;
+const theme: ThemeProp = {
+	...DefaultTheme,
+	dark: false,
+	version: 3,
+	fonts: configureFonts({ config: fontConfig }),
+};
+
+export default theme;

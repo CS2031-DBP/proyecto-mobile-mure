@@ -1,7 +1,4 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Register from "@/screens/Register";
-import Login from "@/screens/Login";
 import BottomTabsNavigator from "./BottomTabsNavigator";
 import AddPost from "@/screens/AddPost";
 import AddStory from "@/screens/AddStory";
@@ -14,17 +11,19 @@ import Library from "@/screens/Library";
 import PlaylistPage from "@/screens/PlaylistPage";
 import FavoriteSongs from "@/screens/FavoriteSongs";
 import { PaperProvider } from "react-native-paper";
-import Artist from "@/screens/Artist";
 import Album from "@/screens/Album";
 import AddSongToPlaylist, {
 	AddSongToPlaylistProps,
 } from "@/screens/AddSongToPlaylist";
 import Search from "@/screens/Search";
-import { useEffect, useState } from "react";
-import * as SecureStore from "expo-secure-store";
+import Auth from "@/screens/Auth";
+import theme from "./Theme";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import RegisterStackNavigator from "./RegisterStackNavigator";
+import { defaultScreenOptions } from "./ScreenOptions";
 
-type RootStackParamList = {
-	Home: undefined;
+export type RootStackParamList = {
+	Auth: undefined;
 	Register: undefined;
 	Login: undefined;
 	Main: undefined;
@@ -45,51 +44,26 @@ type RootStackParamList = {
 	Search: undefined;
 };
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
-
-function AuthStack() {
-	return (
-		<Stack.Navigator initialRouteName={"Register"}>
-			<Stack.Screen
-				name="Register"
-				options={{ headerShown: false }}
-				component={Register}
-			/>
-			<Stack.Screen
-				name="Login"
-				options={{ headerShown: false }}
-				component={Login}
-			/>
-		</Stack.Navigator>
-	);
-}
+export const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function AppNavigation() {
-	const [initialRoute, setInitialRoute] =
-		useState<keyof RootStackParamList>("AuthStack");
-
-	useEffect(() => {
-		const checkToken = async () => {
-			const token = await SecureStore.getItemAsync("userToken");
-			console.log(token);
-
-			if (token) {
-				setInitialRoute("Main");
-			} else {
-				setInitialRoute("AuthStack");
-			}
-		};
-
-		checkToken();
-	}, []);
-
 	return (
-		<PaperProvider>
+		<PaperProvider theme={theme}>
 			<NavigationContainer>
-				<Stack.Navigator initialRouteName={initialRoute}>
+				<Stack.Navigator
+					initialRouteName={"Auth"}
+					screenOptions={{
+						...defaultScreenOptions,
+					}}
+				>
 					<Stack.Screen
-						name="AuthStack"
-						component={AuthStack}
+						name="Auth"
+						component={Auth}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="Register"
+						component={RegisterStackNavigator}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
@@ -133,10 +107,10 @@ export default function AppNavigation() {
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-                        name="Library"
-                        component={Library}
-                        options={{ headerShown: false }}
-                    />
+						name="Library"
+						component={Library}
+						options={{ headerShown: false }}
+					/>
 					<Stack.Screen
 						name="PlaylistPage"
 						component={PlaylistPage}

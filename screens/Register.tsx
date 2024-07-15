@@ -60,7 +60,6 @@ function Register() {
 	return (
 		<ScrollView style={styles.container}>
 			<View style={styles.lottie}>
-				<Text style={styles.title}>Register</Text>
 				{errors ? <Text style={styles.errorText}>{errors}</Text> : null}
 				<TextInput
 					label="Name"
