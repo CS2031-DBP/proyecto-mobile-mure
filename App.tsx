@@ -11,6 +11,8 @@ import FlashMessage from "react-native-flash-message";
 export default function App() {
 	const [loaded, error] = useFonts({
 		"poppins-regular": require("./assets/fonts/Poppins-Regular.ttf"),
+		"oleo-script-regular": require("./assets/fonts/OleoScriptSwashCaps-Regular.ttf"),
+		"oleo-script-bold": require("./assets/fonts/OleoScriptSwashCaps-Bold.ttf"),
 	});
 	// const { user } = useUserContext();
 	// const userId = user ? user.id : 0;

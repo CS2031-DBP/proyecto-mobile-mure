@@ -23,34 +23,34 @@ import { defaultScreenOptions } from "./ScreenOptions";
 import { useEffect, useState } from "react";
 import * as SecureStorage from "expo-secure-store";
 import PlaylistScreen from "@features/playlist/PlaylistScreen";
+import LoginScreen from "@features/auth/login/LoginScreen";
 
 export type RootStackParamList = {
-	Auth: undefined;
-	Register: undefined;
-	Login: undefined;
-	Main: undefined;
-	AddPost: undefined;
-	AuthStack: undefined;
-	AddStory: undefined;
-	AddPlaylist: undefined;
-	EditPlaylist: undefined;
-	EditProfile: undefined;
-	Profile: { userId: number };
-	FriendsPage: { friendIds: number[]; userId?: number };
-	Library: { userId: number };
-	Playlist: { playlistId: number };
-	FavoriteSongs: undefined;
-	Artist: undefined;
-	Album: { albumId: number };
-	AddSongToPlaylist: AddSongToPlaylistProps;
-	Search: undefined;
+	RegisterScreen: undefined;
+	LoginScreen: undefined;
+	MainScreen: undefined;
+	AddPostScreen: undefined;
+	AuthStackScreen: undefined;
+	AddStoryScreen: undefined;
+	AddPlaylistScreen: undefined;
+	EditPlaylistScreen: undefined;
+	EditProfileScreen: undefined;
+	ProfileScreen: { userId: number };
+	FriendsPageScreen: { friendIds: number[]; userId?: number };
+	LibraryScreen: { userId: number };
+	PlaylistScreen: { playlistId: number };
+	FavoriteSongsScreen: undefined;
+	ArtistScreen: undefined;
+	AlbumScreen: { albumId: number };
+	AddSongToPlaylistScreen: AddSongToPlaylistProps;
+	SearchScreen: undefined;
 };
 
 export const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function AppNavigation() {
 	const [initialRoute, setInitialRoute] =
-		useState<keyof RootStackParamList>("AuthStack");
+		useState<keyof RootStackParamList>("AuthStackScreen");
 
 	useEffect(() => {
 		const checkToken = async () => {
@@ -58,9 +58,9 @@ export default function AppNavigation() {
 			console.log(token);
 
 			if (token) {
-				setInitialRoute("Main");
+				setInitialRoute("MainScreen");
 			} else {
-				setInitialRoute("AuthStack");
+				setInitialRoute("AuthStackScreen");
 			}
 		};
 
@@ -71,89 +71,94 @@ export default function AppNavigation() {
 		<PaperProvider theme={theme}>
 			<NavigationContainer>
 				<Stack.Navigator
-					initialRouteName={"Auth"}
+					initialRouteName={"AuthStackScreen"}
 					screenOptions={{
 						...defaultScreenOptions,
 					}}
 				>
 					<Stack.Screen
-						name="Auth"
+						name="AuthStackScreen"
 						component={Auth}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="Register"
+						name="RegisterScreen"
 						component={RegisterStackNavigator}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="Main"
+						name="LoginScreen"
+						component={LoginScreen}
+						options={{ headerTitle: "" }}
+					/>
+					<Stack.Screen
+						name="MainScreen"
 						component={BottomTabsNavigator}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="AddPost"
+						name="AddPostScreen"
 						component={AddPost}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="AddStory"
+						name="AddStoryScreen"
 						component={AddStory}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="AddPlaylist"
+						name="AddPlaylistScreen"
 						component={AddPlaylist}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="EditPlaylist"
+						name="EditPlaylistScreen"
 						component={EditPlaylist}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="EditProfile"
+						name="EditProfileScreen"
 						component={EditProfile}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="Profile"
+						name="ProfileScreen"
 						component={Profile}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="FriendsPage"
+						name="FriendsPageScreen"
 						component={FriendsPage}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="Library"
+						name="LibraryScreen"
 						component={Library}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="Playlist"
+						name="PlaylistScreen"
 						component={PlaylistScreen}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="FavoriteSongs"
+						name="FavoriteSongsScreen"
 						component={FavoriteSongs}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="Album"
+						name="AlbumScreen"
 						component={Album}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="AddSongToPlaylist"
+						name="AddSongToPlaylistScreen"
 						component={AddSongToPlaylist}
 						options={{ headerShown: false }}
 						initialParams={{ songId: -1 }}
 					/>
 					<Stack.Screen
-						name="Search"
+						name="SearchScreen"
 						component={Search}
 						options={{ headerShown: false }}
 					/>
