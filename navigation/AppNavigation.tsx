@@ -70,7 +70,7 @@ export default function AppNavigation() {
 
 	useEffect(() => {
 		const checkToken = async () => {
-			const token = await SecureStore.getItemAsync("userToken");
+			const token = await SecureStore.getItemAsync("token");
 			console.log(token);
 
 			if (token) {
