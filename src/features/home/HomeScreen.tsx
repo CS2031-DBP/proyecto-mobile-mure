@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { FlatList, Image, RefreshControl, View } from "react-native";
+import {
+	Alert,
+	FlatList,
+	BackHandler,
+	Image,
+	RefreshControl,
+	View,
+} from "react-native";
 import {
 	ActivityIndicator,
 	FAB,
@@ -19,6 +26,7 @@ import {
 import Post from "@features/post/components/Post";
 import { PostResponse } from "@features/post/interfaces/PostResponse";
 import { fonts, theme } from "@navigation/Theme";
+import { logout } from "@features/auth/logout/services/logout";
 import { showMessage } from "react-native-flash-message";
 import { RootStackParamList } from "@navigation/AppNavigation";
 
@@ -43,6 +51,50 @@ export default function HomeScreen() {
 		useCallback(() => {
 			fetchPosts(true);
 		}, [])
+	);
+
+	useFocusEffect(
+		useCallback(() => {
+			const onBackPress = () => {
+				Alert.alert(
+					"Logout",
+					"Do you want to logout?",
+					[
+						{
+							text: "Cancel",
+							style: "cancel",
+						},
+						{
+							text: "Yes",
+							onPress: async () => {
+								try {
+									await logout();
+									navigation.reset({
+										index: 0,
+										routes: [{ name: "LoginScreen" }],
+									});
+								} catch (error) {
+									showMessage({
+										message: "Failed to logout",
+										type: "danger",
+									});
+								}
+							},
+						},
+					],
+					{ cancelable: false }
+				);
+				return true; // prevent default behavior (exit app)
+			};
+
+			BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+			return () =>
+				BackHandler.removeEventListener(
+					"hardwareBackPress",
+					onBackPress
+				);
+		}, [navigation])
 	);
 
 	async function fetchPosts(reset: boolean = false) {
