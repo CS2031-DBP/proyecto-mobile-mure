@@ -2,8 +2,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { defaultScreenOptions } from "./ScreenOptions";
 import RegisterDetailsScreen, {
   RegisterDetailsProps,
-} from "@features/auth/register-2/RegisterDetailsScreen";
-import RegisterBasicInfoScreen from "@features/auth/register-2/RegisterBasicInfoScreen";
+} from "@features/auth/register/RegisterDetailsScreen";
+import RegisterBasicInfoScreen from "@features/auth/register/RegisterBasicInfoScreen";
 
 export type RegisterStackParamList = {
   RegisterBasicInfoScreen: undefined;

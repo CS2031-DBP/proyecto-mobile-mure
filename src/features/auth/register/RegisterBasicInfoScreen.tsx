@@ -2,8 +2,8 @@ import { useState } from "react";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RegisterStackParamList } from "@navigation/RegisterStackNavigator";
-import RegisterContainer from "@features/auth/register-2/components/RegisterContainer";
-import RegisterField from "@features/auth/register-2/components/RegisterField";
+import RegisterContainer from "@features/auth/register/components/RegisterContainer";
+import RegisterField from "@features/auth/register/components/RegisterField";
 import { showMessage } from "react-native-flash-message";
 
 export default function RegisterBasicInfoScreen() {
