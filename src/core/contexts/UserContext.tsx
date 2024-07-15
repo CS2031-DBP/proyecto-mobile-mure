@@ -1,14 +1,21 @@
 import { UserResponse } from "@interfaces/UserResponse";
 import { getCurrentUserInfo } from "@services/getUserInfo";
-import { createContext, useState, useEffect, useContext } from "react";
+import {
+	createContext,
+	useState,
+	useEffect,
+	useContext,
+	Dispatch,
+	ReactNode,
+} from "react";
 
 interface UserProviderProps {
-	children: React.ReactNode;
+	children: ReactNode;
 }
 
 interface UserContextProps {
 	user: UserResponse | null;
-	setUser: React.Dispatch<React.SetStateAction<UserResponse | null>>;
+	setUser: Dispatch<React.SetStateAction<UserResponse | null>>;
 	refreshUser: () => Promise<void>;
 }
 

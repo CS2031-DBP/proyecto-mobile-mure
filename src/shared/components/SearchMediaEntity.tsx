@@ -146,6 +146,3 @@ export default function SearchMediaEntity(props: SocialMediaEntityProps) {
 		</SafeAreaView>
 	);
 }
-function getAlbumsByTitle(searchText: string, arg1: number, arg2: number) {
-	throw new Error("Function not implemented.");
-}

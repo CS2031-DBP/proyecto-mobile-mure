@@ -8,7 +8,6 @@ import EditProfile from "@features/profile/EditProfile";
 import Profile from "@features/profile/Profile";
 import FriendsPage from "@features/profile/FriendsPage";
 import Library from "@features/library/Library";
-import Playlist from "@features/playlist/Playlist";
 import FavoriteSongs from "@features/song/FavoriteSongs";
 import { PaperProvider } from "react-native-paper";
 import Album from "@features/album/Album";
@@ -23,6 +22,7 @@ import RegisterStackNavigator from "./RegisterStackNavigator";
 import { defaultScreenOptions } from "./ScreenOptions";
 import { useEffect, useState } from "react";
 import * as SecureStorage from "expo-secure-store";
+import PlaylistScreen from "@features/playlist/PlaylistScreen";
 
 export type RootStackParamList = {
 	Auth: undefined;
@@ -133,7 +133,7 @@ export default function AppNavigation() {
 					/>
 					<Stack.Screen
 						name="Playlist"
-						component={Playlist}
+						component={PlaylistScreen}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen

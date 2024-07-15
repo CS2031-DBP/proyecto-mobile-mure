@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { View, Alert, Image, RefreshControl, FlatList } from "react-native";
 import {
 	ActivityIndicator,
@@ -11,7 +11,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getAllPosts } from "./services/getAllPosts";
 import { useUserContext } from "@contexts/UserContext";
-import { PostResponse } from "@features/post/interfaces/Post";
 import {
 	NavigationProp,
 	ParamListBase,
@@ -19,6 +18,7 @@ import {
 	useFocusEffect,
 } from "@react-navigation/native";
 import Post from "@features/post/components/Post";
+import { PostResponse } from "@features/post/interfaces/PostResponse";
 
 export default function Home() {
 	const [isFabGroupOpen, setIsFabGroupOpen] = useState(false);

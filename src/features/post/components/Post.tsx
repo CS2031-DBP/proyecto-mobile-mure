@@ -14,7 +14,6 @@ import {
 	ParamListBase,
 	useNavigation,
 } from "@react-navigation/native";
-import { PostResponse } from "../interfaces/Post";
 import { useUserContext } from "@contexts/UserContext";
 import { UserResponse } from "@interfaces/UserResponse";
 import { getRoleFromToken } from "@services/getRoleFromToken";
@@ -24,6 +23,7 @@ import CommentsModal from "@components/CommentsModal";
 import { deletePostById } from "../services/deletePostById";
 import { dislikePost } from "../services/dislikePost";
 import { likePost } from "../services/likePost";
+import { PostResponse } from "../interfaces/PostResponse";
 
 interface PostProps {
 	post: PostResponse;
@@ -149,7 +149,7 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 									source={
 										postOwner?.profileImageUrl
 											? { uri: postOwner.profileImageUrl }
-											: require("@/assets/images/favicon.png")
+											: require("assets/images/favicon.png")
 									}
 								/>
 								<Text
