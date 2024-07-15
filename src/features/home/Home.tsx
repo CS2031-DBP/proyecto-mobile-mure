@@ -10,7 +10,6 @@ import {
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getAllPosts } from "./services/getAllPosts";
-import Post from "@/src/shared/components/Post";
 import { useUserContext } from "@contexts/UserContext";
 import { PostResponse } from "@features/post/interfaces/Post";
 import {
@@ -19,6 +18,7 @@ import {
 	useNavigation,
 	useFocusEffect,
 } from "@react-navigation/native";
+import Post from "@features/post/components/Post";
 
 export default function Home() {
 	const [isFabGroupOpen, setIsFabGroupOpen] = useState(false);

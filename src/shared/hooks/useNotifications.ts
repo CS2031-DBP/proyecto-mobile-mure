@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import { Platform } from "react-native";
-import { saveExpoPushToken } from "../../../services/notification/saveExpoPushToken";
 import { ExpoTokenRequest } from "../interfaces/ExpoTokenRequest";
 import * as Device from "expo-device";
+import { saveExpoPushToken } from "@services/notification/saveExpoPushToken";
 
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({

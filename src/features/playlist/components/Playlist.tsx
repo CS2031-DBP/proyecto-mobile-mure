@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
-import { PlaylistResponse } from "@/interfaces/Playlist";
-import { getSongById } from "@/services/song/getSongById";
-import { SongResponse } from "@/interfaces/Song";
-import MediaCard from "@/src/shared/components/MediaCard";
+import { PlaylistResponse } from "../interfaces/PlaylistResponse";
+import { SongResponse } from "@features/song/interfaces/SongResponse";
+import { getSongById } from "@features/song/services/getSongById";
+import MediaCard from "@components/MediaCard";
 
 interface PlaylistProps {
 	playlist: PlaylistResponse;
 }
 
-export default function Playlist({ playlist }: PlaylistProps) {
+export default function Playlist(props: PlaylistProps) {
 	const [songs, setSongs] = useState<SongResponse[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
@@ -18,7 +18,7 @@ export default function Playlist({ playlist }: PlaylistProps) {
 		const loadSongs = async () => {
 			try {
 				const songsData = await Promise.all(
-					playlist.songsIds.map(async (id) => {
+					props.playlist.songsIds.map(async (id) => {
 						try {
 							const song = await getSongById(id);
 							return song;
@@ -42,7 +42,7 @@ export default function Playlist({ playlist }: PlaylistProps) {
 		};
 
 		loadSongs();
-	}, [playlist.songsIds]);
+	}, [props.playlist.songsIds]);
 
 	if (loading) {
 		return <ActivityIndicator size="large" color="#0000ff" />;

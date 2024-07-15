@@ -1,5 +1,5 @@
-import { PlaylistResponse } from "@/interfaces/Playlist";
-import Api from "../../../shared/services/api";
+import Api from "@services/api";
+import { PlaylistResponse } from "../interfaces/PlaylistResponse";
 
 export async function getPlaylistById(id: number) {
 	const api = await Api.getInstance();

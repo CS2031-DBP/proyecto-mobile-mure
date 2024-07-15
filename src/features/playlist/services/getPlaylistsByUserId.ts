@@ -1,6 +1,6 @@
-import Api from "../../../shared/services/api";
-import { PlaylistResponse } from "@/interfaces/Playlist";
-import { PaginatedResponse } from "@/interfaces/PaginationResponse";
+import { PaginatedResponse } from "@interfaces/PaginationResponse";
+import Api from "@services/api";
+import { PlaylistResponse } from "../interfaces/PlaylistResponse";
 
 export async function getPlaylistsByUserId(
 	userId: number,

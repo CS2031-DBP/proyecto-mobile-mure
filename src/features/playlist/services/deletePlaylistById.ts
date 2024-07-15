@@ -1,4 +1,4 @@
-import Api from "../../../shared/services/api";
+import Api from "@services/api";
 
 export async function deletePlaylistById(playlistId: number) {
 	const api = await Api.getInstance();

@@ -1,5 +1,5 @@
-import Api from "../../../shared/services/api";
-import { PlaylistRequest } from "@/interfaces/Playlist";
+import Api from "@services/api";
+import { PlaylistRequest } from "../interfaces/PlaylistRequest";
 
 export async function createPlaylist(playlist: PlaylistRequest): Promise<void> {
 	const api = await Api.getInstance();
