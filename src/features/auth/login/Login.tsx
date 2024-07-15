@@ -7,7 +7,7 @@ import {
 	useNavigation,
 } from "@react-navigation/native";
 import { Button, Text, TextInput } from "react-native-paper";
-import { login } from "./services/Login";
+import { login } from "./services/login-1";
 
 export default function Login() {
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
