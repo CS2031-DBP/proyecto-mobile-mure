@@ -1,10 +1,10 @@
-import RegisterLabel from "@/components/RegisterLabel";
 import { useState } from "react";
-import { SafeAreaView, View } from "react-native";
-import { Button, TextInput } from "react-native-paper";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RegisterStackParamList } from "@/navigation/RegisterStackNavigator";
+import RegisterContainer from "@/components/RegisterContainer";
+import RegisterField from "@/components/RegisterField";
+import { showMessage } from "react-native-flash-message";
 
 export default function RegisterBasicInfo() {
 	const [email, setEmail] = useState("");
@@ -14,7 +14,7 @@ export default function RegisterBasicInfo() {
 	function showMode(currentMode: "date" | "time") {
 		DateTimePickerAndroid.open({
 			value: date,
-			onChange: (event, selectedDate) => {
+			onChange: (_event, selectedDate) => {
 				if (selectedDate) {
 					setDate(selectedDate);
 				}
@@ -24,40 +24,33 @@ export default function RegisterBasicInfo() {
 		});
 	}
 
+	function handleNext() {
+		if (!email || !date) {
+			showMessage({
+				message: "All fields are required",
+				type: "warning",
+			});
+			return;
+		}
+
+		navigation.navigate("RegisterDetails", {
+			email,
+			birthdate: date,
+		});
+	}
+
 	return (
-		<SafeAreaView
-			style={{
-				flex: 1,
-				flexDirection: "column",
-				paddingTop: 100,
-				gap: 40,
-				padding: 20,
-			}}
-		>
-			<View style={{ gap: 20 }}>
-				<RegisterLabel text="What's your email" />
-				<TextInput
-					label=""
-					mode="outlined"
-					value={email}
-					onChangeText={setEmail}
-				/>
-			</View>
-			<View style={{ gap: 20 }}>
-				<RegisterLabel text="What's your date of birth?" />
-				<TextInput
-					label=""
-					mode="outlined"
-					value={date.toDateString()}
-					onPress={() => showMode("date")}
-				/>
-			</View>
-			<Button
-				mode="contained"
-				onPress={() => navigation.navigate("RegisterDetails")}
-			>
-				Next
-			</Button>
-		</SafeAreaView>
+		<RegisterContainer onButtonPress={handleNext} buttonText="Next">
+			<RegisterField
+				label="What's your email?"
+				value={email}
+				onChangeText={setEmail}
+			/>
+			<RegisterField
+				label="What's you date of birth?"
+				value={date.toDateString()}
+				onPress={() => showMode("date")}
+			/>
+		</RegisterContainer>
 	);
 }

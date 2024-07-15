@@ -1,11 +1,13 @@
 import RegisterBasicInfo from "@/screens/RegisterBasicInfo";
-import RegisterDetails from "@/screens/RegisterDetails";
+import RegisterDetails, {
+	RegisterDetailsProps,
+} from "@/screens/RegisterDetails";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { defaultScreenOptions } from "./ScreenOptions";
 
 export type RegisterStackParamList = {
 	RegisterBasicInfo: undefined;
-	RegisterDetails: undefined;
+	RegisterDetails: RegisterDetailsProps;
 };
 
 const RegisterStack = createNativeStackNavigator<RegisterStackParamList>();
@@ -25,6 +27,7 @@ export default function RegisterStackNavigator() {
 				name="RegisterDetails"
 				component={RegisterDetails}
 				options={{ headerTitle: "" }}
+				initialParams={{ email: "", birthdate: new Date() }}
 			/>
 		</RegisterStack.Navigator>
 	);

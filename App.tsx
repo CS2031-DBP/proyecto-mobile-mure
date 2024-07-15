@@ -6,24 +6,15 @@ import { useFonts } from "expo-font";
 import { useEffect } from "react";
 import NotificationDisplay from "./components/NotificationDisplay";
 import useNotifications from "./hooks/useNotifications";
-
-function MainApp() {
-	const { user } = useUserContext();
-	const userId = user ? user.id : 0;
-	const { notification } = useNotifications(userId);
-
-	return (
-		<>
-			<NotificationDisplay notification={notification} />
-			<AppNavigation />
-		</>
-	);
-}
+import FlashMessage from "react-native-flash-message";
 
 export default function App() {
 	const [loaded, error] = useFonts({
 		"poppins-regular": require("./assets/fonts/Poppins-Regular.ttf"),
 	});
+	// const { user } = useUserContext();
+	// const userId = user ? user.id : 0;
+	// const { notification } = useNotifications(userId);
 
 	useEffect(() => {
 		if (loaded || error) {
@@ -36,10 +27,12 @@ export default function App() {
 	}
 
 	return (
-		<UserProvider>
-			<SafeAreaProvider>
-				<MainApp />
-			</SafeAreaProvider>
-		</UserProvider>
+		<SafeAreaProvider>
+			<UserProvider>
+				{/* <NotificationDisplay notification={notification} /> */}
+				<AppNavigation />
+				<FlashMessage position="top" />
+			</UserProvider>
+		</SafeAreaProvider>
 	);
 }
