@@ -1,4 +1,4 @@
-export interface AlbumInfoForPostDto {
+export interface AlbumInfoForPost {
 	id: number;
 	title: string;
 	coverImageUrl: string;

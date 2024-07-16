@@ -1,4 +1,4 @@
-export interface SongResponseForPostDto {
+export interface SongResponseForPost {
 	id: number;
 	title: string;
 	coverImageUrl: string;

@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { IconButton } from "react-native-paper";
 import { Audio } from "expo-av";
 
 interface AudioPlayerProps {
 	previewUrl: string;
+	showRestartButton?: boolean;
 }
 
-export default function AudioPlayer({ previewUrl }: AudioPlayerProps) {
+export default function AudioPlayer(props: AudioPlayerProps) {
 	const [isPlaying, setIsPlaying] = useState<boolean>(false);
 	const [sound, setSound] = useState<Audio.Sound | null>(null);
 
@@ -26,7 +27,7 @@ export default function AudioPlayer({ previewUrl }: AudioPlayerProps) {
 		} else {
 			if (!sound) {
 				const { sound: newSound } = await Audio.Sound.createAsync(
-					{ uri: previewUrl },
+					{ uri: props.previewUrl },
 					{ shouldPlay: true }
 				);
 				setSound(newSound);
@@ -51,9 +52,11 @@ export default function AudioPlayer({ previewUrl }: AudioPlayerProps) {
 			<TouchableOpacity onPress={handlePlayPause}>
 				<IconButton icon={isPlaying ? "pause" : "play"} size={24} />
 			</TouchableOpacity>
-			<TouchableOpacity onPress={handleRestart}>
-				<IconButton icon="restart" size={24} />
-			</TouchableOpacity>
+			{props.showRestartButton && (
+				<TouchableOpacity onPress={handleRestart}>
+					<IconButton icon="restart" size={24} />
+				</TouchableOpacity>
+			)}
 		</View>
 	);
 }

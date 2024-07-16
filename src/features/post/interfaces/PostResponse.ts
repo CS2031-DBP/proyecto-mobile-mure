@@ -1,5 +1,5 @@
-import { AlbumInfoForPostDto } from "./AlbumInfoForPostDto";
-import { SongResponseForPostDto } from "./SongResponseForPostDto";
+import { AlbumInfoForPost } from "./AlbumInfoForPost";
+import { SongResponseForPost } from "./SongResponseForPost";
 
 export interface PostResponse {
 	id: number;
@@ -7,8 +7,8 @@ export interface PostResponse {
 	ownerId: number;
 	profileImage: string;
 	createdAt: string;
-	song: SongResponseForPostDto;
-	album: AlbumInfoForPostDto;
+	song: SongResponseForPost;
+	album: AlbumInfoForPost;
 	likes: number;
 	description: string;
 	imageUrl: string;

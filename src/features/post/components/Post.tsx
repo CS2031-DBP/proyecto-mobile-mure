@@ -1,19 +1,7 @@
 import { useEffect, useState } from "react";
-import {
-	View,
-	Text,
-	Image,
-	ActivityIndicator,
-	Linking,
-	Alert,
-	TouchableOpacity,
-} from "react-native";
-import { Avatar, IconButton } from "react-native-paper";
-import {
-	NavigationProp,
-	ParamListBase,
-	useNavigation,
-} from "@react-navigation/native";
+import { View, Image, ActivityIndicator, Linking, Alert } from "react-native";
+import { IconButton, Text } from "react-native-paper";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useUserContext } from "@contexts/UserContext";
 import { UserResponse } from "@interfaces/UserResponse";
 import { getRoleFromToken } from "@services/getRoleFromToken";
@@ -25,6 +13,8 @@ import { dislikePost } from "../services/dislikePost";
 import { likePost } from "../services/likePost";
 import { PostResponse } from "../interfaces/PostResponse";
 import { showMessage } from "react-native-flash-message";
+import { PostMediaCard } from "./PostMediaCard";
+import { RootStackParamList } from "@navigation/AppNavigation";
 
 interface PostProps {
 	post: PostResponse;
@@ -33,7 +23,7 @@ interface PostProps {
 
 export default function Post(props: PostProps) {
 	const { user } = useUserContext();
-	const navigation = useNavigation<NavigationProp<ParamListBase>>();
+	const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 	const [postOwner, setPostOwner] = useState<UserResponse | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [liked, setLiked] = useState<boolean>(
@@ -119,204 +109,85 @@ export default function Post(props: PostProps) {
 
 	return (
 		<>
-			<TouchableOpacity onPress={() => setIsModalVisible(true)}>
+			<View>
 				<View
 					style={{
 						backgroundColor: "#fff",
 						borderRadius: 10,
-						padding: 16,
+						padding: 10,
+						paddingHorizontal: 15,
 						marginBottom: 16,
 						shadowColor: "#000",
 						shadowOffset: { width: 0, height: 2 },
 						shadowOpacity: 0.1,
 						shadowRadius: 8,
 						elevation: 1,
+						flex: 1,
+						flexDirection: "column",
+						gap: 10,
 					}}
 				>
 					<View
 						style={{
+							flex: 1,
 							flexDirection: "row",
-							justifyContent: "space-between",
-							marginBottom: 12,
+							alignItems: "center",
 						}}
 					>
 						<View
 							style={{
-								flexDirection: "column",
-								alignItems: "flex-start",
-								flex: 2,
+								flex: 1,
+								flexDirection: "row",
+								alignItems: "center",
 							}}
 						>
-							<View
+							<Image
+								source={{ uri: postOwner?.profileImageUrl }}
 								style={{
-									flexDirection: "row",
-									alignItems: "center",
+									width: 40,
+									height: 40,
+									borderRadius: 20,
+								}}
+							/>
+							<Text
+								style={{
+									marginLeft: 8,
+									fontSize: 16,
 								}}
 							>
-								<Image
-									source={
-										postOwner?.profileImageUrl
-											? { uri: postOwner.profileImageUrl }
-											: require("assets/images/favicon.png")
-									}
-									style={{
-										width: 40,
-										height: 40,
-										borderRadius: 20,
-									}}
-								/>
-								<Text
-									style={{
-										marginLeft: 8,
-										fontSize: 16,
-										fontWeight: "bold",
-									}}
-								>
-									@{props.post.owner}
-								</Text>
-							</View>
-							<Text style={{ fontSize: 10, marginTop: 8 }}>
-								{props.post.description}
+								@{props.post.owner}
 							</Text>
 						</View>
 
-						<View
-							style={{
-								flexDirection: "column",
-								alignItems: "flex-start",
-								flex: 1,
-								marginLeft: 64,
-							}}
-						>
-							{props.post.album && (
-								<View
-									style={{
-										flexDirection: "column",
-										alignItems: "flex-start",
-									}}
-								>
-									<Text
-										style={{
-											fontWeight: "bold",
-											fontSize: 10,
-											marginTop: 4,
-										}}
-									>
-										{props.post.album.title}
-									</Text>
-									<Text style={{ fontSize: 10 }}>
-										{props.post.album.artist}
-									</Text>
-									<Text style={{ fontSize: 10 }}>
-										{props.post.album.duration}
-									</Text>
-								</View>
-							)}
-							{props.post.song && (
-								<View
-									style={{
-										flexDirection: "column",
-										alignItems: "flex-start",
-									}}
-								>
-									<Text
-										style={{
-											fontWeight: "bold",
-											fontSize: 10,
-										}}
-									>
-										{props.post.song.title}
-									</Text>
-									<Text style={{ fontSize: 10 }}>
-										{props.post.song.artistsNames.join(
-											", "
-										)}
-									</Text>
-									<Text style={{ fontSize: 10 }}>
-										{props.post.song.genre}
-									</Text>
-									<Text style={{ fontSize: 10 }}>
-										{props.post.song.duration}
-									</Text>
-								</View>
-							)}
-						</View>
-
-						<View
-							style={{
-								flexDirection: "column",
-								alignItems: "center",
-								flex: 1,
-							}}
-						>
-							{props.post.album && (
-								<View
-									style={{
-										flexDirection: "column",
-										alignItems: "center",
-									}}
-								>
-									<Image
-										source={{
-											uri: props.post.album.coverImageUrl,
-										}}
-										style={{
-											width: 60,
-											height: 60,
-											borderRadius: 4,
-										}}
-									/>
-									<IconButton
-										icon="album"
-										size={20}
-										onPress={() => {
-											navigation.navigate("AlbumScreen", {
-												albumId: props.post.album.id,
-											});
-										}}
-									/>
-								</View>
-							)}
-							{props.post.song && (
-								<View
-									style={{
-										flexDirection: "column",
-										alignItems: "center",
-									}}
-								>
-									<Image
-										source={{
-											uri: props.post.song.coverImageUrl,
-										}}
-										style={{
-											width: 60,
-											height: 60,
-											borderRadius: 4,
-										}}
-									/>
-									{props.post.song.spotifyPreviewUrl ? (
-										<AudioPlayer
-											previewUrl={
-												props.post.song
-													.spotifyPreviewUrl
-											}
-										/>
-									) : (
-										<IconButton
-											icon="spotify"
-											size={20}
-											onPress={() => {
-												openLink(
-													props.post.song.spotifyUrl
-												);
-											}}
-											iconColor="green"
-										/>
-									)}
-								</View>
-							)}
-						</View>
+						{props.post.song || props.post.album ? (
+							<IconButton
+								icon="spotify"
+								size={35}
+								iconColor="#fdaab8"
+								onPress={() =>
+									openLink(props.post.song.spotifyUrl)
+								}
+							/>
+						) : null}
 					</View>
+
+					{props.post.album ? (
+						<PostMediaCard
+							type="album"
+							media={props.post.album}
+							onPress={() =>
+								navigation.navigate("AlbumScreen", {
+									albumId: props.post.album.id,
+								})
+							}
+						/>
+					) : props.post.song ? (
+						<PostMediaCard type="song" media={props.post.song} />
+					) : null}
+
+					<Text style={{ fontSize: 16, flex: 1 }}>
+						{props.post.description}
+					</Text>
 
 					{props.post.imageUrl ? (
 						<Image
@@ -324,7 +195,6 @@ export default function Post(props: PostProps) {
 								width: "100%",
 								height: 200,
 								borderRadius: 8,
-								marginTop: 0,
 							}}
 							source={{ uri: props.post.imageUrl }}
 						/>
@@ -338,31 +208,44 @@ export default function Post(props: PostProps) {
 
 					<View
 						style={{
+							flex: 1,
 							flexDirection: "row",
-							justifyContent: "space-between",
-							alignItems: "center",
-							marginTop: 12,
+							alignContent: "space-between",
 						}}
 					>
 						<View
 							style={{
 								flexDirection: "row",
 								alignItems: "center",
+								flex: 1,
 							}}
 						>
 							<IconButton
 								icon={liked ? "heart" : "heart-outline"}
 								iconColor={liked ? "red" : "black"}
 								size={20}
+								style={{
+									alignItems: "flex-start",
+									marginLeft: 0,
+								}}
 								onPress={handleLike}
 							/>
-							<Text>{likesCount} Likes</Text>
+							<Text style={{ marginLeft: -15 }}>
+								{likesCount} likes
+							</Text>
+							<IconButton
+								icon="comment-outline"
+								size={20}
+								onPress={() => setIsModalVisible(true)}
+							/>
 						</View>
+
 						{isOwnerOrAdmin && (
 							<View
 								style={{
+									flex: 1,
 									flexDirection: "row",
-									alignItems: "center",
+									justifyContent: "flex-end",
 								}}
 							>
 								<IconButton
@@ -381,7 +264,8 @@ export default function Post(props: PostProps) {
 						)}
 					</View>
 				</View>
-			</TouchableOpacity>
+			</View>
+
 			<CommentsModal
 				visible={isModalVisible}
 				postId={props.post.id}
