@@ -28,12 +28,6 @@ export default function AuthScreen() {
 			/>
 			<Text variant="titleLarge">Share your music taste!</Text>
 			<IconButton
-				icon={require("assets/images/mure-logo-transparent-background.png")}
-				mode="outlined"
-				size={iconSize}
-			/>
-			<IconButton icon="google" mode="outlined" size={iconSize} />
-			<IconButton
 				icon="email"
 				mode="outlined"
 				size={iconSize}
