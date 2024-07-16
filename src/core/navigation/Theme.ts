@@ -27,5 +27,6 @@ export const theme = {
 		background: "#FFFDF1",
 		mureLogo: "#FF820E",
 		headerBackgroundColor: "#F8E8D5",
+		primary: "#8E3356",
 	},
 } as const;

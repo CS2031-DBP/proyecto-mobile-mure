@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Alert, SafeAreaView, Text } from "react-native";
+import { SafeAreaView, Text } from "react-native";
 import {
 	NavigationProp,
 	ParamListBase,
@@ -13,6 +13,8 @@ import { getUserFriends } from "./services/getUserFriends";
 import { deleteFriend } from "@services/friend/deleteFriend";
 import FriendList from "@components/FriendList";
 import { addFriend } from "@services/friend/addFriend";
+import { theme } from "@navigation/Theme";
+import { showMessage } from "react-native-flash-message";
 
 export default function FriendsScreen() {
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
@@ -67,10 +69,11 @@ export default function FriendsScreen() {
 			);
 			setFriends(updatedFriends);
 			await refreshUser();
-			Alert.alert(
-				"Friend Removed",
-				"You have successfully removed this friend."
-			);
+			showMessage({
+				message: "Friend Removed",
+				description: "You have successfully removed this friend.",
+				type: "success",
+			});
 		} catch (error) {
 			setErrors("Failed to remove friend");
 		}
@@ -82,10 +85,11 @@ export default function FriendsScreen() {
 			await deleteFriend(friendId);
 			await refreshUser();
 			loadFriends();
-			Alert.alert(
-				"Friend Removed",
-				"You have successfully removed this friend."
-			);
+			showMessage({
+				message: "Friend Removed",
+				description: "You have successfully removed this friend.",
+				type: "success",
+			});
 		} catch (error) {
 			setErrors("Failed to remove friend");
 		}
@@ -97,10 +101,12 @@ export default function FriendsScreen() {
 			await addFriend(friendId);
 			await refreshUser();
 			loadFriends();
-			Alert.alert(
-				"Friend Added",
-				"You have successfully added this user as a friend."
-			);
+			showMessage({
+				message: "Friend Added",
+				description:
+					"You have successfully added this user as a friend.",
+				type: "success",
+			});
 		} catch (error) {
 			setErrors("Failed to add friend");
 		}
@@ -109,7 +115,9 @@ export default function FriendsScreen() {
 	const isCurrentUser = userId === currentUser?.id;
 
 	return (
-		<SafeAreaView style={{ flex: 1 }}>
+		<SafeAreaView
+			style={{ flex: 1, backgroundColor: theme.colors.background }}
+		>
 			{errors ? (
 				<Text
 					style={{
