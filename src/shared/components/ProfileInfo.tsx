@@ -220,61 +220,71 @@ export default function ProfileInfo({
 						@{user.nickname}
 					</Text>
 				</View>
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						marginBottom: 8,
-					}}
-				>
+				<View style={{ flexDirection: "row", alignItems: "center" }}>
 					<View
 						style={{
-							position: "relative",
-							width: 100,
-							height: 100,
-							overflow: "hidden",
-							justifyContent: "center",
+							width: "30%",
 							alignItems: "center",
 						}}
 					>
-						<Image
-							style={{ width: 80, height: 80, borderRadius: 50 }}
-							source={{ uri: user.profileImageUrl }}
-						/>
-						{!isFriend && !isCurrentUser ? (
-							<IconButton
-								icon="plus"
-								size={30}
+						<View
+							style={{
+								position: "relative",
+								width: 100,
+								height: 100,
+								overflow: "hidden",
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<Image
 								style={{
-									position: "absolute",
-									top: -5,
-									right: -5,
-									backgroundColor: theme.colors.primary,
-									width: 30,
-									height: 30,
+									width: 80,
+									height: 80,
+									borderRadius: 50,
 								}}
-								iconColor="white"
-								onPress={handleAddFriend}
+								source={{ uri: user.profileImageUrl }}
 							/>
-						) : null}
-						{isFriend && !isCurrentUser ? (
-							<IconButton
-								icon="trash-can"
-								size={30}
-								style={{
-									position: "absolute",
-									top: -5,
-									right: -5,
-									backgroundColor: theme.colors.primary,
-									width: 30,
-									height: 30,
-								}}
-								iconColor="white"
-								onPress={handleDeleteFriend}
-							/>
-						) : null}
+							{!isFriend && !isCurrentUser ? (
+								<IconButton
+									icon="plus"
+									size={30}
+									style={{
+										position: "absolute",
+										top: -5,
+										right: -5,
+										backgroundColor: theme.colors.primary,
+										width: 30,
+										height: 30,
+									}}
+									iconColor="white"
+									onPress={handleAddFriend}
+								/>
+							) : null}
+							{isFriend && !isCurrentUser ? (
+								<IconButton
+									icon="trash-can"
+									size={30}
+									style={{
+										position: "absolute",
+										top: -5,
+										right: -5,
+										backgroundColor: theme.colors.primary,
+										width: 30,
+										height: 30,
+									}}
+									iconColor="white"
+									onPress={handleDeleteFriend}
+								/>
+							) : null}
+						</View>
 					</View>
-					<View style={{ flex: 1, marginLeft: 10 }}>
+					<View
+						style={{
+							width: "40%",
+							paddingLeft: 10,
+						}}
+					>
 						<Text
 							style={{
 								fontSize: 16,
@@ -297,7 +307,12 @@ export default function ProfileInfo({
 						</Text>
 					</View>
 					<View
-						style={{ alignItems: "center", flexDirection: "row" }}
+						style={{
+							width: "30%",
+							alignItems: "flex-end",
+							flexDirection: "row",
+							justifyContent: "flex-end",
+						}}
 					>
 						<View
 							style={{
@@ -331,52 +346,50 @@ export default function ProfileInfo({
 									Friends
 								</Text>
 							)}
+							{(isFriend ||
+								isCurrentUser ||
+								role === "ROLE_ADMIN") && (
+								<IconButton
+									mode="outlined"
+									onPress={() =>
+										navigation.navigate("FriendsScreen", {
+											friendIds: user.friendsIds,
+											userId: user.id,
+										})
+									}
+									icon="eye"
+									size={30}
+									style={{
+										backgroundColor:
+											theme.colors.background,
+										borderColor: theme.colors.background,
+									}}
+									iconColor={theme.colors.primary}
+								/>
+							)}
 						</View>
-						{(isFriend ||
-							isCurrentUser ||
-							role === "ROLE_ADMIN") && (
-							<IconButton
-								mode="outlined"
-								onPress={() =>
-									navigation.navigate("FriendsScreen", {
-										friendIds: user.friendsIds,
-										userId: user.id,
-									})
-								}
-								icon="eye"
-								size={30}
-								style={{
-									backgroundColor: theme.colors.background,
-									borderColor: theme.colors.background,
-								}}
-								iconColor={theme.colors.primary}
-							/>
-						)}
-						{(isFriend ||
-							(role === "ROLE_ADMIN" && !isCurrentUser)) && (
-							<Button
-								mode="contained"
-								onPress={() =>
-									isCurrentUser
-										? navigation.navigate("MainScreen", {
-												screen: "LibraryScreen",
-											})
-										: navigation.navigate("LibraryScreen", {
-												userId: user.id,
-											})
-								}
-								style={{
-									marginTop: 8,
-									width: "100%",
-									backgroundColor: theme.colors.primary,
-								}}
-								labelStyle={{ color: theme.colors.background }}
-							>
-								View Library
-							</Button>
-						)}
 					</View>
 				</View>
+				{isFriend && !isCurrentUser && (
+					<Button
+						mode="contained"
+						onPress={() =>
+							navigation.navigate("LibraryScreen", {
+								userId: user.id,
+							})
+						}
+						style={{
+							marginTop: 8,
+							width: "100%",
+							backgroundColor: theme.colors.primary,
+						}}
+						labelStyle={{
+							color: theme.colors.background,
+						}}
+					>
+						View Library
+					</Button>
+				)}
 				{errors ? (
 					<Text
 						style={{

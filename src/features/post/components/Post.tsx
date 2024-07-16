@@ -254,14 +254,6 @@ export default function Post(props: PostProps) {
 								}}
 							>
 								<IconButton
-									icon="pencil"
-									size={20}
-									onPress={() => {
-										/* Edit post */
-									}}
-									iconColor={theme.colors.primary}
-								/>
-								<IconButton
 									icon="delete"
 									size={20}
 									onPress={handleDelete}

@@ -25,7 +25,7 @@ export default function SearchMediaEntity(props: SocialMediaEntityProps) {
 	const [results, setResults] = useState<SearchResult[]>([]);
 
 	useEffect(() => {
-		if (searchText.length > 2) fetchData();
+		if (searchText.length > 0) fetchData();
 	}, [searchText]);
 
 	async function fetchData() {

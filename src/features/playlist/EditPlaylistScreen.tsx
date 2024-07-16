@@ -1,25 +1,28 @@
 import React, { useEffect, useState } from "react";
 import {
-	Alert,
-	Image,
 	SafeAreaView,
 	ScrollView,
 	Text,
-	TextInput,
 	View,
 	TouchableOpacity,
+	Image,
 } from "react-native";
-import { Button, IconButton } from "react-native-paper";
+import {
+	Button,
+	IconButton,
+	TextInput,
+	ActivityIndicator,
+} from "react-native-paper";
 import {
 	NavigationProp,
 	ParamListBase,
-	RouteProp,
 	useNavigation,
 	useRoute,
+	RouteProp,
 } from "@react-navigation/native";
-import { SongResponse } from "@features/song/interfaces/SongResponse";
 import { useUserContext } from "@contexts/UserContext";
 import useImagePicker from "@hooks/useImagePicker";
+import { SongResponse } from "@features/song/interfaces/SongResponse";
 import { getSongById } from "@features/song/services/getSongById";
 import { getSongsByTitle } from "@features/song/services/getSongsByTitle";
 import { addSongToPlaylist } from "./services/addSongToPlaylist";
@@ -27,6 +30,7 @@ import { removeSongFromPlaylist } from "./services/removeSongFromPlaylist";
 import { UpdatePlaylistRequest } from "./interfaces/UpdatePlaylistRequest";
 import { updatePlaylist } from "./services/updatePlaylist";
 import { theme } from "@navigation/Theme";
+import { showMessage } from "react-native-flash-message";
 
 interface EditPlaylistRouteParams {
 	playlist: {
@@ -156,10 +160,10 @@ export default function EditPlaylistScreen() {
 		};
 		try {
 			await updatePlaylist(updatedPlaylistData);
-			Alert.alert(
-				"Playlist Updated",
-				"Your playlist has been updated successfully."
-			);
+			showMessage({
+				message: "Playlist updated successfully",
+				type: "success",
+			});
 			navigation.navigate("PlaylistScreen", { playlistId: playlist.id });
 		} catch (error) {
 			setError("Failed to update playlist");
@@ -178,266 +182,240 @@ export default function EditPlaylistScreen() {
 		imagePickerHook.setImageUri(null);
 	};
 
+	const handleScroll = ({ nativeEvent }: { nativeEvent: any }) => {
+		if (isCloseToBottom(nativeEvent) && !loading) {
+			loadMoreSongs();
+		}
+	};
+
+	const isCloseToBottom = ({
+		layoutMeasurement,
+		contentOffset,
+		contentSize,
+	}: {
+		layoutMeasurement: { height: number };
+		contentOffset: { y: number };
+		contentSize: { height: number };
+	}) => {
+		const paddingToBottom = 20;
+		return (
+			layoutMeasurement.height + contentOffset.y >=
+			contentSize.height - paddingToBottom
+		);
+	};
+
 	return (
 		<SafeAreaView
-			style={{ flex: 1, padding: 16, backgroundColor: "#FEF5E7" }}
+			style={{
+				flex: 1,
+				padding: 16,
+				backgroundColor: theme.colors.background,
+			}}
 		>
-			<ScrollView
-				contentContainerStyle={{
-					flexGrow: 1,
-					justifyContent: "center",
-				}}
-			>
-				<View style={{ alignItems: "center", marginBottom: 16 }}>
-					<TouchableOpacity
-						style={{
-							backgroundColor: "#FFF",
-							borderColor: theme.colors.primary,
-							borderWidth: 1,
-							height: 150,
-							width: 150,
-							borderRadius: 8,
-							alignItems: "center",
-							justifyContent: "center",
-							position: "relative",
-						}}
-						onPress={handleImageChange}
-					>
-						{coverImage ? (
-							<>
-								<Image
-									source={{ uri: coverImage }}
-									style={{
-										width: "100%",
-										height: "100%",
-										borderRadius: 8,
-									}}
-								/>
-								<IconButton
-									icon="close"
-									size={24}
-									onPress={handleImageReset}
-									style={{
-										position: "absolute",
-										top: 8,
-										right: 8,
-										backgroundColor: "#FFF",
-										borderRadius: 12,
-									}}
-									iconColor={theme.colors.primary}
-								/>
-							</>
-						) : (
-							<IconButton
-								icon="camera"
-								size={50}
-								iconColor={theme.colors.primary}
-							/>
-						)}
-					</TouchableOpacity>
+			<View style={{ marginBottom: 16, marginTop: 32 }}>
+				<View style={{ flexDirection: "row" }}>
+					<IconButton
+						icon="arrow-left"
+						onPress={() => navigation.goBack()}
+						size={24}
+						style={{ marginBottom: 16 }}
+						iconColor={theme.colors.primary}
+					/>
 					<TextInput
+						mode="outlined"
+						label="Enter playlist name"
 						value={playlistName}
 						onChangeText={setPlaylistName}
-						style={{
-							marginTop: 16,
-							padding: 8,
-							borderColor: "gray",
-							borderWidth: 1,
-							borderRadius: 4,
-							width: "80%",
-							textAlign: "center",
-						}}
+						style={{ marginBottom: 16, width: "85%" }}
 					/>
 				</View>
-				<View
+				<TouchableOpacity
 					style={{
-						flexDirection: "row",
+						backgroundColor: "#FFF",
+						borderColor: theme.colors.primary,
+						borderWidth: 1,
+						height: 200,
+						width: "100%",
+						borderRadius: 8,
+						alignItems: "center",
 						justifyContent: "center",
-						marginBottom: 16,
+						position: "relative",
 					}}
+					onPress={handleImageChange}
 				>
-					<TextInput
-						placeholder="Enter song title"
-						value={title}
-						onChangeText={setTitle}
+					{coverImage ? (
+						<>
+							<Image
+								source={{ uri: coverImage }}
+								style={{
+									width: "100%",
+									height: "100%",
+									borderRadius: 8,
+								}}
+							/>
+							<IconButton
+								icon="close"
+								size={24}
+								onPress={handleImageReset}
+								style={{
+									position: "absolute",
+									top: 8,
+									right: 8,
+									backgroundColor: "#FFF",
+									borderRadius: 12,
+								}}
+								iconColor={theme.colors.primary}
+							/>
+						</>
+					) : (
+						<IconButton
+							icon="camera"
+							size={50}
+							iconColor={theme.colors.primary}
+						/>
+					)}
+				</TouchableOpacity>
+			</View>
+			<View
+				style={{
+					flexDirection: "row",
+					alignItems: "center",
+					marginBottom: 16,
+				}}
+			>
+				<TextInput
+					mode="outlined"
+					label="Enter song title"
+					value={title}
+					onChangeText={setTitle}
+					style={{ flex: 1, marginRight: 8 }}
+				/>
+				<Button mode="contained" onPress={handleSearch}>
+					Search
+				</Button>
+			</View>
+			{error && (
+				<Text style={{ color: "red", marginBottom: 16 }}>{error}</Text>
+			)}
+			<View style={{ flex: 1, flexDirection: "row", marginBottom: 16 }}>
+				<View style={{ flex: 1, marginRight: 8 }}>
+					<Text
 						style={{
-							flex: 1,
-							padding: 8,
-							borderColor: "gray",
-							borderWidth: 1,
-							borderRadius: 4,
-							marginRight: 8,
-						}}
-					/>
-					<Button
-						mode="contained"
-						onPress={handleSearch}
-						style={{
-							backgroundColor: theme.colors.primary,
-							justifyContent: "center",
+							fontSize: 20,
+							fontWeight: "bold",
+							marginBottom: 8,
+							color: theme.colors.primary,
 						}}
 					>
-						Search
-					</Button>
-				</View>
-				{error && (
-					<Text style={{ color: "red", textAlign: "center" }}>
-						{error}
+						Search Results
 					</Text>
-				)}
-				<View
-					style={{
-						flexDirection: "row",
-						justifyContent: "space-between",
-						flex: 1,
-					}}
-				>
-					<View style={{ flex: 1, marginRight: 8 }}>
-						<Text
-							style={{
-								fontSize: 20,
-								fontWeight: "bold",
-								marginBottom: 8,
-							}}
-						>
-							Search Results
-						</Text>
-						<ScrollView
-							onScroll={({ nativeEvent }) => {
-								if (isCloseToBottom(nativeEvent) && !loading) {
-									loadMoreSongs();
-								}
-							}}
-							scrollEventThrottle={16}
-						>
-							{songs.map((item) => (
-								<View
-									key={item.id}
-									style={{
-										flexDirection: "row",
-										alignItems: "center",
-										justifyContent: "space-between",
-										padding: 8,
-										borderBottomColor: "gray",
-										borderBottomWidth: 1,
-									}}
-								>
-									<View style={{ flex: 1, marginRight: 8 }}>
-										<Text
-											style={{
-												fontSize: 14,
-												flexShrink: 1,
-											}}
-											numberOfLines={1}
-											ellipsizeMode="tail"
-										>
-											{item.title}
-										</Text>
-										<Text
-											style={{
-												fontSize: 12,
-												color: "gray",
-												flexShrink: 1,
-											}}
-											numberOfLines={1}
-											ellipsizeMode="tail"
-										>
-											{item.artistsNames.join(", ")}
-										</Text>
-									</View>
-									<IconButton
-										icon="plus"
-										size={24}
-										onPress={() => handleAddSong(item)}
-									/>
+					<ScrollView
+						onScroll={handleScroll}
+						scrollEventThrottle={16}
+					>
+						{songs.map((item) => (
+							<View
+								key={item.id}
+								style={{
+									flexDirection: "row",
+									justifyContent: "space-between",
+									alignItems: "center",
+									padding: 16,
+									borderBottomColor: "gray",
+									borderBottomWidth: 1,
+								}}
+							>
+								<View style={{ flex: 1, marginRight: 8 }}>
+									<Text style={{ fontSize: 14 }}>
+										{item.title}
+									</Text>
+									<Text
+										style={{ fontSize: 12, color: "gray" }}
+									>
+										{item.artistsNames.join(", ")}
+									</Text>
 								</View>
-							))}
-							{loading && (
-								<Text style={{ textAlign: "center" }}>
-									Loading...
-								</Text>
-							)}
-						</ScrollView>
-					</View>
-					<View style={{ flex: 1, marginLeft: 8 }}>
-						<Text
-							style={{
-								fontSize: 20,
-								fontWeight: "bold",
-								marginBottom: 8,
-							}}
-						>
-							Selected Songs
-						</Text>
-						<ScrollView>
-							{selectedSongs.map((item) => (
-								<View
-									key={item.id}
+								<IconButton
+									icon="plus"
+									size={30}
+									onPress={() => handleAddSong(item)}
 									style={{
-										flexDirection: "row",
-										alignItems: "center",
-										justifyContent: "space-between",
-										padding: 8,
-										borderBottomColor: "gray",
-										borderBottomWidth: 1,
+										backgroundColor: theme.colors.primary,
+										width: 30,
+										height: 30,
 									}}
-								>
-									<View style={{ flex: 1, marginRight: 8 }}>
-										<Text
-											style={{
-												fontSize: 14,
-												flexShrink: 1,
-											}}
-											numberOfLines={1}
-											ellipsizeMode="tail"
-										>
-											{item.title}
-										</Text>
-										<Text
-											style={{
-												fontSize: 12,
-												color: "gray",
-												flexShrink: 1,
-											}}
-											numberOfLines={1}
-											ellipsizeMode="tail"
-										>
-											{item.artistsNames.join(", ")}
-										</Text>
-									</View>
-									<IconButton
-										icon="minus"
-										size={24}
-										onPress={() =>
-											handleRemoveSong(item.id)
-										}
-									/>
-								</View>
-							))}
-						</ScrollView>
-					</View>
+									iconColor="#FFF"
+								/>
+							</View>
+						))}
+						{loading && (
+							<ActivityIndicator size="small" color="#0000ff" />
+						)}
+					</ScrollView>
 				</View>
-				<Button
-					mode="contained"
-					onPress={handleSave}
-					style={{
-						marginTop: 16,
-						backgroundColor: theme.colors.primary,
-						alignSelf: "center",
-						width: "80%",
-					}}
-				>
-					Save Changes
-				</Button>
-			</ScrollView>
+				<View style={{ flex: 1 }}>
+					<Text
+						style={{
+							fontSize: 20,
+							fontWeight: "bold",
+							marginBottom: 8,
+							color: theme.colors.primary,
+						}}
+					>
+						Selected Songs
+					</Text>
+					<ScrollView>
+						{selectedSongs.map((item) => (
+							<View
+								key={item.id}
+								style={{
+									flexDirection: "row",
+									justifyContent: "space-between",
+									alignItems: "center",
+									padding: 16,
+									borderBottomColor: "gray",
+									borderBottomWidth: 1,
+								}}
+							>
+								<View style={{ flex: 1, marginRight: 8 }}>
+									<Text style={{ fontSize: 14 }}>
+										{item.title}
+									</Text>
+									<Text
+										style={{ fontSize: 12, color: "gray" }}
+									>
+										{item.artistsNames.join(", ")}
+									</Text>
+								</View>
+								<IconButton
+									icon="minus"
+									size={30}
+									onPress={() => handleRemoveSong(item.id)}
+									style={{
+										backgroundColor: theme.colors.primary,
+										width: 30,
+										height: 30,
+									}}
+									iconColor="#FFF"
+								/>
+							</View>
+						))}
+					</ScrollView>
+				</View>
+			</View>
+			<Button
+				mode="contained"
+				onPress={handleSave}
+				style={{
+					marginTop: 16,
+					position: "absolute",
+					bottom: 16,
+					left: 16,
+					right: 16,
+				}}
+			>
+				Save Changes
+			</Button>
 		</SafeAreaView>
 	);
 }
-
-const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
-	const paddingToBottom = 20;
-	return (
-		layoutMeasurement.height + contentOffset.y >=
-		contentSize.height - paddingToBottom
-	);
-};
