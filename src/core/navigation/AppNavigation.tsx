@@ -119,7 +119,10 @@ export default function AppNavigation() {
 					<Stack.Screen
 						name="EditProfileScreen"
 						component={EditProfileScreen}
-						options={{ headerShown: false }}
+						options={{
+							headerShown: true,
+							headerTitle: "Edit Profile",
+						}}
 					/>
 					<Stack.Screen
 						name="ProfileScreen"
@@ -129,7 +132,10 @@ export default function AppNavigation() {
 					<Stack.Screen
 						name="FriendsScreen"
 						component={FriendsScreen}
-						options={{ headerShown: false }}
+						options={{
+							headerShown: true,
+							headerTitle: "Friends",
+						}}
 					/>
 					<Stack.Screen
 						name="LibraryScreen"

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, SafeAreaView, ScrollView, Image } from "react-native";
+import { SafeAreaView, ScrollView, Image } from "react-native";
 import {
 	NavigationProp,
 	ParamListBase,
@@ -19,6 +19,8 @@ import { verifyPassword } from "./services/verifyPassword";
 import { UserUpdate } from "./interfaces/UserUpdate";
 import { useUserContext } from "@contexts/UserContext";
 import useImagePicker from "@hooks/useImagePicker";
+import { theme } from "@navigation/Theme";
+import { showMessage } from "react-native-flash-message";
 
 export default function EditProfileScreen() {
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
@@ -83,10 +85,11 @@ export default function EditProfileScreen() {
 
 			await editProfile(data);
 			await refreshUser();
-			Alert.alert(
-				"profile Updated",
-				"Your profile has been updated successfully."
-			);
+			showMessage({
+				message: "Profile Updated",
+				description: "Your profile has been updated successfully.",
+				type: "success",
+			});
 			navigation.navigate("MainScreen", { screen: "ProfileScreen" });
 		} catch (error) {
 			console.log(error);
@@ -104,7 +107,11 @@ export default function EditProfileScreen() {
 			const isValid = await verifyPassword(user.id, oldPassword);
 
 			if (!isValid) {
-				Alert.alert("Error", "The old password is incorrect");
+				showMessage({
+					message: "Error",
+					description: "The old password is incorrect",
+					type: "danger",
+				});
 				setErrors("The old password is incorrect");
 				return;
 			}
@@ -116,10 +123,11 @@ export default function EditProfileScreen() {
 
 			await editProfile(data);
 			await refreshUser();
-			Alert.alert(
-				"Password Updated",
-				"Your password has been updated successfully."
-			);
+			showMessage({
+				message: "Password Updated",
+				description: "Your password has been updated successfully.",
+				type: "success",
+			});
 			setIsModalVisible(false);
 			navigation.navigate("MainScreen", { screen: "ProfileScreen" });
 		} catch (error) {
@@ -128,37 +136,52 @@ export default function EditProfileScreen() {
 	}
 
 	return (
-		<SafeAreaView style={{ flex: 1, padding: 20 }}>
-			<ScrollView contentContainerStyle={{ alignItems: "center" }}>
-				<Text
-					style={{
-						fontSize: 24,
-						fontWeight: "bold",
-						marginBottom: 20,
-					}}
-				>
-					Edit Profile
-				</Text>
+		<SafeAreaView
+			style={{
+				flex: 1,
+				padding: 20,
+				backgroundColor: theme.colors.background,
+			}}
+		>
+			<ScrollView
+				contentContainerStyle={{
+					alignItems: "center",
+					backgroundColor: theme.colors.background,
+				}}
+			>
 				{imagePickerHook.image ? (
 					<>
 						<Image
 							source={{ uri: imagePickerHook.image }}
-							style={{ marginBottom: 20, width: 80, height: 80 }}
+							style={{
+								width: 100,
+								height: 100,
+							}}
 						/>
 						<IconButton
 							icon="delete"
-							iconColor="red"
+							iconColor={theme.colors.primary}
 							size={30}
 							onPress={() => imagePickerHook.setImageUri(null)}
 						/>
 					</>
 				) : (
 					<Image
-						style={{ width: 80, height: 80 }}
 						source={{ uri: user?.profileImageUrl }}
-					/>
+						style={{
+							width: 100,
+							height: 100,
+							borderRadius: 40,
+							marginVertical: 20,
+						}}
+					></Image>
 				)}
-				<Button mode="text" onPress={imagePickerHook.pickImage}>
+				<Button
+					mode="text"
+					onPress={imagePickerHook.pickImage}
+					textColor={theme.colors.primary}
+					style={{ marginBottom: 16 }}
+				>
 					Edit picture or avatar
 				</Button>
 				<TextInput
@@ -166,32 +189,38 @@ export default function EditProfileScreen() {
 					mode="outlined"
 					value={userUpdate.name}
 					onChangeText={(text) => handleInputChange("name", text)}
-					style={{ width: "100%", marginBottom: 16 }}
+					style={{ width: "100%", marginBottom: 24 }}
 					autoCapitalize="none"
+					outlineColor={theme.colors.primary}
+					activeOutlineColor={theme.colors.primary}
 				/>
 				<TextInput
 					label="Nickname"
 					mode="outlined"
 					value={userUpdate.nickname}
 					onChangeText={(text) => handleInputChange("nickname", text)}
-					style={{ width: "100%", marginBottom: 16 }}
+					style={{ width: "100%", marginBottom: 24 }}
 					autoCapitalize="none"
+					outlineColor={theme.colors.primary}
+					activeOutlineColor={theme.colors.primary}
 				/>
 				<TextInput
 					label="Email"
 					mode="outlined"
 					value={userUpdate.email}
 					onChangeText={(text) => handleInputChange("email", text)}
-					style={{ width: "100%", marginBottom: 16 }}
+					style={{ width: "100%", marginBottom: 24 }}
 					keyboardType="email-address"
 					autoCapitalize="none"
+					outlineColor={theme.colors.primary}
+					activeOutlineColor={theme.colors.primary}
 				/>
 				<TextInput
 					label="Current Password"
 					mode="outlined"
 					value={currentPassword}
 					onChangeText={setCurrentPassword}
-					style={{ width: "100%", marginBottom: 16 }}
+					style={{ width: "100%", marginBottom: 24 }}
 					secureTextEntry={!showCurrentPassword}
 					right={
 						<TextInput.Icon
@@ -199,9 +228,12 @@ export default function EditProfileScreen() {
 							onPress={() =>
 								setShowCurrentPassword(!showCurrentPassword)
 							}
+							color={theme.colors.primary}
 						/>
 					}
 					autoCapitalize="none"
+					outlineColor={theme.colors.primary}
+					activeOutlineColor={theme.colors.primary}
 				/>
 				{errors ? (
 					<Text
@@ -217,13 +249,19 @@ export default function EditProfileScreen() {
 				<Button
 					mode="contained"
 					onPress={handleSave}
-					style={{ width: "100%", padding: 8, marginTop: 16 }}
+					style={{
+						width: "100%",
+						padding: 8,
+						marginVertical: 16,
+						backgroundColor: theme.colors.primary,
+					}}
 				>
 					Save
 				</Button>
 				<Button
 					mode="text"
 					onPress={() => setIsModalVisible(true)}
+					textColor={theme.colors.primary}
 					style={{ marginTop: 8 }}
 				>
 					Change Password
@@ -234,6 +272,10 @@ export default function EditProfileScreen() {
 				<Dialog
 					visible={isModalVisible}
 					onDismiss={() => setIsModalVisible(false)}
+					style={{
+						backgroundColor: theme.colors.background,
+						padding: 20,
+					}}
 				>
 					<Dialog.Title>Change Password</Dialog.Title>
 					<Dialog.Content>
@@ -242,7 +284,7 @@ export default function EditProfileScreen() {
 							mode="outlined"
 							value={oldPassword}
 							onChangeText={setOldPassword}
-							style={{ width: "100%", marginBottom: 16 }}
+							style={{ width: "100%", marginBottom: 24 }}
 							secureTextEntry={!showOldPassword}
 							right={
 								<TextInput.Icon
@@ -250,16 +292,19 @@ export default function EditProfileScreen() {
 									onPress={() =>
 										setShowOldPassword(!showOldPassword)
 									}
+									color={theme.colors.primary}
 								/>
 							}
 							autoCapitalize="none"
+							outlineColor={theme.colors.primary}
+							activeOutlineColor={theme.colors.primary}
 						/>
 						<TextInput
 							label="New Password"
 							mode="outlined"
 							value={newPassword}
 							onChangeText={setNewPassword}
-							style={{ width: "100%", marginBottom: 16 }}
+							style={{ width: "100%" }}
 							secureTextEntry={!showNewPassword}
 							right={
 								<TextInput.Icon
@@ -267,9 +312,12 @@ export default function EditProfileScreen() {
 									onPress={() =>
 										setShowNewPassword(!showNewPassword)
 									}
+									color={theme.colors.primary}
 								/>
 							}
 							autoCapitalize="none"
+							outlineColor={theme.colors.primary}
+							activeOutlineColor={theme.colors.primary}
 						/>
 					</Dialog.Content>
 					<Dialog.Actions>
