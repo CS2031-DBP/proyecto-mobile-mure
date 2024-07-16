@@ -275,7 +275,7 @@ export default function ProfileInfo({
 							<Button
 								mode="outlined"
 								onPress={() =>
-									navigation.navigate("FriendsPageScreen", {
+									navigation.navigate("FriendsScreen", {
 										friendIds: user.friendsIds,
 										userId: user.id,
 									})

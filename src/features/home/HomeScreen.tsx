@@ -26,9 +26,10 @@ import {
 import Post from "@features/post/components/Post";
 import { PostResponse } from "@features/post/interfaces/PostResponse";
 import { fonts, theme } from "@navigation/Theme";
-import { logout } from "@features/auth/logout/services/logout";
+import { logout } from "@services/logout";
 import { showMessage } from "react-native-flash-message";
 import { RootStackParamList } from "@navigation/AppNavigation";
+import useNotifications from "@hooks/useNotifications";
 
 export default function HomeScreen() {
 	const [isFabGroupOpen, setIsFabGroupOpen] = useState(false);
@@ -39,10 +40,14 @@ export default function HomeScreen() {
 	const [refreshing, setRefreshing] = useState<boolean>(false);
 	const [hasMore, setHasMore] = useState<boolean>(true);
 	const userContext = useUserContext();
+	const { registerForPushNotificationsAsync } = useNotifications();
 
 	useEffect(() => {
 		(async () => {
 			await userContext.refreshUser();
+			console.log("User:", userContext.user);
+			if (userContext.user)
+				await registerForPushNotificationsAsync(userContext.user.id);
 			fetchPosts(true);
 		})();
 	}, []);
@@ -84,7 +89,7 @@ export default function HomeScreen() {
 					],
 					{ cancelable: false }
 				);
-				return true; // prevent default behavior (exit app)
+				return true;
 			};
 
 			BackHandler.addEventListener("hardwareBackPress", onBackPress);

@@ -1,6 +1,6 @@
 import React from "react";
-import { ScrollView, TouchableOpacity, View, Text } from "react-native";
-import { Avatar, IconButton } from "react-native-paper";
+import { ScrollView, TouchableOpacity, View, Text, Image } from "react-native";
+import { IconButton } from "react-native-paper";
 import { UserResponse } from "@interfaces/UserResponse";
 
 interface FriendListProps {
@@ -35,9 +35,13 @@ export default function FriendList({
 						onPress={() => onFriendPress(friend.id)}
 					>
 						<View>
-							<Avatar.Image
-								size={60}
+							<Image
 								source={{ uri: friend.profileImageUrl }}
+								style={{
+									width: 60,
+									height: 60,
+									borderRadius: 30,
+								}}
 							/>
 							{currentUser?.id !== friend.id && (
 								<IconButton

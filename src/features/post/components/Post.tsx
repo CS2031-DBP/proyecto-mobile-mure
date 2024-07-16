@@ -144,13 +144,17 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 									alignItems: "center",
 								}}
 							>
-								<Avatar.Image
-									size={40}
+								<Image
 									source={
 										postOwner?.profileImageUrl
 											? { uri: postOwner.profileImageUrl }
 											: require("assets/images/favicon.png")
 									}
+									style={{
+										width: 40,
+										height: 40,
+										borderRadius: 20,
+									}}
 								/>
 								<Text
 									style={{

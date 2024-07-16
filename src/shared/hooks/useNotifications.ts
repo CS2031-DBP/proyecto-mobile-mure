@@ -14,7 +14,7 @@ Notifications.setNotificationHandler({
 	}),
 });
 
-export default function useNotifications(userId: number) {
+export default function useNotifications() {
 	const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
 	const [notification, setNotification] =
 		useState<Notifications.Notification | null>(null);
@@ -24,15 +24,6 @@ export default function useNotifications(userId: number) {
 	const responseListener = useRef<Notifications.Subscription | null>(null);
 
 	useEffect(() => {
-		registerForPushNotificationsAsync().then((token) => {
-			if (token) {
-				setExpoPushToken(token);
-				console.log("Token set in state:", token);
-			} else {
-				console.log("No token received");
-			}
-		});
-
 		notificationListener.current =
 			Notifications.addNotificationReceivedListener((notification) => {
 				setNotification(notification);
@@ -59,7 +50,7 @@ export default function useNotifications(userId: number) {
 		};
 	}, []);
 
-	const registerForPushNotificationsAsync = async () => {
+	const registerForPushNotificationsAsync = async (userId: number) => {
 		let token;
 
 		if (Platform.OS === "android") {
@@ -103,6 +94,7 @@ export default function useNotifications(userId: number) {
 				expoPushToken: token,
 			};
 			await saveExpoPushToken(userId, expoTokenRequest);
+			setExpoPushToken(token);
 		} else {
 			alert("Must use physical device for Push Notifications");
 			console.log("Must use physical device for Push Notifications");
@@ -114,5 +106,6 @@ export default function useNotifications(userId: number) {
 	return {
 		expoPushToken,
 		notification,
+		registerForPushNotificationsAsync,
 	};
 }
