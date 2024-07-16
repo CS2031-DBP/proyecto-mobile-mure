@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { View, Text, Image, TouchableOpacity, Linking } from "react-native";
-import { Card, IconButton } from "react-native-paper";
+import { View, Image, TouchableOpacity, Linking } from "react-native";
+import { Card, IconButton, Text } from "react-native-paper";
 import { SongResponse } from "@features/song/interfaces/SongResponse";
 import { dislikeAlbum } from "@features/album/services/dislikeAlbum";
 import { isSongLikedByUser } from "@features/song/services/isSongLikedByUser";
@@ -13,11 +13,38 @@ import { getAlbumById } from "@features/album/services/getAlbumById";
 import { likeAlbum } from "@features/album/services/likeAlbum";
 import { likeSong } from "@features/song/services/likeSong";
 import { dislikeSong } from "@features/song/services/dislikeSong";
+import { theme } from "@navigation/Theme";
 
 interface MediaCardProps {
 	type: "song" | "album";
 	mediaId: number;
 }
+
+const HeartIcon = ({
+	liked,
+	onPress,
+}: {
+	liked: boolean;
+	onPress: () => void;
+}) => {
+	return (
+		<TouchableOpacity onPress={onPress}>
+			{liked ? (
+				<IconButton
+					icon="heart"
+					size={24}
+					iconColor={theme.colors.primary}
+				/>
+			) : (
+				<IconButton
+					icon="heart-outline"
+					size={24}
+					iconColor={theme.colors.primary}
+				/>
+			)}
+		</TouchableOpacity>
+	);
+};
 
 export default function MediaCard({ type, mediaId }: MediaCardProps) {
 	type Media = SongResponse | AlbumResponse;
@@ -89,41 +116,54 @@ export default function MediaCard({ type, mediaId }: MediaCardProps) {
 	if (!media) return <Text style={{ textAlign: "center" }}>Loading...</Text>;
 
 	return (
-		<Card style={{ padding: 10 }}>
+		<Card
+			style={{
+				padding: 10,
+				borderRadius: 8,
+				borderColor: theme.colors.primary,
+				borderWidth: 1,
+				backgroundColor: "#FFF7E7",
+				marginVertical: 10,
+			}}
+		>
 			<View style={{ flexDirection: "row", alignItems: "center" }}>
 				{media.coverImageUrl ? (
 					<Image
 						source={{ uri: media.coverImageUrl }}
-						style={{ width: 60, height: 60, borderRadius: 30 }}
+						style={{ width: 80, height: 80, borderRadius: 8 }}
 					/>
 				) : (
 					<View
 						style={{
-							width: 60,
-							height: 60,
-							borderRadius: 30,
+							width: 80,
+							height: 80,
+							borderRadius: 8,
 							backgroundColor: "gray",
 						}}
 					/>
 				)}
-				<View style={{ marginLeft: 10, flex: 1 }}>
-					<Text style={{ fontSize: 18, fontWeight: "bold" }}>
+				<View style={{ marginLeft: 16, flex: 1 }}>
+					<Text
+						style={{
+							fontSize: 14,
+							fontWeight: "bold",
+							color: theme.colors.primary,
+							marginBottom: 4,
+						}}
+					>
 						{media.title}
 					</Text>
-					<Text style={{ color: "gray" }}>
+					<Text style={{ fontSize: 12, color: "gray" }}>
 						{type === "song"
 							? (media as SongResponse).artistsNames.join(", ")
 							: (media as AlbumResponse).artistName}
 					</Text>
 					{type === "song" ? (
 						<>
-							<Text style={{ color: "gray" }}>
-								{(media as SongResponse).albumTitle}
-							</Text>
-							<Text style={{ color: "gray" }}>
+							<Text style={{ fontSize: 12, color: "gray" }}>
 								{(media as SongResponse).genre}
 							</Text>
-							<Text style={{ color: "gray" }}>
+							<Text style={{ fontSize: 12, color: "gray" }}>
 								{(media as SongResponse).duration}
 							</Text>
 						</>
@@ -131,12 +171,9 @@ export default function MediaCard({ type, mediaId }: MediaCardProps) {
 				</View>
 				<View
 					style={{
+						flexDirection: "column",
+						alignItems: "flex-end",
 						justifyContent: "space-between",
-						alignItems: "center",
-						position: "absolute",
-						right: 0,
-						top: 0,
-						bottom: 0,
 					}}
 				>
 					{type === "song" &&
@@ -145,23 +182,18 @@ export default function MediaCard({ type, mediaId }: MediaCardProps) {
 							previewUrl={
 								(media as SongResponse).spotifyPreviewUrl
 							}
+							showRestartButton
 						/>
 					) : (
-						<TouchableOpacity onPress={openLink}>
-							<IconButton
-								icon="spotify"
-								size={24}
-								iconColor="green"
-							/>
-						</TouchableOpacity>
-					)}
-					<TouchableOpacity onPress={handleLike}>
 						<IconButton
-							icon={liked ? "heart" : "heart-outline"}
+							icon="spotify"
 							size={24}
-							iconColor={liked ? "red" : "gray"}
+							iconColor={theme.colors.primary}
+							onPress={openLink}
+							style={{ marginBottom: 16 }}
 						/>
-					</TouchableOpacity>
+					)}
+					<HeartIcon liked={liked} onPress={handleLike} />
 				</View>
 			</View>
 		</Card>

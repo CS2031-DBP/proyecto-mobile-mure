@@ -23,6 +23,8 @@ import { getPlaylistById } from "./services/getPlaylistById";
 import Playlist from "./components/Playlist";
 import { useUserContext } from "@contexts/UserContext";
 import { getRoleFromToken } from "@services/getRoleFromToken";
+import { theme } from "@navigation/Theme";
+import { showMessage } from "react-native-flash-message";
 
 type PlaylistPageRouteParams = {
 	playlistId: number;
@@ -77,7 +79,10 @@ export default function PlaylistScreen() {
 								screen: "LibraryScreen",
 							});
 						} catch (error) {
-							Alert.alert("Failed to delete playlist");
+							showMessage({
+								message: "Failed to delete playlist",
+								type: "danger",
+							});
 						}
 					},
 				},
@@ -119,93 +124,68 @@ export default function PlaylistScreen() {
 	}
 
 	return (
-		<SafeAreaView style={{ flex: 1 }}>
-			<View
-				style={{
-					paddingTop: 24,
-					paddingHorizontal: 4,
-					flexDirection: "row",
-					alignItems: "center",
-				}}
-			>
-				<IconButton
-					icon="arrow-left"
-					size={20}
-					onPress={() => navigation.goBack()}
-				/>
-				<Text style={{ fontSize: 20, fontWeight: "bold" }}>
-					Playlist Details
-				</Text>
-			</View>
-			<View
-				style={{
-					flexDirection: "row",
-					alignItems: "center",
-					marginVertical: 16,
-					paddingHorizontal: 16,
-				}}
-			>
-				<View
-					style={{
-						flex: 1,
-						justifyContent: "center",
-						paddingLeft: 64,
-					}}
-				>
+		<SafeAreaView
+			style={{ flex: 1, backgroundColor: theme.colors.background }}
+		>
+			<ScrollView contentContainerStyle={{ padding: 16 }}>
+				<View style={{ alignItems: "center", marginTop: 16 }}>
+					<Image
+						source={{ uri: playlist.coverImageUrl }}
+						style={{
+							width: 180,
+							height: 180,
+							borderRadius: 8,
+						}}
+					/>
 					<Text
 						style={{
-							fontSize: 20,
+							fontSize: 24,
 							fontWeight: "bold",
-							marginBottom: 8,
+							marginTop: 16,
+							textAlign: "center",
 						}}
 					>
 						{playlist.name}
 					</Text>
-					<Text
+					<View
 						style={{
-							fontSize: 16,
-							color: "gray",
+							flexDirection: "row",
+							alignItems: "center",
 							marginBottom: 16,
+							width: "50%",
+							justifyContent: "space-between",
 						}}
 					>
-						by {playlist.nickname}
-					</Text>
-					{(isCurrentUser || isAdmin) && (
-						<View style={{ flexDirection: "row" }}>
-							<IconButton
-								icon="pencil"
-								size={24}
-								onPress={handleEdit}
-							/>
-							<IconButton
-								icon="delete"
-								size={24}
-								onPress={handleDelete}
-							/>
-						</View>
-					)}
+						{(isCurrentUser || isAdmin) && (
+							<View>
+								<IconButton
+									icon="delete"
+									size={24}
+									onPress={handleDelete}
+									iconColor={theme.colors.primary}
+								/>
+							</View>
+						)}
+						<Text
+							style={{
+								fontSize: 16,
+								color: "gray",
+							}}
+						>
+							by {playlist.nickname}
+						</Text>
+						{(isCurrentUser || isAdmin) && (
+							<View>
+								<IconButton
+									icon="pencil"
+									size={24}
+									onPress={handleEdit}
+									iconColor={theme.colors.primary}
+								/>
+							</View>
+						)}
+					</View>
 				</View>
-				<View
-					style={{
-						flex: 1,
-						justifyContent: "center",
-						paddingRight: 64,
-					}}
-				>
-					{playlist.coverImageUrl ? (
-						<Image
-							source={{ uri: playlist.coverImageUrl }}
-							style={{ width: 160, height: 160, borderRadius: 8 }}
-						/>
-					) : (
-						<Image
-							source={require("../../../assets/images/mure-logo-solid-background.jpg")}
-							style={{ width: 160, height: 160, borderRadius: 8 }}
-						/>
-					)}
-				</View>
-			</View>
-			<ScrollView contentContainerStyle={{ padding: 16 }}>
 				<Playlist playlist={playlist} />
 			</ScrollView>
 		</SafeAreaView>

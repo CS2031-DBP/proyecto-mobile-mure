@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, ActivityIndicator } from "react-native";
+import { Text } from "react-native-paper";
 import { PlaylistResponse } from "../interfaces/PlaylistResponse";
 import { SongResponse } from "@features/song/interfaces/SongResponse";
 import { getSongById } from "@features/song/services/getSongById";
@@ -54,9 +55,7 @@ export default function Playlist(props: PlaylistProps) {
 			style={{
 				padding: 16,
 				marginBottom: 16,
-				backgroundColor: "#fff",
 				borderRadius: 8,
-				gap: 20,
 			}}
 		>
 			{songs.length === 0 ? (

@@ -20,7 +20,7 @@ export async function getArtistsByName(
 		);
 		return response.data;
 	} catch (error) {
-		console.error("Error in getAlbumsBytitle:", error);
+		console.error("Error in getArtistsByName:", error);
 		throw error;
 	}
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Image, ActivityIndicator, Linking, Alert } from "react-native";
+import { View, Image, ActivityIndicator, Linking } from "react-native";
 import { IconButton, Text } from "react-native-paper";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useUserContext } from "@contexts/UserContext";
@@ -15,6 +15,7 @@ import { PostResponse } from "../interfaces/PostResponse";
 import { showMessage } from "react-native-flash-message";
 import { PostMediaCard } from "./PostMediaCard";
 import { RootStackParamList } from "@navigation/AppNavigation";
+import { theme } from "@navigation/Theme";
 
 interface PostProps {
 	post: PostResponse;
@@ -85,14 +86,16 @@ export default function Post(props: PostProps) {
 	async function handleDelete() {
 		try {
 			await deletePostById(props.post.id);
-			Alert.alert(
-				"post Deleted",
-				"Your post has been deleted successfully."
-			);
+			showMessage({
+				message: "Post deleted",
+				type: "success",
+			});
 			props.onPostDeleted(props.post.id);
 		} catch (error) {
-			console.error("Error deleting post:", error);
-			Alert.alert("Error", "There was an error deleting the post.");
+			showMessage({
+				message: "Failed to delete post",
+				type: "danger",
+			});
 		}
 	}
 
@@ -114,6 +117,8 @@ export default function Post(props: PostProps) {
 					style={{
 						backgroundColor: "#fff",
 						borderRadius: 10,
+						borderWidth: 1,
+						borderColor: theme.colors.primary,
 						padding: 10,
 						paddingHorizontal: 15,
 						marginBottom: 16,
@@ -163,7 +168,7 @@ export default function Post(props: PostProps) {
 							<IconButton
 								icon="spotify"
 								size={35}
-								iconColor="#fdaab8"
+								iconColor={theme.colors.primary}
 								onPress={() =>
 									openLink(props.post.song.spotifyUrl)
 								}
@@ -254,11 +259,13 @@ export default function Post(props: PostProps) {
 									onPress={() => {
 										/* Edit post */
 									}}
+									iconColor={theme.colors.primary}
 								/>
 								<IconButton
 									icon="delete"
 									size={20}
 									onPress={handleDelete}
+									iconColor={theme.colors.primary}
 								/>
 							</View>
 						)}

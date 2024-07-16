@@ -122,6 +122,7 @@ export default function AppNavigation() {
 						options={{
 							headerShown: true,
 							headerTitle: "Edit Profile",
+							headerTintColor: theme.colors.primary,
 						}}
 					/>
 					<Stack.Screen
@@ -135,6 +136,7 @@ export default function AppNavigation() {
 						options={{
 							headerShown: true,
 							headerTitle: "Friends",
+							headerTintColor: theme.colors.primary,
 						}}
 					/>
 					<Stack.Screen
@@ -145,17 +147,41 @@ export default function AppNavigation() {
 					<Stack.Screen
 						name="PlaylistScreen"
 						component={PlaylistScreen}
-						options={{ headerShown: false }}
+						options={{
+							headerShown: true,
+							headerTitle: "Playlist Details",
+							headerTintColor: theme.colors.primary,
+						}}
 					/>
 					<Stack.Screen
 						name="FavoriteSongsScreen"
 						component={FavoriteSongsScreen}
-						options={{ headerShown: false }}
+						options={{
+							headerShown: true,
+							headerTitle: "Favorite Songs",
+							headerStyle: {
+								backgroundColor: theme.colors.primary,
+							},
+							headerTitleStyle: {
+								color: theme.colors.background,
+							},
+							headerTintColor: "white",
+						}}
 					/>
 					<Stack.Screen
 						name="AlbumScreen"
 						component={AlbumScreen}
-						options={{ headerShown: false }}
+						options={{
+							headerShown: true,
+							headerTitle: "Album",
+							headerStyle: {
+								backgroundColor: theme.colors.primary,
+							},
+							headerTitleStyle: {
+								color: theme.colors.background,
+							},
+							headerTintColor: "white",
+						}}
 					/>
 					<Stack.Screen
 						name="AddSongToPlaylistScreen"

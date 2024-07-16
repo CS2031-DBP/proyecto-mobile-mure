@@ -1,8 +1,9 @@
 import { useUserContext } from "@contexts/UserContext";
 import { CommentResponseDto } from "@interfaces/Comment";
+import { theme } from "@navigation/Theme";
 import React from "react";
-import { View, Text, Alert, TouchableOpacity } from "react-native";
-import { IconButton } from "react-native-paper";
+import { View, Alert, TouchableOpacity } from "react-native";
+import { IconButton, Text } from "react-native-paper";
 
 interface CommentProps {
 	comment: CommentResponseDto;
@@ -38,18 +39,27 @@ export default function Comment({ comment, onDelete, userRole }: CommentProps) {
 				justifyContent: "space-between",
 				alignItems: "center",
 				padding: 8,
-				borderBottomColor: "gray",
+				borderBottomColor: theme.colors.primary,
 				borderBottomWidth: 1,
 			}}
 		>
 			<View style={{ flex: 1, marginRight: 8 }}>
-				<Text style={{ fontSize: 14 }}>{comment.content}</Text>
-				<Text style={{ fontSize: 12, color: "gray" }}>
-					{comment.nickname}
+				<Text style={{ fontSize: 14, color: theme.colors.primary }}>
+					@{comment.nickname}
+				</Text>
+				<Text
+					style={{ fontSize: 12, marginVertical: 4, color: "black" }}
+				>
+					{comment.content}
 				</Text>
 			</View>
 			{isOwnerOrAdmin && (
-				<IconButton icon="delete" size={20} onPress={handleDelete} />
+				<IconButton
+					icon="delete"
+					size={20}
+					onPress={handleDelete}
+					iconColor={theme.colors.primary}
+				/>
 			)}
 		</View>
 	);

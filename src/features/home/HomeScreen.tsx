@@ -209,6 +209,9 @@ export default function HomeScreen() {
 				/>
 				<Portal>
 					<FAB.Group
+						fabStyle={{ backgroundColor: theme.colors.primary }}
+						color={theme.colors.background}
+						backdropColor={theme.colors.background}
 						open={isFabGroupOpen}
 						visible
 						icon={isFabGroupOpen ? "close" : "fruit-grapes"}
@@ -218,12 +221,14 @@ export default function HomeScreen() {
 								label: "Add a post",
 								onPress: () =>
 									navigation.navigate("AddPostScreen"),
+								color: theme.colors.primary,
 							},
 							{
 								icon: "camera",
 								label: "Add a story",
 								onPress: () =>
 									navigation.navigate("AddStoryScreen"),
+								color: theme.colors.primary,
 							},
 						]}
 						onStateChange={() => setIsFabGroupOpen(!isFabGroupOpen)}

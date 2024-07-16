@@ -3,6 +3,7 @@ import HomeScreen from "@features/home/HomeScreen";
 import LibraryScreen from "@features/library/LibraryScreen";
 import ProfileScreen from "@features/profile/ProfileScreen";
 import { Icon } from "react-native-paper";
+import { theme } from "./Theme";
 
 type BottomTabsParamList = {
 	HomeScreen: undefined;
@@ -20,14 +21,25 @@ export default function BottomTabsNavigator() {
 			initialRouteName="HomeScreen"
 			screenOptions={{
 				tabBarShowLabel: false,
-				tabBarStyle: { height: 60 },
+				tabBarStyle: {
+					height: 60,
+					backgroundColor: theme.colors.background,
+					borderTopColor: theme.colors.primary,
+					borderTopWidth: 1,
+				},
 			}}
 		>
 			<Tab.Screen
 				name="HomeScreen"
 				options={{
 					headerShown: false,
-					tabBarIcon: () => <Icon source="home" size={iconSize} />,
+					tabBarIcon: () => (
+						<Icon
+							source="home"
+							size={iconSize}
+							color={theme.colors.primary}
+						/>
+					),
 				}}
 				component={HomeScreen}
 			/>
@@ -35,7 +47,13 @@ export default function BottomTabsNavigator() {
 				name="LibraryScreen"
 				options={{
 					headerShown: false,
-					tabBarIcon: () => <Icon source="library" size={iconSize} />,
+					tabBarIcon: () => (
+						<Icon
+							source="library"
+							size={iconSize}
+							color={theme.colors.primary}
+						/>
+					),
 				}}
 				component={LibraryScreen}
 			/>
@@ -43,7 +61,13 @@ export default function BottomTabsNavigator() {
 				name="ProfileScreen"
 				options={{
 					headerShown: false,
-					tabBarIcon: () => <Icon source="account" size={iconSize} />,
+					tabBarIcon: () => (
+						<Icon
+							source="account"
+							size={iconSize}
+							color={theme.colors.primary}
+						/>
+					),
 				}}
 				component={ProfileScreen}
 			/>

@@ -17,6 +17,7 @@ import { getRoleFromToken } from "@services/getRoleFromToken";
 import { createComment } from "@services/comment/createComment";
 import { deleteComment } from "@services/comment/deleteComment";
 import { getCommentsByPostId } from "@services/comment/getCommentsByPostId";
+import { theme } from "@navigation/Theme";
 
 interface CommentsModalProps {
 	visible: boolean;
@@ -109,8 +110,15 @@ export default function CommentsModal(props: CommentsModalProps) {
 			visible={props.visible}
 			onRequestClose={props.onClose}
 			animationType="slide"
+			style={{ flex: 1, backgroundColor: theme.colors.background }}
 		>
-			<View style={{ flex: 1, padding: 16, backgroundColor: "#fff" }}>
+			<View
+				style={{
+					flex: 1,
+					padding: 16,
+					backgroundColor: theme.colors.background,
+				}}
+			>
 				<View
 					style={{
 						flexDirection: "row",
@@ -152,8 +160,8 @@ export default function CommentsModal(props: CommentsModalProps) {
 						flexDirection: "row",
 						alignItems: "center",
 						borderTopWidth: 1,
-						borderColor: "gray",
 						paddingTop: 16,
+						borderTopColor: theme.colors.primary,
 					}}
 				>
 					<TextInput
@@ -163,7 +171,7 @@ export default function CommentsModal(props: CommentsModalProps) {
 						style={{
 							flex: 1,
 							padding: 8,
-							borderColor: "gray",
+							borderColor: theme.colors.primary,
 							borderWidth: 1,
 							borderRadius: 4,
 							marginRight: 8,
@@ -172,12 +180,17 @@ export default function CommentsModal(props: CommentsModalProps) {
 					<TouchableOpacity
 						onPress={handleCreateComment}
 						style={{
-							backgroundColor: "#6200ea",
+							backgroundColor: theme.colors.primary,
 							padding: 10,
 							borderRadius: 4,
 						}}
 					>
-						<Text style={{ color: "#fff", fontWeight: "bold" }}>
+						<Text
+							style={{
+								color: "white",
+								fontWeight: "bold",
+							}}
+						>
 							Send
 						</Text>
 					</TouchableOpacity>

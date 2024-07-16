@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { IconButton } from "react-native-paper";
 import { Audio } from "expo-av";
+import { theme } from "@navigation/Theme";
 
 interface AudioPlayerProps {
 	previewUrl: string;
@@ -50,11 +51,19 @@ export default function AudioPlayer(props: AudioPlayerProps) {
 	return (
 		<View style={{ flexDirection: "row" }}>
 			<TouchableOpacity onPress={handlePlayPause}>
-				<IconButton icon={isPlaying ? "pause" : "play"} size={24} />
+				<IconButton
+					icon={isPlaying ? "pause" : "play"}
+					size={24}
+					iconColor={theme.colors.primary}
+				/>
 			</TouchableOpacity>
 			{props.showRestartButton && (
 				<TouchableOpacity onPress={handleRestart}>
-					<IconButton icon="restart" size={24} />
+					<IconButton
+						icon="restart"
+						size={24}
+						iconColor={theme.colors.primary}
+					/>
 				</TouchableOpacity>
 			)}
 		</View>

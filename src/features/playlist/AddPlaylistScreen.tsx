@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import {
-	Alert,
 	Image,
 	SafeAreaView,
 	ScrollView,
 	Text,
 	View,
+	TouchableOpacity,
 } from "react-native";
 import {
 	ActivityIndicator,
@@ -24,6 +24,8 @@ import { SongResponse } from "@features/song/interfaces/SongResponse";
 import { getSongsByTitle } from "@features/song/services/getSongsByTitle";
 import { PlaylistRequest } from "./interfaces/PlaylistRequest";
 import { createPlaylistImage } from "./services/createPlaylistImage";
+import { theme } from "@navigation/Theme";
+import { showMessage } from "react-native-flash-message";
 
 export default function AddPlaylistScreen() {
 	const [title, setTitle] = useState("");
@@ -77,7 +79,7 @@ export default function AddPlaylistScreen() {
 		}
 	};
 
-	const handleRemoveSong = (songId: string) => {
+	const handleRemoveSong = (songId: number) => {
 		setSelectedSongs(selectedSongs.filter((song) => song.id !== songId));
 	};
 
@@ -103,17 +105,18 @@ export default function AddPlaylistScreen() {
 
 		try {
 			await createPlaylistImage(playlistData);
-			Alert.alert(
-				"playlist Created",
-				"Your playlist has been created successfully."
-			);
+			showMessage({
+				message: "playlist Created",
+				description: "Your playlist has been created successfully.",
+				type: "success",
+			});
 			navigation.navigate("MainScreen", { screen: "LibraryScreen" });
 		} catch (error) {
 			setError("Failed to create playlist");
 		}
 	};
 
-	const handleScroll = ({ nativeEvent }) => {
+	const handleScroll = ({ nativeEvent }: { nativeEvent: any }) => {
 		if (isCloseToBottom(nativeEvent) && !loading) {
 			fetchSongs();
 		}
@@ -123,6 +126,10 @@ export default function AddPlaylistScreen() {
 		layoutMeasurement,
 		contentOffset,
 		contentSize,
+	}: {
+		layoutMeasurement: { height: number };
+		contentOffset: { y: number };
+		contentSize: { height: number };
 	}) => {
 		const paddingToBottom = 20;
 		return (
@@ -132,49 +139,83 @@ export default function AddPlaylistScreen() {
 	};
 
 	return (
-		<SafeAreaView style={{ flex: 1, padding: 16, marginTop: 32 }}>
+		<SafeAreaView
+			style={{
+				flex: 1,
+				padding: 16,
+				backgroundColor: theme.colors.background,
+			}}
+		>
 			<View
 				style={{
-					flexDirection: "row",
-					alignItems: "center",
-					justifyContent: "space-between",
 					marginBottom: 16,
+					marginTop: 32,
 				}}
 			>
-				<TextInput
-					mode="outlined"
-					label="Enter playlist name"
-					value={playlistName}
-					onChangeText={setPlaylistName}
-					style={{ flex: 1 }}
-				/>
-				{imagePickerHook.image ? (
-					<View
-						style={{ flexDirection: "row", alignItems: "center" }}
-					>
-						<Image
-							source={{ uri: imagePickerHook.image }}
-							style={{
-								width: 60,
-								height: 60,
-								borderRadius: 8,
-								marginLeft: 8,
-							}}
-						/>
-						<IconButton
-							icon="delete"
-							size={20}
-							onPress={() => imagePickerHook.setImageUri(null)}
-						/>
-					</View>
-				) : (
+				<View style={{ flexDirection: "row" }}>
 					<IconButton
-						style={{ marginLeft: 8 }}
-						icon="camera"
-						size={30}
-						onPress={imagePickerHook.pickImage}
+						icon="arrow-left"
+						onPress={() => navigation.goBack()}
+						size={24}
+						style={{ marginBottom: 16 }}
+						iconColor={theme.colors.primary}
+					></IconButton>
+					<TextInput
+						mode="outlined"
+						label="Enter playlist name"
+						value={playlistName}
+						onChangeText={setPlaylistName}
+						style={{ marginBottom: 16, width: "85%" }}
 					/>
-				)}
+				</View>
+				<TouchableOpacity
+					style={{
+						backgroundColor: "#FFF",
+						borderColor: theme.colors.primary,
+						borderWidth: 1,
+						height: 300,
+						width: "100%",
+						borderRadius: 8,
+						alignItems: "center",
+						justifyContent: "center",
+						position: "relative",
+					}}
+					onPress={imagePickerHook.pickImage}
+				>
+					{imagePickerHook.image ? (
+						<>
+							<Image
+								source={{ uri: imagePickerHook.image }}
+								style={{
+									width: "100%",
+									height: "100%",
+									borderRadius: 8,
+								}}
+							/>
+							<IconButton
+								icon="close"
+								size={24}
+								onPress={() =>
+									imagePickerHook.setImageUri(null)
+								}
+								style={{
+									position: "absolute",
+									top: 8,
+									right: 8,
+									backgroundColor: "#FFF",
+									borderRadius: 12,
+								}}
+								iconColor={theme.colors.primary}
+							/>
+						</>
+					) : (
+						<IconButton
+							icon="camera"
+							size={50}
+							iconColor={theme.colors.primary}
+						/>
+					)}
+				</TouchableOpacity>
 			</View>
 			<View
 				style={{
@@ -204,6 +245,7 @@ export default function AddPlaylistScreen() {
 							fontSize: 20,
 							fontWeight: "bold",
 							marginBottom: 8,
+							color: theme.colors.primary,
 						}}
 					>
 						Search Results
@@ -236,8 +278,14 @@ export default function AddPlaylistScreen() {
 								</View>
 								<IconButton
 									icon="plus"
-									size={20}
+									size={30}
 									onPress={() => handleAddSong(item)}
+									style={{
+										backgroundColor: theme.colors.primary,
+										width: 30,
+										height: 30,
+									}}
+									iconColor="#FFF"
 								/>
 							</View>
 						))}
@@ -252,6 +300,7 @@ export default function AddPlaylistScreen() {
 							fontSize: 20,
 							fontWeight: "bold",
 							marginBottom: 8,
+							color: theme.colors.primary,
 						}}
 					>
 						Selected Songs
@@ -281,8 +330,14 @@ export default function AddPlaylistScreen() {
 								</View>
 								<IconButton
 									icon="minus"
-									size={20}
+									size={30}
 									onPress={() => handleRemoveSong(item.id)}
+									style={{
+										backgroundColor: theme.colors.primary,
+										width: 30,
+										height: 30,
+									}}
+									iconColor="#FFF"
 								/>
 							</View>
 						))}

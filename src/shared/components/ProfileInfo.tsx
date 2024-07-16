@@ -25,6 +25,8 @@ import { deleteUserById } from "@features/profile/services/deleteUserById";
 import Post from "@features/post/components/Post";
 import { addFriend } from "@services/friend/addFriend";
 import { getPostsByUserId } from "@features/post/services/getPostsByUserId";
+import { theme } from "@navigation/Theme";
+import { showMessage } from "react-native-flash-message";
 
 interface ProfileProps {
 	user: UserResponse;
@@ -123,10 +125,10 @@ export default function ProfileInfo({
 			setIsFriend(true);
 			setFriendsCount(friendsCount + 1);
 			await refreshUser();
-			Alert.alert(
-				"Friend Added",
-				"You have successfully added this user as a friend."
-			);
+			showMessage({
+				message: "Friend added",
+				type: "success",
+			});
 		} catch (error) {
 			setErrors("Failed to add friend");
 		}
@@ -138,10 +140,11 @@ export default function ProfileInfo({
 			setIsFriend(false);
 			setFriendsCount(friendsCount - 1);
 			await refreshUser();
-			Alert.alert(
-				"Friend Removed",
-				"You have successfully removed this user from your friends."
-			);
+			showMessage({
+				message: "Friend removed",
+				type: "success",
+				color: theme.colors.primary,
+			});
 		} catch (error) {
 			setErrors("Failed to delete friend");
 		}
@@ -161,10 +164,10 @@ export default function ProfileInfo({
 					onPress: async () => {
 						try {
 							await deleteUserById(user.id);
-							Alert.alert(
-								"profile Deleted",
-								"The user profile has been deleted successfully."
-							);
+							showMessage({
+								message: "Profile deleted",
+								type: "success",
+							});
 							if (isCurrentUser) {
 								navigation.navigate("Register");
 							} else {
@@ -184,8 +187,39 @@ export default function ProfileInfo({
 	};
 
 	return (
-		<SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
-			<View style={{ alignItems: "center", paddingHorizontal: 20 }}>
+		<SafeAreaView
+			style={{
+				flex: 1,
+				justifyContent: "center",
+				backgroundColor: theme.colors.background,
+				paddingTop: 28,
+			}}
+		>
+			<View
+				style={{
+					alignItems: "center",
+					paddingHorizontal: 20,
+				}}
+			>
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						marginBottom: 8,
+					}}
+				>
+					<Text
+						style={{
+							fontSize: 20,
+							fontWeight: "bold",
+							color: theme.colors.primary,
+							flex: 1,
+							marginLeft: 16,
+						}}
+					>
+						@{user.nickname}
+					</Text>
+				</View>
 				<View
 					style={{
 						flexDirection: "row",
@@ -210,26 +244,32 @@ export default function ProfileInfo({
 						{!isFriend && !isCurrentUser ? (
 							<IconButton
 								icon="plus"
-								size={15}
+								size={30}
 								style={{
 									position: "absolute",
 									top: -5,
 									right: -5,
-									backgroundColor: "#B0ACAC",
+									backgroundColor: theme.colors.primary,
+									width: 30,
+									height: 30,
 								}}
+								iconColor="white"
 								onPress={handleAddFriend}
 							/>
 						) : null}
 						{isFriend && !isCurrentUser ? (
 							<IconButton
 								icon="trash-can"
-								size={15}
+								size={30}
 								style={{
 									position: "absolute",
 									top: -5,
 									right: -5,
-									backgroundColor: "#B0ACAC",
+									backgroundColor: theme.colors.primary,
+									width: 30,
+									height: 30,
 								}}
+								iconColor="white"
 								onPress={handleDeleteFriend}
 							/>
 						) : null}
@@ -238,17 +278,7 @@ export default function ProfileInfo({
 						<Text
 							style={{
 								fontSize: 16,
-								fontWeight: "bold",
-								textAlign: "left",
-								marginBottom: 5,
-							}}
-						>
-							@{user.nickname}
-						</Text>
-						<Text
-							style={{
-								fontSize: 14,
-								color: "gray",
+								color: theme.colors.primary,
 								textAlign: "left",
 								marginBottom: 5,
 							}}
@@ -260,19 +290,52 @@ export default function ProfileInfo({
 								fontSize: 12,
 								color: "gray",
 								textAlign: "left",
+								marginBottom: 5,
 							}}
 						>
 							{user.birthDate}
 						</Text>
 					</View>
-					<View style={{ alignItems: "center" }}>
-						<Text style={{ fontSize: 18 }}>
-							{friendsCount} Friends
-						</Text>
+					<View
+						style={{ alignItems: "center", flexDirection: "row" }}
+					>
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+							}}
+						>
+							{friendsCount > 0 && (
+								<Text
+									style={{
+										fontSize: 16,
+									}}
+								>
+									{friendsCount + " "}
+								</Text>
+							)}
+							{friendsCount === 1 ? (
+								<Text
+									style={{
+										fontSize: 16,
+									}}
+								>
+									Friend
+								</Text>
+							) : (
+								<Text
+									style={{
+										fontSize: 16,
+									}}
+								>
+									Friends
+								</Text>
+							)}
+						</View>
 						{(isFriend ||
 							isCurrentUser ||
 							role === "ROLE_ADMIN") && (
-							<Button
+							<IconButton
 								mode="outlined"
 								onPress={() =>
 									navigation.navigate("FriendsScreen", {
@@ -280,10 +343,14 @@ export default function ProfileInfo({
 										userId: user.id,
 									})
 								}
-								style={{ marginTop: 4 }}
-							>
-								View Friends
-							</Button>
+								icon="eye"
+								size={30}
+								style={{
+									backgroundColor: theme.colors.background,
+									borderColor: theme.colors.background,
+								}}
+								iconColor={theme.colors.primary}
+							/>
 						)}
 						{(isFriend ||
 							(role === "ROLE_ADMIN" && !isCurrentUser)) && (
@@ -298,7 +365,12 @@ export default function ProfileInfo({
 												userId: user.id,
 											})
 								}
-								style={{ marginTop: 8, width: "100%" }}
+								style={{
+									marginTop: 8,
+									width: "100%",
+									backgroundColor: theme.colors.primary,
+								}}
+								labelStyle={{ color: theme.colors.background }}
 							>
 								View Library
 							</Button>
@@ -336,14 +408,23 @@ export default function ProfileInfo({
 								onPress={() =>
 									navigation.navigate("EditProfileScreen")
 								}
-								style={{ flex: 1, marginRight: 10 }}
+								style={{
+									flex: 1,
+									marginRight: 10,
+									backgroundColor: theme.colors.primary,
+								}}
+								labelStyle={{ color: theme.colors.background }}
 							>
 								Edit Profile
 							</Button>
 							<Button
 								mode="contained"
 								onPress={handleDeleteProfile}
-								style={{ flex: 1 }}
+								style={{
+									flex: 1,
+									backgroundColor: theme.colors.primary,
+								}}
+								labelStyle={{ color: theme.colors.background }}
 							>
 								Delete Profile
 							</Button>
@@ -353,7 +434,12 @@ export default function ProfileInfo({
 						<Button
 							mode="contained"
 							onPress={handleDeleteProfile}
-							style={{ width: "60%", marginTop: 10 }}
+							style={{
+								width: "60%",
+								marginTop: 10,
+								backgroundColor: theme.colors.primary,
+							}}
+							labelStyle={{ color: theme.colors.background }}
 						>
 							Delete Profile
 						</Button>

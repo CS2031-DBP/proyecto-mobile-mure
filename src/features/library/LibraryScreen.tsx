@@ -8,14 +8,13 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
-import { FAB, Portal, Provider } from "react-native-paper";
 import {
 	NavigationProp,
 	ParamListBase,
 	RouteProp,
+	useRoute,
 	useIsFocused,
 	useNavigation,
-	useRoute,
 } from "@react-navigation/native";
 import { useUserContext } from "@contexts/UserContext";
 import { PlaylistResponse } from "@features/playlist/interfaces/PlaylistResponse";
@@ -24,6 +23,8 @@ import { AlbumResponse } from "@features/album/interfaces/AlbumResponse";
 import { getPlaylistsByUserId } from "@features/playlist/services/getPlaylistsByUserId";
 import { getFavoriteSongs } from "@features/song/services/getFavoriteSongs";
 import { getFavoriteAlbums } from "@features/album/services/getFavoriteAlbums";
+import { IconButton, Provider } from "react-native-paper";
+import { theme } from "@navigation/Theme";
 
 interface LibraryProps {
 	userId?: number;
@@ -40,7 +41,6 @@ export default function LibraryScreen() {
 	const [page, setPage] = useState<number>(0);
 	const [hasMore, setHasMore] = useState<boolean>(true);
 	const [loading, setLoading] = useState<boolean>(false);
-	const [isFabGroupOpen, setIsFabGroupOpen] = useState(false);
 	const isFocused = useIsFocused();
 	const scrollViewRef = useRef<ScrollView>(null);
 
@@ -120,12 +120,52 @@ export default function LibraryScreen() {
 
 	return (
 		<Provider>
-			<SafeAreaView style={{ flex: 1, marginTop: 16 }}>
+			<SafeAreaView
+				style={{
+					flex: 1,
+					backgroundColor: theme.colors.primary,
+					paddingTop: 24,
+				}}
+			>
+				<View
+					style={{
+						flexDirection: "row",
+						justifyContent: "space-between",
+						alignItems: "center",
+						paddingHorizontal: 16,
+						backgroundColor: theme.colors.primary,
+					}}
+				>
+					<Text
+						style={{
+							fontSize: 20,
+							fontWeight: "bold",
+							color: "white",
+							marginBottom: 8,
+						}}
+					>
+						{isCurrentUser
+							? "Your Library"
+							: "Your Friend's Library"}
+					</Text>
+					{isCurrentUser && (
+						<IconButton
+							icon="plus"
+							size={24}
+							iconColor="white"
+							onPress={() =>
+								navigation.navigate("AddPlaylistScreen")
+							}
+							style={{ marginBottom: 8 }}
+						/>
+					)}
+				</View>
 				<ScrollView
 					ref={scrollViewRef}
 					contentContainerStyle={{ padding: 16 }}
 					onScroll={handleScroll}
 					scrollEventThrottle={16}
+					style={{ backgroundColor: theme.colors.background }}
 				>
 					{errors ? (
 						<Text style={{ color: "red" }}>{errors}</Text>
@@ -142,8 +182,10 @@ export default function LibraryScreen() {
 									style={{
 										padding: 16,
 										marginBottom: 16,
-										backgroundColor: "#fff",
+										backgroundColor: "#FFF7E7",
 										borderRadius: 8,
+										borderColor: theme.colors.primary,
+										borderWidth: 1,
 										flexDirection: "row",
 										alignItems: "center",
 									}}
@@ -153,8 +195,11 @@ export default function LibraryScreen() {
 											style={{
 												fontSize: 16,
 												fontWeight: "bold",
+												color: theme.colors.primary,
 												flex: 1,
+												overflow: "hidden",
 											}}
+											numberOfLines={1}
 										>
 											Favorite Songs
 										</Text>
@@ -169,13 +214,9 @@ export default function LibraryScreen() {
 										</Text>
 									</View>
 									<Image
-										source={require("assets/images/favorite-songs-playlist-image.png")}
-										style={{
-											width: 60,
-											height: 60,
-											borderRadius: 4,
-										}}
-									/>
+										source={require("../../../assets/images/favorite-songs-playlist-image.png")}
+										style={{ width: 80, height: 80 }}
+									></Image>
 								</View>
 							</TouchableOpacity>
 							{favoriteAlbums.map((album) => (
@@ -191,29 +232,23 @@ export default function LibraryScreen() {
 										style={{
 											padding: 16,
 											marginBottom: 16,
-											backgroundColor: "#fff",
+											backgroundColor: "#FFF7E7",
 											borderRadius: 8,
+											borderColor: theme.colors.primary,
+											borderWidth: 1,
 											flexDirection: "row",
 											alignItems: "center",
 										}}
 									>
-										<Image
-											source={{
-												uri: album.coverImageUrl,
-											}}
-											style={{
-												width: 60,
-												height: 60,
-												borderRadius: 4,
-												marginRight: 16,
-											}}
-										/>
-										<View>
+										<View style={{ flex: 1 }}>
 											<Text
 												style={{
 													fontSize: 16,
 													fontWeight: "bold",
+													color: theme.colors.primary,
+													overflow: "hidden",
 												}}
+												numberOfLines={1}
 											>
 												{truncateText(album.title, 25)}
 											</Text>
@@ -225,11 +260,21 @@ export default function LibraryScreen() {
 											>
 												{truncateText(
 													album.artistName,
-													20
+													30
 												)}
 											</Text>
 											<Text>album</Text>
 										</View>
+										<Image
+											source={{
+												uri: album.coverImageUrl,
+											}}
+											style={{
+												width: 80,
+												height: 80,
+												borderRadius: 4,
+											}}
+										/>
 									</View>
 								</TouchableOpacity>
 							))}
@@ -246,8 +291,10 @@ export default function LibraryScreen() {
 										style={{
 											padding: 16,
 											marginBottom: 16,
-											backgroundColor: "#fff",
+											backgroundColor: "#FFF7E7",
 											borderRadius: 8,
+											borderColor: theme.colors.primary,
+											borderWidth: 1,
 											flexDirection: "row",
 											alignItems: "center",
 										}}
@@ -257,7 +304,10 @@ export default function LibraryScreen() {
 												style={{
 													fontSize: 16,
 													fontWeight: "bold",
+													color: theme.colors.primary,
+													overflow: "hidden",
 												}}
+												numberOfLines={1}
 											>
 												{truncateText(
 													playlist.name,
@@ -280,8 +330,8 @@ export default function LibraryScreen() {
 													uri: playlist.coverImageUrl,
 												}}
 												style={{
-													width: 60,
-													height: 60,
+													width: 80,
+													height: 80,
 													borderRadius: 4,
 												}}
 											/>
@@ -289,8 +339,8 @@ export default function LibraryScreen() {
 											<Image
 												source={require("../../../assets/images/mure-logo-solid-background.jpg")}
 												style={{
-													width: 60,
-													height: 60,
+													width: 80,
+													height: 80,
 													borderRadius: 4,
 												}}
 											/>
@@ -304,28 +354,6 @@ export default function LibraryScreen() {
 						<ActivityIndicator size="large" color="#0000ff" />
 					)}
 				</ScrollView>
-				{isCurrentUser && (
-					<Portal>
-						<FAB.Group
-							open={isFabGroupOpen}
-							visible
-							icon={isFabGroupOpen ? "close" : "playlist-plus"}
-							actions={[
-								{
-									icon: "playlist-plus",
-									label: "Add playlist",
-									onPress: () =>
-										navigation.navigate(
-											"AddPlaylistScreen"
-										),
-								},
-							]}
-							onStateChange={() =>
-								setIsFabGroupOpen(!isFabGroupOpen)
-							}
-						/>
-					</Portal>
-				)}
 			</SafeAreaView>
 		</Provider>
 	);

@@ -1,6 +1,6 @@
 import React from "react";
-import { ScrollView, TouchableOpacity, View, Text, Image } from "react-native";
-import { IconButton } from "react-native-paper";
+import { ScrollView, TouchableOpacity, View, Image } from "react-native";
+import { IconButton, Text } from "react-native-paper";
 import { UserResponse } from "@interfaces/UserResponse";
 import { theme } from "@navigation/Theme";
 

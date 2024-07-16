@@ -2,7 +2,7 @@ import { PaginatedResponse } from "@interfaces/PaginationResponse";
 import Api from "@services/api";
 import { AlbumResponse } from "../interfaces/AlbumResponse";
 
-export async function getAlbumsBytitle(
+export async function getAlbumsByTitle(
 	title: string,
 	page: number,
 	size: number
@@ -18,7 +18,7 @@ export async function getAlbumsBytitle(
 		});
 		return response.data;
 	} catch (error) {
-		console.error("Error in getAlbumsBytitle:", error);
+		console.error("Error in getAlbumsByTitle:", error);
 		throw error;
 	}
 }

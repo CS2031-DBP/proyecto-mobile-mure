@@ -1,5 +1,5 @@
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import { IconButton } from "react-native-paper";
+import { Image, TouchableOpacity, View } from "react-native";
+import { IconButton, Text } from "react-native-paper";
 
 export interface SearchItemProps {
 	mediaId: number;

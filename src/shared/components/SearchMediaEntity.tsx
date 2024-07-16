@@ -8,7 +8,9 @@ import { AlbumResponse } from "@features/album/interfaces/AlbumResponse";
 import { PaginatedResponse } from "@interfaces/PaginationResponse";
 import { getSongsByTitle } from "@features/song/services/getSongsByTitle";
 import { getArtistsByName } from "@features/artist/services/getArtistsByName";
+import { getAlbumsByTitle } from "@features/album/services/getAlbumsByTitle";
 import SearchItem, { SearchItemProps } from "./SearchItem";
+import { theme } from "@navigation/Theme";
 
 interface SocialMediaEntityProps {
 	mode: "interactive" | "static";
@@ -70,7 +72,13 @@ export default function SearchMediaEntity(props: SocialMediaEntityProps) {
 
 	return (
 		<SafeAreaView
-			style={{ flex: 1, flexDirection: "column", padding: 10, gap: 20 }}
+			style={{
+				flex: 1,
+				flexDirection: "column",
+				padding: 10,
+				gap: 20,
+				backgroundColor: theme.colors.background,
+			}}
 		>
 			<Searchbar
 				value={searchText}
@@ -79,6 +87,7 @@ export default function SearchMediaEntity(props: SocialMediaEntityProps) {
 				onIconPress={() =>
 					props.mode === "interactive" && props.navigation?.goBack()
 				}
+				style={{ backgroundColor: "white" }}
 			/>
 			<ScrollView style={{ flex: 1, flexDirection: "column" }}>
 				{results.map((result, key) => {

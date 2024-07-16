@@ -55,7 +55,7 @@ export function PostMediaCard(props: PostMediaCardProps) {
 					previewUrl={
 						(props.media as SongResponseForPost).spotifyPreviewUrl
 					}
-					showRestartButton={false}
+					showRestartButton={true}
 				/>
 			) : props.type === "album" ? (
 				<IconButton icon="album" onPress={props.onPress} />

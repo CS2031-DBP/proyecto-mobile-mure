@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { SafeAreaView, Text } from "react-native";
+import { SafeAreaView } from "react-native";
 import {
 	NavigationProp,
 	ParamListBase,
@@ -7,6 +7,7 @@ import {
 	useNavigation,
 	useRoute,
 } from "@react-navigation/native";
+import { Text } from "react-native-paper";
 import { useUserContext } from "@contexts/UserContext";
 import { UserResponse } from "@interfaces/UserResponse";
 import { getUserFriends } from "./services/getUserFriends";
