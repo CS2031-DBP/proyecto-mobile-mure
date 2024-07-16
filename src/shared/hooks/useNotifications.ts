@@ -5,6 +5,7 @@ import { Platform } from "react-native";
 import { ExpoTokenRequest } from "../interfaces/ExpoTokenRequest";
 import * as Device from "expo-device";
 import { saveExpoPushToken } from "@services/notification/saveExpoPushToken";
+import { showMessage } from "react-native-flash-message";
 
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({
@@ -42,6 +43,7 @@ export default function useNotifications() {
 					notificationListener.current
 				);
 			}
+
 			if (responseListener.current) {
 				Notifications.removeNotificationSubscription(
 					responseListener.current
@@ -69,24 +71,32 @@ export default function useNotifications() {
 				await Notifications.getPermissionsAsync();
 			console.log("Existing status:", existingStatus);
 			let finalStatus = existingStatus;
+
 			if (existingStatus !== "granted") {
 				const { status } =
 					await Notifications.requestPermissionsAsync();
 				finalStatus = status;
 			}
+
 			if (finalStatus !== "granted") {
-				alert("Failed to get push token for push notification!");
+				showMessage({
+					message: "Failed to get push token for push notification!",
+					type: "danger",
+				});
 				console.log("Permission not granted for notifications");
 				return;
 			}
+
 			console.log("Permission granted for notifications");
 			const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+
 			if (!projectId) {
 				console.error(
 					"No projectId found. Make sure you have configured your app.json correctly."
 				);
 				return;
 			}
+
 			token = (await Notifications.getExpoPushTokenAsync({ projectId }))
 				.data;
 			console.log("Expo Push Token obtained:", token);
@@ -96,7 +106,10 @@ export default function useNotifications() {
 			await saveExpoPushToken(userId, expoTokenRequest);
 			setExpoPushToken(token);
 		} else {
-			alert("Must use physical device for Push Notifications");
+			showMessage({
+				message: "Must use physical device for Push Notifications",
+				type: "warning",
+			});
 			console.log("Must use physical device for Push Notifications");
 		}
 
