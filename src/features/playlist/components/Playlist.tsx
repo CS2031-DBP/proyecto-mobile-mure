@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { PlaylistResponse } from "../interfaces/PlaylistResponse";
 import { SongResponse } from "@features/song/interfaces/SongResponse";
 import { getSongById } from "@features/song/services/getSongById";
 import MediaCard from "@components/MediaCard";
+import { showMessage } from "react-native-flash-message";
 
 interface PlaylistProps {
 	playlist: PlaylistResponse;
@@ -12,12 +13,11 @@ interface PlaylistProps {
 export default function Playlist(props: PlaylistProps) {
 	const [songs, setSongs] = useState<SongResponse[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
-	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		const loadSongs = async () => {
 			try {
-				const songsData = await Promise.all(
+				const songsData = await Promise.all<SongResponse>(
 					props.playlist.songsIds.map(async (id) => {
 						try {
 							const song = await getSongById(id);
@@ -31,11 +31,12 @@ export default function Playlist(props: PlaylistProps) {
 						}
 					})
 				);
-				setSongs(
-					songsData.filter((song) => song !== null) as SongResponse[]
-				);
-			} catch (error) {
-				setError("Failed to load songs");
+				setSongs(songsData.filter((song) => song !== null));
+			} catch {
+				showMessage({
+					message: "Failed to load songs",
+					type: "danger",
+				});
 			} finally {
 				setLoading(false);
 			}
@@ -46,10 +47,6 @@ export default function Playlist(props: PlaylistProps) {
 
 	if (loading) {
 		return <ActivityIndicator size="large" color="#0000ff" />;
-	}
-
-	if (error) {
-		return <Text style={{ color: "red" }}>{error}</Text>;
 	}
 
 	return (
