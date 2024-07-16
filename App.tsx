@@ -12,9 +12,6 @@ export default function App() {
 		"oleo-script-regular": require("assets/fonts/OleoScriptSwashCaps-Regular.ttf"),
 		"oleo-script-bold": require("assets/fonts/OleoScriptSwashCaps-Bold.ttf"),
 	});
-	// const { user } = useUserContext();
-	// const userId = user ? user.id : 0;
-	// const { notification } = useNotifications(userId);
 
 	useEffect(() => {
 		if (loaded || error) {
@@ -29,7 +26,6 @@ export default function App() {
 	return (
 		<SafeAreaProvider>
 			<UserProvider>
-				{/* <NotificationDisplay notification={notification} /> */}
 				<AppNavigation />
 				<FlashMessage position="top" />
 			</UserProvider>

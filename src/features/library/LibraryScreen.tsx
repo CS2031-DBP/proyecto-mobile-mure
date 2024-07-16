@@ -133,7 +133,7 @@ export default function LibraryScreen() {
 						<>
 							<TouchableOpacity
 								onPress={() =>
-									navigation.navigate("FavoriteSongs", {
+									navigation.navigate("FavoriteSongsScreen", {
 										userId,
 									})
 								}
@@ -182,7 +182,7 @@ export default function LibraryScreen() {
 								<TouchableOpacity
 									key={album.id}
 									onPress={() =>
-										navigation.navigate("Album", {
+										navigation.navigate("AlbumScreen", {
 											albumId: album.id,
 										})
 									}
@@ -237,7 +237,7 @@ export default function LibraryScreen() {
 								<TouchableOpacity
 									key={playlist.id}
 									onPress={() =>
-										navigation.navigate("PlaylistPage", {
+										navigation.navigate("PlaylistScreen", {
 											playlistId: playlist.id,
 										})
 									}
@@ -315,7 +315,9 @@ export default function LibraryScreen() {
 									icon: "playlist-plus",
 									label: "Add playlist",
 									onPress: () =>
-										navigation.navigate("AddPlaylist"),
+										navigation.navigate(
+											"AddPlaylistScreen"
+										),
 								},
 							]}
 							onStateChange={() =>

@@ -36,7 +36,7 @@ export type RootStackParamList = {
 	EditPlaylistScreen: undefined;
 	EditProfileScreen: undefined;
 	ProfileScreen: { userId: number };
-	FriendsPageScreen: { friendIds: number[]; userId?: number };
+	FriendsScreen: { friendIds: number[]; userId?: number };
 	LibraryScreen: { userId: number };
 	PlaylistScreen: { playlistId: number };
 	FavoriteSongsScreen: undefined;
@@ -127,7 +127,7 @@ export default function AppNavigation() {
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="FriendsPageScreen"
+						name="FriendsScreen"
 						component={FriendsScreen}
 						options={{ headerShown: false }}
 					/>

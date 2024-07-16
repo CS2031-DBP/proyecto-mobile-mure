@@ -56,7 +56,7 @@ export default function PlaylistScreen() {
 	const isAdmin = role === "ROLE_ADMIN";
 
 	const handleEdit = () => {
-		navigation.navigate("EditPlaylist", { playlist });
+		navigation.navigate("EditPlaylistScreen", { playlist });
 	};
 
 	const handleDelete = () => {
@@ -73,7 +73,9 @@ export default function PlaylistScreen() {
 					onPress: async () => {
 						try {
 							await deletePlaylistById(playlistId);
-							navigation.navigate("Main", { screen: "Library" });
+							navigation.navigate("MainScreen", {
+								screen: "LibraryScreen",
+							});
 						} catch (error) {
 							Alert.alert("Failed to delete playlist");
 						}

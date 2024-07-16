@@ -11,11 +11,13 @@ import { RootStackParamList } from "@navigation/AppNavigation";
 import { showMessage } from "react-native-flash-message";
 import { login } from "./services/login";
 import { theme } from "@navigation/Theme";
+import { useUserContext } from "@contexts/UserContext";
 
 export default function LoginScreen() {
 	const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const userContext = useUserContext();
 
 	async function handleLogin() {
 		if (!email || !password) {
@@ -28,6 +30,7 @@ export default function LoginScreen() {
 
 		try {
 			const response = await login({ email, password });
+			await userContext.refreshUser();
 			if (response.token) navigation.navigate("MainScreen");
 		} catch (error) {
 			showMessage({ message: "Something went wrong", type: "danger" });

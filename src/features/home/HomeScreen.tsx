@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { FlatList, Image, RefreshControl, View } from "react-native";
+import {
+	Alert,
+	FlatList,
+	BackHandler,
+	Image,
+	RefreshControl,
+	View,
+} from "react-native";
 import {
 	ActivityIndicator,
 	FAB,
@@ -19,8 +26,10 @@ import {
 import Post from "@features/post/components/Post";
 import { PostResponse } from "@features/post/interfaces/PostResponse";
 import { fonts, theme } from "@navigation/Theme";
+import { logout } from "@services/logout";
 import { showMessage } from "react-native-flash-message";
 import { RootStackParamList } from "@navigation/AppNavigation";
+import useNotifications from "@hooks/useNotifications";
 
 export default function HomeScreen() {
 	const [isFabGroupOpen, setIsFabGroupOpen] = useState(false);
@@ -31,10 +40,14 @@ export default function HomeScreen() {
 	const [refreshing, setRefreshing] = useState<boolean>(false);
 	const [hasMore, setHasMore] = useState<boolean>(true);
 	const userContext = useUserContext();
+	const { registerForPushNotificationsAsync } = useNotifications();
 
 	useEffect(() => {
 		(async () => {
 			await userContext.refreshUser();
+			console.log("User:", userContext.user);
+			if (userContext.user)
+				await registerForPushNotificationsAsync(userContext.user.id);
 			fetchPosts(true);
 		})();
 	}, []);
@@ -43,6 +56,50 @@ export default function HomeScreen() {
 		useCallback(() => {
 			fetchPosts(true);
 		}, [])
+	);
+
+	useFocusEffect(
+		useCallback(() => {
+			const onBackPress = () => {
+				Alert.alert(
+					"Logout",
+					"Do you want to logout?",
+					[
+						{
+							text: "Cancel",
+							style: "cancel",
+						},
+						{
+							text: "Yes",
+							onPress: async () => {
+								try {
+									await logout();
+									navigation.reset({
+										index: 0,
+										routes: [{ name: "LoginScreen" }],
+									});
+								} catch (error) {
+									showMessage({
+										message: "Failed to logout",
+										type: "danger",
+									});
+								}
+							},
+						},
+					],
+					{ cancelable: false }
+				);
+				return true;
+			};
+
+			BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+			return () =>
+				BackHandler.removeEventListener(
+					"hardwareBackPress",
+					onBackPress
+				);
+		}, [navigation])
 	);
 
 	async function fetchPosts(reset: boolean = false) {
