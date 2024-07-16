@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Image, SafeAreaView, View } from "react-native";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import {
+	NavigationProp,
+	ThemeProvider,
+	useNavigation,
+} from "@react-navigation/native";
 import { Button, Text, TextInput } from "react-native-paper";
 import RegisterLink from "../components/RegisterLink";
 import { RootStackParamList } from "@navigation/AppNavigation";

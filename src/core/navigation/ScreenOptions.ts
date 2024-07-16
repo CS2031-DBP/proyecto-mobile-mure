@@ -1,12 +1,13 @@
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
+import { fonts, theme } from "./Theme";
 
 export const defaultScreenOptions: NativeStackNavigationOptions = {
 	headerTitleStyle: {
-		fontFamily: "poppins-regular",
+		fontFamily: fonts.poppinsRegular,
 	},
 	headerBackVisible: true,
 	headerTitleAlign: "center",
 	headerStyle: {
-		backgroundColor: "#F8E8D5",
+		backgroundColor: theme.colors.headerBackgroundColor,
 	},
 };

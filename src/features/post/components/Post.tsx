@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	View,
 	Text,
@@ -24,37 +24,42 @@ import { deletePostById } from "../services/deletePostById";
 import { dislikePost } from "../services/dislikePost";
 import { likePost } from "../services/likePost";
 import { PostResponse } from "../interfaces/PostResponse";
+import { showMessage } from "react-native-flash-message";
 
 interface PostProps {
 	post: PostResponse;
 	onPostDeleted: (postId: number) => void;
 }
 
-export default function Post({ post, onPostDeleted }: PostProps) {
+export default function Post(props: PostProps) {
 	const { user } = useUserContext();
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
 	const [postOwner, setPostOwner] = useState<UserResponse | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [liked, setLiked] = useState<boolean>(
-		post.likedByUserIds.includes(user?.id || 0)
+		props.post.likedByUserIds.includes(user?.id || 0)
 	);
-	const [likesCount, setLikesCount] = useState<number>(post.likes);
+	const [likesCount, setLikesCount] = useState<number>(props.post.likes);
 	const [userRole, setUserRole] = useState<string | null>(null);
 	const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
-				const userData = await getUserById(post.ownerId);
+				const userData = await getUserById(props.post.ownerId);
 				setPostOwner(userData);
 			} catch (error) {
-				console.error("Failed to fetch user data:", error);
+				showMessage({
+					message: "Failed to fetch user data",
+					type: "danger",
+				});
 			} finally {
 				setLoading(false);
 			}
 		};
+
 		fetchUser();
-	}, [post.ownerId, user?.id]);
+	}, [props.post.ownerId, user?.id]);
 
 	useEffect(() => {
 		const fetchRole = async () => {
@@ -62,51 +67,55 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 				const role = await getRoleFromToken();
 				setUserRole(role);
 			} catch (error) {
-				console.error("Failed to fetch user role:", error);
+				showMessage({
+					message: "Failed to fetch user role",
+					type: "danger",
+				});
 			}
 		};
+
 		fetchRole();
 	}, []);
 
-	const handleLike = async () => {
+	async function handleLike() {
 		try {
 			if (liked) {
-				await dislikePost(post.id);
+				await dislikePost(props.post.id);
 				setLikesCount((prev) => prev - 1);
 			} else {
-				await likePost(post.id);
+				await likePost(props.post.id);
 				setLikesCount((prev) => prev + 1);
 			}
 			setLiked(!liked);
 		} catch (error) {
 			console.error("Error updating like status:", error);
 		}
-	};
+	}
 
-	const handleDelete = async () => {
+	async function handleDelete() {
 		try {
-			await deletePostById(post.id);
+			await deletePostById(props.post.id);
 			Alert.alert(
 				"post Deleted",
 				"Your post has been deleted successfully."
 			);
-			onPostDeleted(post.id);
+			props.onPostDeleted(props.post.id);
 		} catch (error) {
 			console.error("Error deleting post:", error);
 			Alert.alert("Error", "There was an error deleting the post.");
 		}
-	};
+	}
 
 	if (loading) {
 		return <ActivityIndicator size="large" color="#0000ff" />;
 	}
 
-	const openLink = (link: string) => {
+	function openLink(link: string) {
 		Linking.openURL(link);
-	};
+	}
 
 	const isOwnerOrAdmin =
-		user?.id === post.ownerId || userRole === "ROLE_ADMIN";
+		user?.id === props.post.ownerId || userRole === "ROLE_ADMIN";
 
 	return (
 		<>
@@ -114,7 +123,7 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 				<View
 					style={{
 						backgroundColor: "#fff",
-						borderRadius: 8,
+						borderRadius: 10,
 						padding: 16,
 						marginBottom: 16,
 						shadowColor: "#000",
@@ -159,11 +168,11 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 										fontWeight: "bold",
 									}}
 								>
-									@{post.owner}
+									@{props.post.owner}
 								</Text>
 							</View>
 							<Text style={{ fontSize: 10, marginTop: 8 }}>
-								{post.description}
+								{props.post.description}
 							</Text>
 						</View>
 
@@ -175,7 +184,7 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 								marginLeft: 64,
 							}}
 						>
-							{post.album && (
+							{props.post.album && (
 								<View
 									style={{
 										flexDirection: "column",
@@ -189,17 +198,17 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 											marginTop: 4,
 										}}
 									>
-										{post.album.title}
+										{props.post.album.title}
 									</Text>
 									<Text style={{ fontSize: 10 }}>
-										{post.album.artist}
+										{props.post.album.artist}
 									</Text>
 									<Text style={{ fontSize: 10 }}>
-										{post.album.duration}
+										{props.post.album.duration}
 									</Text>
 								</View>
 							)}
-							{post.song && (
+							{props.post.song && (
 								<View
 									style={{
 										flexDirection: "column",
@@ -212,16 +221,18 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 											fontSize: 10,
 										}}
 									>
-										{post.song.title}
+										{props.post.song.title}
 									</Text>
 									<Text style={{ fontSize: 10 }}>
-										{post.song.artistsNames.join(", ")}
+										{props.post.song.artistsNames.join(
+											", "
+										)}
 									</Text>
 									<Text style={{ fontSize: 10 }}>
-										{post.song.genre}
+										{props.post.song.genre}
 									</Text>
 									<Text style={{ fontSize: 10 }}>
-										{post.song.duration}
+										{props.post.song.duration}
 									</Text>
 								</View>
 							)}
@@ -234,7 +245,7 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 								flex: 1,
 							}}
 						>
-							{post.album && (
+							{props.post.album && (
 								<View
 									style={{
 										flexDirection: "column",
@@ -243,7 +254,7 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 								>
 									<Image
 										source={{
-											uri: post.album.coverImageUrl,
+											uri: props.post.album.coverImageUrl,
 										}}
 										style={{
 											width: 60,
@@ -256,13 +267,13 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 										size={20}
 										onPress={() => {
 											navigation.navigate("Album", {
-												albumId: post.album.id,
+												albumId: props.post.album.id,
 											});
 										}}
 									/>
 								</View>
 							)}
-							{post.song && (
+							{props.post.song && (
 								<View
 									style={{
 										flexDirection: "column",
@@ -271,7 +282,7 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 								>
 									<Image
 										source={{
-											uri: post.song.coverImageUrl,
+											uri: props.post.song.coverImageUrl,
 										}}
 										style={{
 											width: 60,
@@ -279,10 +290,11 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 											borderRadius: 4,
 										}}
 									/>
-									{post.song.spotifyPreviewUrl ? (
+									{props.post.song.spotifyPreviewUrl ? (
 										<AudioPlayer
 											previewUrl={
-												post.song.spotifyPreviewUrl
+												props.post.song
+													.spotifyPreviewUrl
 											}
 										/>
 									) : (
@@ -290,7 +302,9 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 											icon="spotify"
 											size={20}
 											onPress={() => {
-												openLink(post.song.spotifyUrl);
+												openLink(
+													props.post.song.spotifyUrl
+												);
 											}}
 											iconColor="green"
 										/>
@@ -300,7 +314,7 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 						</View>
 					</View>
 
-					{post.imageUrl ? (
+					{props.post.imageUrl ? (
 						<Image
 							style={{
 								width: "100%",
@@ -308,13 +322,13 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 								borderRadius: 8,
 								marginTop: 0,
 							}}
-							source={{ uri: post.imageUrl }}
+							source={{ uri: props.post.imageUrl }}
 						/>
 					) : null}
 
-					{post.audioUrl ? (
+					{props.post.audioUrl ? (
 						<View style={{ marginTop: 12 }}>
-							<AudioPlayer previewUrl={post.audioUrl} />
+							<AudioPlayer previewUrl={props.post.audioUrl} />
 						</View>
 					) : null}
 
@@ -366,7 +380,7 @@ export default function Post({ post, onPostDeleted }: PostProps) {
 			</TouchableOpacity>
 			<CommentsModal
 				visible={isModalVisible}
-				postId={post.id}
+				postId={props.post.id}
 				onClose={() => setIsModalVisible(false)}
 			/>
 		</>

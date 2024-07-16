@@ -88,6 +88,41 @@ export default function HomeScreen() {
 
 	return (
 		<Provider>
+			<View
+				style={{
+					paddingTop: 30,
+					flexDirection: "row",
+					justifyContent: "space-between",
+					alignItems: "center",
+					backgroundColor: theme.colors?.headerBackgroundColor,
+				}}
+			>
+				<Image
+					source={require("assets/images/mure-logo-transparent-background.png")}
+					style={{
+						width: 45,
+						height: 45,
+						resizeMode: "contain",
+						borderRadius: 50,
+						marginLeft: 10,
+						marginVertical: 8,
+					}}
+				/>
+				<Text
+					style={{
+						fontSize: 35,
+						fontFamily: fonts.oleoScriptBold,
+						color: theme.colors.mureLogo,
+					}}
+				>
+					Mure
+				</Text>
+				<IconButton
+					icon="magnify"
+					size={30}
+					onPress={() => navigation.navigate("SearchScreen")}
+				/>
+			</View>
 			<SafeAreaView
 				style={{
 					flex: 1,
@@ -95,38 +130,6 @@ export default function HomeScreen() {
 					backgroundColor: theme.colors?.background,
 				}}
 			>
-				<View
-					style={{
-						flexDirection: "row",
-						justifyContent: "space-between",
-						alignItems: "center",
-					}}
-				>
-					<Image
-						source={require("assets/images/mure-logo-transparent-background.png")}
-						style={{
-							width: 45,
-							height: 45,
-							resizeMode: "contain",
-							borderRadius: 50,
-							marginLeft: 10,
-							marginVertical: 8,
-						}}
-					/>
-					<Text
-						style={{
-							fontSize: 35,
-							fontFamily: fonts["oleo-script-bold"],
-						}}
-					>
-						Mure
-					</Text>
-					<IconButton
-						icon="magnify"
-						size={30}
-						onPress={() => navigation.navigate("SearchScreen")}
-					/>
-				</View>
 				<FlatList
 					data={posts}
 					keyExtractor={(item) => item.id.toString()}
@@ -136,7 +139,7 @@ export default function HomeScreen() {
 					onEndReached={handleLoadMore}
 					onEndReachedThreshold={0.5}
 					ListFooterComponent={
-						loading && (
+						null && (
 							<ActivityIndicator size="large" color="#0000ff" />
 						)
 					}
