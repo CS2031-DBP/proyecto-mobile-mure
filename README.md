@@ -1,23 +1,25 @@
 # Mure: Share Your Music Taste 🎧 🎶
 
-**Mure**, the winner of the *Berners Lee Award 2024-1* for the UTEC course *Platform-Based Development* (CS2031), is a platform designed for users to share their music preferences with friends and followers. With Mure, you can create and share posts, playlists, and explore music content 🎙️
+**Mure**, the winner of the *Berners Lee Award 2024-1* for the UTEC course *Platform-Based Development* (CS2031), is a platform designed for users to share their music preferences with friends and followers. With Mure, you can create and share posts, playlists, and explore music content 🎙️.
 
-The project is developed using **Java and Spring Boot 🌱** for the backend, while the mobile application is developed with **React Native 📱**.
+This repository contains the source code for the mobile frontend of the project, developed with React Native 📱. For the backend and web frontend, please refer to the following repositories:
+
+- **Backend**: [Mure Backend Repository](https://github.com/CS2031-DBP/proyecto-backend-mure.git)
+- **Frontend Web**: [Mure Frontend Web Repository](https://github.com/CS2031-DBP/proyecto-web-mure.git)
 
 ## Project Members 🤝
 
-| Name              | Email                                                               |
-|-------------------|---------------------------------------------------------------------|
-| Joaquin Salinas   | [joaquin.salinas@utec.edu.pe](mailto:joaquin.salinas@utec.edu.pe)   |
-| Guillermo Galvez  | [jose.galvez.p@utec.edu.pe](mailto:jose.galvez.p@utec.edu.pe)       |
-| Alejandro Escobar | [alejandro.escobar@utec.edu.pe](mailto:alejandro.escobar@utec.edu.pe)|
+| Name              | GitHub User                                              |  Email                                                                |
+|-------------------|----------------------------------------------------------|-----------------------------------------------------------------------|
+| Joaquin Salinas   | [joaquinsalinas06](https://github.com/joaquinsalinas06)  |[joaquin.salinas@utec.edu.pe](mailto:joaquin.salinas@utec.edu.pe)      |
+| Guillermo Galvez  | [KarTaGo124](https://github.com/KarTaGo124)              |[jose.galvez.p@utec.edu.pe](mailto:jose.galvez.p@utec.edu.pe)          |
+| Alejandro Escobar | [AlejandroEN](https://github.com/AlejandroEN )           |[alejandro.escobar@utec.edu.pe](mailto:alejandro.escobar@utec.edu.pe)  |
 
 ## Prerequisites 🔧
 
 Before setting up the project, ensure you have the following installed on your machine:
 
 - **Node.js**: Latest version
-- **Expo CLI**: Install by running `npm install -g expo-cli`
 - **Backend**: You'll need to run the backend before using the app. Use the following repository: [Mure Backend](https://github.com/CS2031-DBP/proyecto-backend-mure). Also, if you don't use "localhost:8080" to communicate with your local API, feel free to change it in the `services/api.js` file to match your URL.
 
 ## Getting Started 🚀
@@ -70,12 +72,12 @@ To set up the project on your local machine, follow these steps:
 
 - **Framework**: React Native
 - **Libraries**:
-    - **React Navigation**
-    - **React Native Paper**
-    - **Expo**
-    - **Axios**
-    - **JWT Decode**
-    - **React Native Safe Area Context**
+  - **React Navigation**
+  - **React Native Paper**
+  - **Expo**
+  - **Axios**
+  - **JWT Decode**
+  - **React Native Safe Area Context**
 
 ## Main Screens 📄
 
